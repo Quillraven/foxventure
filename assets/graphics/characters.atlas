@@ -1,0 +1,76 @@
+
+characters.png
+size: 512, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+fox/idle
+  rotate: false
+  xy: 1, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 0
+fox/idle
+  rotate: false
+  xy: 36, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 1
+fox/idle
+  rotate: false
+  xy: 71, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 2
+fox/idle
+  rotate: false
+  xy: 106, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 3
+fox/run
+  rotate: false
+  xy: 141, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 0
+fox/run
+  rotate: false
+  xy: 176, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 1
+fox/run
+  rotate: false
+  xy: 211, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 2
+fox/run
+  rotate: false
+  xy: 246, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 3
+fox/run
+  rotate: false
+  xy: 281, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 4
+fox/run
+  rotate: false
+  xy: 316, 1
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 5
