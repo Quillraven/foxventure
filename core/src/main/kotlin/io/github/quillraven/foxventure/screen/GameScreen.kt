@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.configureWorld
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame
+import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.MusicAsset
-import io.github.quillraven.foxventure.component.EntityTag
-import io.github.quillraven.foxventure.component.Graphic
-import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.get
 import io.github.quillraven.foxventure.system.RenderSystem
+import io.github.quillraven.foxventure.system.SpawnSystem
+import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
+import io.github.quillraven.foxventure.tiled.MapChangeListener
+import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.app.KtxScreen
-import ktx.math.vec2
 
 class GameScreen(
     game: GdxGame,
@@ -22,6 +22,7 @@ class GameScreen(
     private val assets: AssetManager = game.serviceLocator.assets,
     private val gameViewport: Viewport = game.gameViewport,
     private val stage: Stage = game.stage,
+    private val tiledService: TiledService = game.serviceLocator.tiledService,
 ) : KtxScreen {
 
     private val world = ecsWorld()
@@ -31,9 +32,11 @@ class GameScreen(
             add(batch)
             add(gameViewport)
             add(stage)
+            add(assets)
         }
 
         systems {
+            add(SpawnSystem())
             add(RenderSystem())
         }
     }
@@ -41,19 +44,22 @@ class GameScreen(
     override fun show() {
         assets[MusicAsset.HURT_AND_HEART].play()
 
-        world.entity {
-            it += Transform(
-                position = vec2(0f, 0f),
-                size = vec2(2.0625f, 2f),
-                rotationDegrees = 0f,
-                scale = 1f,
-            )
-            it += Graphic(assets[AtlasAsset.CHARACTERS].findRegions("fox/idle").first())
-            it += EntityTag.ACTIVE
-        }
+        registerTiledListeners()
+        tiledService.setMap(MapAsset.TUTORIAL)
     }
 
     override fun render(delta: Float) {
         world.update(delta)
+    }
+
+    private fun registerTiledListeners() {
+        world.systems.forEach { system ->
+            if (system is MapChangeListener) {
+                tiledService.addMapChangeListener(system)
+            }
+            if (system is LoadTileObjectListener) {
+                tiledService.addLoadTileObjectListener(system)
+            }
+        }
     }
 }

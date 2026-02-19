@@ -2,6 +2,9 @@ package io.github.quillraven.foxventure
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
+import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
@@ -9,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import io.github.quillraven.foxventure.screen.LoadAssetsScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
+import ktx.assets.setLoader
 
 class GdxGame : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator() }
@@ -18,6 +22,9 @@ class GdxGame : KtxGame<KtxScreen>() {
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
+
+        val tiledLoader = TmxMapLoader(serviceLocator.assets.fileHandleResolver)
+        serviceLocator.assets.setLoader<TiledMap, BaseTiledMapLoader.Parameters>(tiledLoader)
 
         addScreen(LoadAssetsScreen(this))
         setScreen<LoadAssetsScreen>()
@@ -37,5 +44,7 @@ class GdxGame : KtxGame<KtxScreen>() {
 
     companion object {
         fun Int.toWorldUnits() = this / 16f
+
+        fun Float.toWorldUnits() = this / 16f
     }
 }

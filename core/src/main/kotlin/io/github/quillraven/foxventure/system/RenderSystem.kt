@@ -1,6 +1,10 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.maps.MapLayer
+import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -9,10 +13,13 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntityBy
+import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
-import ktx.graphics.use
+import io.github.quillraven.foxventure.tiled.MapChangeListener
+import ktx.collections.gdxArrayOf
+import ktx.tiled.use
 
 class RenderSystem(
     private val batch: Batch = inject(),
@@ -21,12 +28,19 @@ class RenderSystem(
 ) : IteratingSystem(
     family = family { all(Transform, Graphic, EntityTag.ACTIVE) },
     comparator = compareEntityBy(Transform),
-) {
+), MapChangeListener {
+
+    private val camera: OrthographicCamera = gameViewport.camera as OrthographicCamera
+    private val mapRenderer = OrthogonalTiledMapRenderer(TiledMap(), 1.toWorldUnits(), batch)
+    private val bgdLayers = gdxArrayOf<MapLayer>()
+    private val fgdLayers = gdxArrayOf<MapLayer>()
 
     override fun onTick() {
         gameViewport.apply()
-        batch.use(gameViewport.camera.combined) {
-            super.onTick()
+        mapRenderer.use(camera) {
+            bgdLayers.forEach(it::renderMapLayer)
+            super.onTick() // render entities
+            fgdLayers.forEach(it::renderMapLayer)
         }
 
         stage.viewport.apply()
@@ -48,5 +62,26 @@ class RenderSystem(
             scale, scale,
             rotationDegrees
         )
+    }
+
+    override fun onMapChanged(tiledMap: TiledMap) {
+        mapRenderer.map = tiledMap
+
+        bgdLayers.clear()
+        fgdLayers.clear()
+        var currentLayers = bgdLayers
+        tiledMap.layers.forEach { layer ->
+            if ("objects" == layer.name) {
+                currentLayers = fgdLayers
+                return@forEach
+            }
+
+            if (layer::class == MapLayer::class) {
+                // ignore object layers
+                return@forEach
+            }
+
+            currentLayers.add(layer)
+        }
     }
 }

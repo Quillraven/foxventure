@@ -1,76 +1,104 @@
 
-characters.png
-size: 512, 64
+objects.png
+size: 256, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-fox/idle
+characters/fox/idle
   rotate: false
-  xy: 1, 1
+  xy: 82, 186
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-fox/idle
+characters/fox/idle
   rotate: false
-  xy: 36, 1
+  xy: 82, 152
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-fox/idle
+characters/fox/idle
   rotate: false
-  xy: 71, 1
+  xy: 82, 118
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
-fox/idle
+characters/fox/idle
   rotate: false
-  xy: 106, 1
+  xy: 82, 84
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
-fox/run
+characters/fox/run
   rotate: false
-  xy: 141, 1
+  xy: 130, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-fox/run
+characters/fox/run
   rotate: false
-  xy: 176, 1
+  xy: 165, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-fox/run
+characters/fox/run
   rotate: false
-  xy: 211, 1
+  xy: 200, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
-fox/run
+characters/fox/run
   rotate: false
-  xy: 246, 1
+  xy: 117, 182
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
-fox/run
+characters/fox/run
   rotate: false
-  xy: 281, 1
+  xy: 117, 148
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 4
-fox/run
+characters/fox/run
   rotate: false
-  xy: 316, 1
+  xy: 152, 182
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 5
+props/bush
+  rotate: false
+  xy: 82, 220
+  size: 46, 28
+  orig: 46, 28
+  offset: 0, 0
+  index: -1
+props/palm
+  rotate: false
+  xy: 1, 72
+  size: 79, 176
+  orig: 79, 176
+  offset: 0, 0
+  index: -1
+props/rock2
+  rotate: false
+  xy: 1, 13
+  size: 66, 57
+  orig: 66, 57
+  offset: 0, 0
+  index: -1
+props/skulls
+  rotate: false
+  xy: 1, 1
+  size: 16, 10
+  orig: 16, 10
+  offset: 0, 0
+  index: -1

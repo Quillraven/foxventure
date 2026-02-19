@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="7">
+ <tileset firstgid="1" source="sunny_land.tsx"/>
+ <tileset firstgid="576" source="props.tsx"/>
+ <tileset firstgid="580" source="characters.tsx"/>
+ <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
+  <image source="../graphics/sky.png" width="384" height="240"/>
+ </imagelayer>
+ <layer id="1" name="ground" width="40" height="15">
+  <data encoding="base64" compression="zlib">
+   eJztksFKAlEUhr9/3sC2ES1EepohpB6glfgKShES5b6wlaDgUtHVoK4iLGpTUQ8TtQvzDlymM8ygCC3mwMflzmLOd/5zoaiiiipqO7UL7KWw/w9CD4FDIHJnzBSobnF2n0Dp+cR+FkfAsdG3Ifr3QB7OxEnWHEu/0MiomuGXll9D0BTUBE8edXf2BH3BqX79yOtn9Q+NvcZzXAJXQDvxv2vBjefVFQwELXefCeaCjuB2Tb9og/yGgpHnFyVyfBd8CMaCyYb5nRt7z/J7EDy6zF4Er4K3hGPMs+f3JfgW3CXe6MLltNydtd9WChfAp/6+eetbHkoB7ARQFlQ8DrTKyer/Ayq/Zt4=
+  </data>
+ </layer>
+ <layer id="3" name="props" width="40" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDCewmWHkAHx+3QjFpOobBaNgFNAOXGGE0DtHQCADAOC+BQo=
+  </data>
+ </layer>
+ <objectgroup id="4" name="objects">
+  <object id="1" gid="576" x="288" y="144" width="46" height="28">
+   <properties>
+    <property name="z" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="2" gid="577" x="48" y="112" width="51" height="113.62"/>
+  <object id="3" gid="579" x="128" y="224" width="16" height="10"/>
+  <object id="4" name="player" gid="580" x="16" y="112" width="33" height="32"/>
+  <object id="6" gid="577" x="560" y="128" width="51" height="113.62"/>
+ </objectgroup>
+</map>
