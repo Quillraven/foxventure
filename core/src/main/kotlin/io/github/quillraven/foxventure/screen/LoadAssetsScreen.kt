@@ -3,7 +3,6 @@ package io.github.quillraven.foxventure.screen
 import com.badlogic.gdx.assets.AssetManager
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame
-import io.github.quillraven.foxventure.MusicAsset
 import ktx.app.KtxScreen
 import ktx.assets.loadAsset
 
@@ -13,7 +12,6 @@ class LoadAssetsScreen(
 ) : KtxScreen {
 
     override fun show() {
-        MusicAsset.entries.forEach { assets.loadAsset(it.descriptor) }
         AtlasAsset.entries.forEach { assets.loadAsset(it.descriptor) }
     }
 

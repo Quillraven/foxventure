@@ -6,12 +6,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
-import io.github.quillraven.foxventure.get
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.math.vec2
 import ktx.tiled.height

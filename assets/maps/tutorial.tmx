@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="7">
+ <properties>
+  <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
+ </properties>
  <tileset firstgid="1" source="sunny_land.tsx"/>
  <tileset firstgid="576" source="props.tsx"/>
  <tileset firstgid="580" source="characters.tsx"/>

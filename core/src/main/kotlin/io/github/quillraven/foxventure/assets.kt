@@ -2,32 +2,29 @@ package io.github.quillraven.foxventure
 
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import ktx.assets.assetDescriptor
 
-enum class MusicAsset {
-    HURT_AND_HEART;
+interface Asset<T> {
+    val descriptor: AssetDescriptor<T>
 
-    val descriptor: AssetDescriptor<Music> = assetDescriptor<Music>("music/${name.lowercase()}.ogg")
+    companion object {
+        inline operator fun <reified T> AssetManager.get(asset: Asset<T>): T = get(asset.descriptor)
+    }
 }
 
-operator fun AssetManager.get(asset: MusicAsset): Music = get(asset.descriptor)
-
-enum class AtlasAsset {
+enum class AtlasAsset : Asset<TextureAtlas> {
     OBJECTS;
 
-    val descriptor: AssetDescriptor<TextureAtlas> = assetDescriptor("graphics/${name.lowercase()}.atlas")
+    override val descriptor = assetDescriptor<TextureAtlas>("graphics/${name.lowercase()}.atlas")
 }
 
-operator fun AssetManager.get(asset: AtlasAsset): TextureAtlas = get(asset.descriptor)
-
-enum class MapAsset {
+enum class MapAsset : Asset<TiledMap> {
     TUTORIAL;
 
-    val descriptor: AssetDescriptor<TiledMap> = assetDescriptor("maps/${name.lowercase()}.tmx", defaultParams())
+    override val descriptor = assetDescriptor("maps/${name.lowercase()}.tmx", defaultParams())
 
     private fun defaultParams(): BaseTiledMapLoader.Parameters {
         return BaseTiledMapLoader.Parameters().apply {
@@ -35,5 +32,3 @@ enum class MapAsset {
         }
     }
 }
-
-operator fun AssetManager.get(asset: MapAsset): TiledMap = get(asset.descriptor)

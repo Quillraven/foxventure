@@ -7,8 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
-import io.github.quillraven.foxventure.MusicAsset
-import io.github.quillraven.foxventure.get
+import io.github.quillraven.foxventure.system.AudioSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -38,12 +37,11 @@ class GameScreen(
         systems {
             add(SpawnSystem())
             add(RenderSystem())
+            add(AudioSystem())
         }
     }
 
     override fun show() {
-        assets[MusicAsset.HURT_AND_HEART].play()
-
         registerTiledListeners()
         tiledService.setMap(MapAsset.TUTORIAL)
     }
