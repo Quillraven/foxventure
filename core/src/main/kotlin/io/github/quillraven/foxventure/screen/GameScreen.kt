@@ -8,6 +8,7 @@ import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.AudioSystem
+import io.github.quillraven.foxventure.system.DebugRenderSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -37,6 +38,7 @@ class GameScreen(
         systems {
             add(SpawnSystem())
             add(RenderSystem())
+            add(DebugRenderSystem())
             add(AudioSystem())
         }
     }
@@ -59,5 +61,9 @@ class GameScreen(
                 tiledService.addLoadTileObjectListener(system)
             }
         }
+    }
+
+    override fun dispose() {
+        world.dispose()
     }
 }
