@@ -128,6 +128,7 @@ class MoveSystem(
     private fun moveY(transform: Transform, collision: Collision, velocity: Velocity, deltaY: Float) {
         if (deltaY == 0f) return
 
+        val prevBottom = transform.position.y + collision.rect.y
         transform.position.y += deltaY
         checkRect.set(
             transform.position.x + collision.rect.x,
@@ -145,7 +146,7 @@ class MoveSystem(
 
         for (y in startY..endY) {
             for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, includeSemiSolid = deltaY <= 0f, tempRect)
+                tiledService.getCollisionRect(x, y, includeSemiSolid = false, tempRect)
                 if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
                     if (deltaY > 0f) {
                         transform.position.y = tempRect.y - collision.rect.y - collision.rect.height
@@ -156,6 +157,24 @@ class MoveSystem(
                         collision.isGrounded = true
                     }
                     return
+                }
+            }
+        }
+
+        // Check semisolids only if falling and was above the platform
+        if (deltaY < 0f) {
+            for (y in startY..endY) {
+                for (x in startX..endX) {
+                    tiledService.getCollisionRect(x, y, includeSemiSolid = true, tempRect)
+                    if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
+                        // Only collide if player was above the semisolid before moving
+                        if (prevBottom >= tempRect.y + tempRect.height) {
+                            transform.position.y = tempRect.y + tempRect.height - collision.rect.y
+                            velocity.current.y = 0f
+                            collision.isGrounded = true
+                            return
+                        }
+                    }
                 }
             }
         }
