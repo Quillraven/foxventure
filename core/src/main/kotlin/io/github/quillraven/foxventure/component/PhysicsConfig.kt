@@ -9,6 +9,10 @@ data class PhysicsConfig(
     var jumpImpulse: Float,
     var coyoteThreshold: Float,
     var jumpBufferThreshold: Float,
+    var maxSpeed: Float,
+    var acceleration: Float,
+    var deceleration: Float,
+    var airControl: Float,
 ) : Component<PhysicsConfig> {
     override fun type() = PhysicsConfig
 

@@ -38,17 +38,12 @@ class MoveSystem(
         val jumpPressed = Gdx.input.isKeyPressed(Input.Keys.SPACE)
 
         // Horizontal movement with acceleration
-        val maxSpeed = 4f
-        val acceleration = 15f
-        val deceleration = 20f
-        val airControl = 0.7f
-
-        val accel = if (collision.isGrounded) acceleration else acceleration * airControl
-        val decel = if (collision.isGrounded) deceleration else deceleration * 0.5f
+        val accel = if (collision.isGrounded) physics.acceleration else physics.acceleration * physics.airControl
+        val decel = if (collision.isGrounded) physics.deceleration else physics.deceleration * 0.5f
 
         if (inputX != 0f) {
             velocity.current.x += inputX * accel * deltaTime
-            velocity.current.x = velocity.current.x.coerceIn(-maxSpeed, maxSpeed)
+            velocity.current.x = velocity.current.x.coerceIn(-physics.maxSpeed, physics.maxSpeed)
         } else {
             val reduction = decel * deltaTime
             if (abs(velocity.current.x) <= reduction) {
@@ -71,7 +66,7 @@ class MoveSystem(
         }
 
         if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {
-            val speedBonus = abs(velocity.current.x) / maxSpeed * 0.3f
+            val speedBonus = abs(velocity.current.x) / physics.maxSpeed * 0.25f
             velocity.current.y = physics.jumpImpulse * (1f + speedBonus)
             jumpControl.jumpBufferTimer = 0f
             jumpControl.coyoteTimer = 0f
@@ -80,7 +75,7 @@ class MoveSystem(
 
         // Variable jump height
         if (!jumpPressed && jumpControl.isRequestingJump && velocity.current.y > 0f) {
-            velocity.current.y *= 0.5f
+            velocity.current.y *= 0.4f
             jumpControl.isRequestingJump = false
         }
 

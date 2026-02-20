@@ -63,11 +63,15 @@ class SpawnSystem(
                 it += Collision(Rectangle(x.toWorldUnits(), y.toWorldUnits(), w.toWorldUnits(), h.toWorldUnits()))
                 it += JumpControl()
                 it += PhysicsConfig(
-                    gravity = 20f,
-                    maxFallSpeed = 15f,
-                    jumpImpulse = 10f,
-                    coyoteThreshold = 0.1f,
-                    jumpBufferThreshold = 0.1f
+                    gravity = 35f,
+                    maxFallSpeed = 16f,
+                    jumpImpulse = 12f,
+                    coyoteThreshold = 0.08f,
+                    jumpBufferThreshold = 0.08f,
+                    maxSpeed = 4.5f,
+                    acceleration = 40f,
+                    deceleration = 35f,
+                    airControl = 0.65f
                 )
                 it += Velocity()
             }
