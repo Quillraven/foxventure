@@ -11,5 +11,5 @@ tasks.register<JavaExec>("packTextures") {
     description = "Packs textures of the assets/graphics/sprites folder into texture atlases"
 
     mainClass.set("io.github.quillraven.foxventure.TexturePackerKt")
-    classpath = sourceSets["main"].runtimeClasspath
+    classpath = sourceSets.main.get().runtimeClasspath
 }
