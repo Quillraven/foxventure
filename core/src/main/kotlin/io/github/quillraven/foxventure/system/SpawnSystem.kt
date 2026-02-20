@@ -35,9 +35,13 @@ class SpawnSystem(
         val h = mapObject.height.toWorldUnits()
         val z = mapObject.property("z", 0)
         val data = tile.textureRegion.texture.textureData as FileTextureData
+        // Tiled references graphics in the "collection of images" tilesets as a relative path.
+        // This path is the input path for the TexturePacker tool that creates a TextureAtlas out of those single images.
+        // Since we use the atlas for rendering instead of the single images, we need the atlas key instead of the path.
+        // The key is the path without the input folder part (= 'graphics/sprites/') and without the file extension.
         val atlasKey = data.fileHandle.pathWithoutExtension()
             .substringAfter("graphics/sprites/") // atlas key is without TexturePacker input directory name
-            .substringBeforeLast("_") // remove index like "idle_0" becomes "idle"
+            .substringBeforeLast("_") // remove index -> "idle_0" becomes "idle"
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)

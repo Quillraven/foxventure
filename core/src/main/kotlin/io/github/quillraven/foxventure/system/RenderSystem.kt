@@ -53,13 +53,16 @@ class RenderSystem(
         val (position, size, rotationDegrees, scale) = entity[Transform]
 
         // fill texture inside transform size by keeping the aspect ratio
-        val realSize = Scaling.fill.apply(regionSize.x, regionSize.y, size.x, size.y)
+        val targetW = size.x * scale
+        val targetH = size.y * scale
+        val realSize = Scaling.fill.apply(regionSize.x, regionSize.y, targetW, targetH)
+
         batch.draw(
             region,
             position.x, position.y,
             realSize.x / 2f, realSize.y / 2f,
             realSize.x, realSize.y,
-            scale, scale,
+            1f, 1f,
             rotationDegrees
         )
     }
