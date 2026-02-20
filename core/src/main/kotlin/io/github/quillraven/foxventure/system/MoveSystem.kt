@@ -92,31 +92,15 @@ class MoveSystem(
         if (deltaX == 0f) return
 
         transform.position.x += deltaX
-        checkRect.set(
-            transform.position.x + collision.rect.x,
-            transform.position.y + collision.rect.y,
-            collision.rect.width,
-            collision.rect.height
-        )
+        updateCheckRect(transform, collision)
 
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, includeSemiSolid = false, tempRect)
-                if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
-                    if (deltaX > 0f) {
-                        transform.position.x = tempRect.x - collision.rect.x - collision.rect.width
-                    } else {
-                        transform.position.x = tempRect.x + tempRect.width - collision.rect.x
-                    }
-                    velocity.current.x = 0f
-                    return
-                }
+        if (checkCollision(includeSemiSolid = false)) {
+            if (deltaX > 0f) {
+                transform.position.x = tempRect.x - collision.rect.x - collision.rect.width
+            } else {
+                transform.position.x = tempRect.x + tempRect.width - collision.rect.x
             }
+            velocity.current.x = 0f
         }
     }
 
@@ -125,53 +109,55 @@ class MoveSystem(
 
         val prevBottom = transform.position.y + collision.rect.y
         transform.position.y += deltaY
+        updateCheckRect(transform, collision)
+
+        collision.isGrounded = false
+
+        if (checkCollision(includeSemiSolid = false)) {
+            if (deltaY > 0f) {
+                transform.position.y = tempRect.y - collision.rect.y - collision.rect.height
+                velocity.current.y = 0f
+            } else {
+                transform.position.y = tempRect.y + tempRect.height - collision.rect.y
+                velocity.current.y = 0f
+                collision.isGrounded = true
+            }
+            return
+        }
+
+        // Check semisolids only if falling and was above the platform
+        if (deltaY < 0f && checkCollision(includeSemiSolid = true)) {
+            if (prevBottom >= tempRect.y + tempRect.height) {
+                transform.position.y = tempRect.y + tempRect.height - collision.rect.y
+                velocity.current.y = 0f
+                collision.isGrounded = true
+            }
+        }
+    }
+
+    private fun updateCheckRect(transform: Transform, collision: Collision) {
         checkRect.set(
             transform.position.x + collision.rect.x,
             transform.position.y + collision.rect.y,
             collision.rect.width,
             collision.rect.height
         )
+    }
 
+    private fun checkCollision(includeSemiSolid: Boolean): Boolean {
         val startX = checkRect.x.toInt()
         val endX = (checkRect.x + checkRect.width).toInt()
         val startY = checkRect.y.toInt()
         val endY = (checkRect.y + checkRect.height).toInt()
 
-        collision.isGrounded = false
-
         for (y in startY..endY) {
             for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, includeSemiSolid = false, tempRect)
+                tiledService.getCollisionRect(x, y, includeSemiSolid, tempRect)
                 if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
-                    if (deltaY > 0f) {
-                        transform.position.y = tempRect.y - collision.rect.y - collision.rect.height
-                        velocity.current.y = 0f
-                    } else {
-                        transform.position.y = tempRect.y + tempRect.height - collision.rect.y
-                        velocity.current.y = 0f
-                        collision.isGrounded = true
-                    }
-                    return
+                    return true
                 }
             }
         }
-
-        // Check semisolids only if falling and was above the platform
-        if (deltaY < 0f) {
-            for (y in startY..endY) {
-                for (x in startX..endX) {
-                    tiledService.getCollisionRect(x, y, includeSemiSolid = true, tempRect)
-                    if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
-                        // Only collide if player was above the semisolid before moving
-                        if (prevBottom >= tempRect.y + tempRect.height) {
-                            transform.position.y = tempRect.y + tempRect.height - collision.rect.y
-                            velocity.current.y = 0f
-                            collision.isGrounded = true
-                            return
-                        }
-                    }
-                }
-            }
-        }
+        return false
     }
 }
