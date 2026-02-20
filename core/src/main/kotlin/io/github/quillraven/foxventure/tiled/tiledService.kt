@@ -3,14 +3,18 @@ package io.github.quillraven.foxventure.tiled
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTile
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
+import com.badlogic.gdx.math.Rectangle
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.MapAsset
 import ktx.app.gdxError
 import ktx.assets.loadAsset
 import ktx.collections.gdxArrayOf
+import ktx.tiled.height
 import ktx.tiled.layer
 import ktx.tiled.property
+import ktx.tiled.width
 import ktx.tiled.x
 import ktx.tiled.y
 
@@ -26,6 +30,7 @@ class TiledService(
     private val assets: AssetManager,
 ) {
     private var currentMap: TiledMap = TiledMap()
+    private val currentTileLayers = gdxArrayOf<TiledMapTileLayer>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
 
@@ -41,8 +46,16 @@ class TiledService(
         tiledMapAsset.finishLoading()
         currentMap = tiledMapAsset.asset
         currentMap.properties.put("gdxFilePath", asset.descriptor.fileName)
+        currentMap.layers.getByType(TiledMapTileLayer::class.java, currentTileLayers)
 
         // load objects
+        loadObjects()
+
+        // notify listeners
+        mapChangeListeners.forEach { it.onMapChanged(currentMap) }
+    }
+
+    private fun loadObjects() {
         currentMap.layer("objects").objects.forEach { mapObject ->
             val x = mapObject.x.toWorldUnits()
             val y = mapObject.y.toWorldUnits()
@@ -52,9 +65,23 @@ class TiledService(
                 gdxError("Unsupported map object $mapObject")
             }
         }
+    }
 
-        // notify listeners
-        mapChangeListeners.forEach { it.onMapChanged(currentMap) }
+    fun getCollisionRect(cellX: Int, cellY: Int, result: Rectangle) {
+        result.set(0f, 0f, 0f, 0f)
+        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
+
+        currentTileLayers.forEach { layer ->
+            val cell = layer.getCell(cellX, cellY) ?: return@forEach
+            val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
+            result.set(
+                cellX + mapObject.x.toWorldUnits(),
+                cellY + mapObject.y.toWorldUnits(),
+                mapObject.width.toWorldUnits(),
+                mapObject.height.toWorldUnits()
+            )
+            return
+        }
     }
 
     fun addMapChangeListener(listener: MapChangeListener) {
