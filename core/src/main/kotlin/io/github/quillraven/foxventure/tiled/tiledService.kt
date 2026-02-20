@@ -34,6 +34,10 @@ class TiledService(
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
 
+    val mapWidth: Int get() = currentMap.width
+
+    val mapHeight: Int get() = currentMap.height
+
     fun setMap(asset: MapAsset) {
         // unload the previous map from memory
         val mapPath = currentMap.property("gdxFilePath", "")

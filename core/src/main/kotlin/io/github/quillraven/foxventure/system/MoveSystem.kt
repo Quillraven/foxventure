@@ -92,6 +92,12 @@ class MoveSystem(
         if (deltaX == 0f) return
 
         transform.position.x += deltaX
+        
+        // Clamp to map boundaries
+        val minX = -collision.rect.x
+        val maxX = tiledService.mapWidth - collision.rect.x - collision.rect.width
+        transform.position.x = transform.position.x.coerceIn(minX, maxX)
+        
         updateCheckRect(transform, collision)
 
         if (checkCollision(includeSemiSolid = false)) {
