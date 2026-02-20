@@ -74,6 +74,7 @@ class SpawnSystem(
                     airControl = 0.65f
                 )
                 it += Velocity()
+                it += EntityTag.CAMERA_FOCUS
             }
         }
     }

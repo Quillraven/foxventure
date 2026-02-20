@@ -8,6 +8,7 @@ import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.AudioSystem
+import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.DebugRenderSystem
 import io.github.quillraven.foxventure.system.MoveSystem
 import io.github.quillraven.foxventure.system.RenderSystem
@@ -40,6 +41,7 @@ class GameScreen(
         systems {
             add(SpawnSystem())
             add(MoveSystem())
+            add(CameraSystem())
             add(RenderSystem())
             add(DebugRenderSystem())
             add(AudioSystem())
