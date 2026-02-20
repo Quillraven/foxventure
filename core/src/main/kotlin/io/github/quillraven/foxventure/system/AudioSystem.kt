@@ -9,6 +9,13 @@ import ktx.assets.toInternalFile
 import ktx.tiled.property
 
 class AudioSystem : IntervalSystem(), MapChangeListener {
+
+    var musicVolume = 0f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            currentMusic?.volume = field
+        }
+
     private var currentMusic: Music? = null
 
     override fun onTick() = Unit
@@ -21,10 +28,12 @@ class AudioSystem : IntervalSystem(), MapChangeListener {
         }
 
         // load and play new music
-        val music = Gdx.audio.newMusic("music/$name".toInternalFile())
-        music.isLooping = true
-        music.play()
-        currentMusic = music
+        Gdx.audio.newMusic("music/$name".toInternalFile())?.let { music ->
+            music.isLooping = true
+            music.play()
+            music.volume = musicVolume
+            currentMusic = music
+        }
     }
 
     override fun onMapChanged(tiledMap: TiledMap) {
