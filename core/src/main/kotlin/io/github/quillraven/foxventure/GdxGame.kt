@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -34,6 +35,12 @@ class GdxGame : KtxGame<KtxScreen>() {
         gameViewport.update(width, height, true)
         uiViewport.update(width, height, true)
         super.resize(width, height)
+    }
+
+    override fun render() {
+        ScreenUtils.clear(0f, 0f, 0f, 1f, true)
+        val deltaTime = Gdx.graphics.deltaTime.coerceIn(0f, 1 / 30f)
+        currentScreen.render(deltaTime)
     }
 
     override fun dispose() {
