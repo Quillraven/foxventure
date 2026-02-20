@@ -7,8 +7,13 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Transform
 import ktx.graphics.use
+import ktx.math.component1
+import ktx.math.component2
+import ktx.math.component3
+import ktx.math.component4
 
 class DebugRenderSystem(
     private val gameViewport: Viewport = inject(),
@@ -19,7 +24,6 @@ class DebugRenderSystem(
 
     override fun onTick() {
         gameViewport.apply()
-        shapeRenderer.color = Color.RED
         shapeRenderer.use(ShapeRenderer.ShapeType.Line, gameViewport.camera.combined) {
             super.onTick()
         }
@@ -27,7 +31,14 @@ class DebugRenderSystem(
 
     override fun onTickEntity(entity: Entity) {
         val (position, size, _, scale) = entity[Transform]
+        shapeRenderer.color = Color.RED
         shapeRenderer.rect(position.x, position.y, size.x * scale, size.y * scale)
+
+        entity.getOrNull(Collision)?.let { collision ->
+            val (collX, collY, collW, collH) = collision.rect
+            shapeRenderer.color = Color.GREEN
+            shapeRenderer.rect(position.x + collX, position.y + collY, collW, collH)
+        }
     }
 
     override fun onDispose() {

@@ -2,17 +2,27 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.glutils.FileTextureData
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
+import io.github.quillraven.foxventure.component.JumpControl
+import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
+import ktx.math.component1
+import ktx.math.component2
+import ktx.math.component3
+import ktx.math.component4
 import ktx.math.vec2
 import ktx.tiled.height
 import ktx.tiled.property
@@ -47,6 +57,20 @@ class SpawnSystem(
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Graphic(objectsAtlas.findRegions(atlasKey).first())
             it += EntityTag.ACTIVE
+
+            if ("player" == mapObject.name) {
+                val (x, y, w, h) = (mapObject.tile.objects.single() as RectangleMapObject).rectangle
+                it += Collision(Rectangle(x.toWorldUnits(), y.toWorldUnits(), w.toWorldUnits(), h.toWorldUnits()))
+                it += JumpControl()
+                it += PhysicsConfig(
+                    gravity = 20f,
+                    maxFallSpeed = 15f,
+                    jumpImpulse = 10f,
+                    coyoteThreshold = 0.1f,
+                    jumpBufferThreshold = 0.1f
+                )
+                it += Velocity()
+            }
         }
     }
 }

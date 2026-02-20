@@ -3,5 +3,8 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image source="../graphics/sprites/characters/fox/idle_0.png" width="33" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="9" y="13" width="13" height="17"/>
+  </objectgroup>
  </tile>
 </tileset>

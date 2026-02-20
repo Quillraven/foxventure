@@ -11,7 +11,6 @@ dependencies {
     implementation(project(":core"))
     listOf(
         libs.gdxPlatform,
-        libs.gdxBox2dPlatform,
         libs.gdxFreetypePlatform,
     ).forEach {
         runtimeOnly(it) {

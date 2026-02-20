@@ -9,6 +9,7 @@ import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.AudioSystem
 import io.github.quillraven.foxventure.system.DebugRenderSystem
+import io.github.quillraven.foxventure.system.MoveSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -33,10 +34,12 @@ class GameScreen(
             add(gameViewport)
             add(stage)
             add(assets)
+            add(tiledService)
         }
 
         systems {
             add(SpawnSystem())
+            add(MoveSystem())
             add(RenderSystem())
             add(DebugRenderSystem())
             add(AudioSystem())
