@@ -39,8 +39,9 @@ data object PlayerStateRun : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val velocity = entity[Velocity].current
+        val controller = entity[Controller]
 
-        if (velocity.x == 0f) {
+        if (velocity.x == 0f && controller.hasNoCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         } else if (velocity.y > 0f) {
             entity[Fsm].state.changeState(PlayerStateJump)
