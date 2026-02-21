@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.component.Box
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
@@ -60,7 +60,7 @@ class SpawnSystem(
 
             if ("player" == mapObject.name) {
                 val (x, y, w, h) = (mapObject.tile.objects.single() as RectangleMapObject).rectangle
-                it += Collision(Rectangle(x.toWorldUnits(), y.toWorldUnits(), w.toWorldUnits(), h.toWorldUnits()))
+                it += Collision(Box(x.toWorldUnits(), y.toWorldUnits(), w.toWorldUnits(), h.toWorldUnits()))
                 it += JumpControl()
                 it += PhysicsConfig(
                     gravity = 35f,

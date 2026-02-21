@@ -110,17 +110,17 @@ class MoveSystem(
         transform.position.x += deltaX
 
         // Clamp to map boundaries
-        val minX = -collision.rect.x
-        val maxX = tiledService.mapWidth - collision.rect.x - collision.rect.width
+        val minX = -collision.box.x
+        val maxX = tiledService.mapWidth - collision.box.x - collision.box.width
         transform.position.x = transform.position.x.coerceIn(minX, maxX)
 
         updateCheckRect(transform, collision)
 
         if (checkCollision(includeSemiSolid = false)) {
             if (deltaX > 0f) {
-                transform.position.x = tempRect.x - collision.rect.x - collision.rect.width
+                transform.position.x = tempRect.x - collision.box.x - collision.box.width
             } else {
-                transform.position.x = tempRect.x + tempRect.width - collision.rect.x
+                transform.position.x = tempRect.x + tempRect.width - collision.box.x
             }
             velocity.current.x = 0f
         }
@@ -129,7 +129,7 @@ class MoveSystem(
     private fun moveY(transform: Transform, collision: Collision, velocity: Velocity, deltaY: Float) {
         if (deltaY == 0f) return
 
-        val prevBottom = transform.position.y + collision.rect.y
+        val prevBottom = transform.position.y + collision.box.y
         transform.position.y += deltaY
         updateCheckRect(transform, collision)
 
@@ -157,10 +157,10 @@ class MoveSystem(
 
                 // No correction possible, revert and stop
                 transform.position.x = originalX
-                transform.position.y = tempRect.y - collision.rect.y - collision.rect.height
+                transform.position.y = tempRect.y - collision.box.y - collision.box.height
                 velocity.current.y = 0f
             } else {
-                transform.position.y = tempRect.y + tempRect.height - collision.rect.y
+                transform.position.y = tempRect.y + tempRect.height - collision.box.y
                 velocity.current.y = 0f
                 collision.isGrounded = true
             }
@@ -170,7 +170,7 @@ class MoveSystem(
         // Check semisolid only if falling and was above the platform
         if (deltaY < 0f && checkCollision(includeSemiSolid = true)) {
             if (prevBottom >= tempRect.y + tempRect.height) {
-                transform.position.y = tempRect.y + tempRect.height - collision.rect.y
+                transform.position.y = tempRect.y + tempRect.height - collision.box.y
                 velocity.current.y = 0f
                 collision.isGrounded = true
             }
@@ -179,10 +179,10 @@ class MoveSystem(
 
     private fun updateCheckRect(transform: Transform, collision: Collision) {
         checkRect.set(
-            transform.position.x + collision.rect.x,
-            transform.position.y + collision.rect.y,
-            collision.rect.width,
-            collision.rect.height
+            transform.position.x + collision.box.x,
+            transform.position.y + collision.box.y,
+            collision.box.width,
+            collision.box.height
         )
     }
 

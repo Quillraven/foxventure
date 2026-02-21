@@ -1,11 +1,12 @@
 package io.github.quillraven.foxventure.component
 
-import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+data class Box(val x: Float, val y: Float, val width: Float, val height: Float)
+
 data class Collision(
-    val rect: Rectangle,
+    val box: Box,
     var isGrounded: Boolean = false,
 ) : Component<Collision> {
     override fun type() = Collision

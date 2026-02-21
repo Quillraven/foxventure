@@ -10,10 +10,6 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Transform
 import ktx.graphics.use
-import ktx.math.component1
-import ktx.math.component2
-import ktx.math.component3
-import ktx.math.component4
 
 class DebugRenderSystem(
     private val gameViewport: Viewport = inject(),
@@ -35,7 +31,7 @@ class DebugRenderSystem(
         shapeRenderer.rect(position.x, position.y, size.x * scale, size.y * scale)
 
         entity.getOrNull(Collision)?.let { collision ->
-            val (collX, collY, collW, collH) = collision.rect
+            val (collX, collY, collW, collH) = collision.box
             shapeRenderer.color = Color.GREEN
             shapeRenderer.rect(position.x + collX, position.y + collY, collW, collH)
         }
