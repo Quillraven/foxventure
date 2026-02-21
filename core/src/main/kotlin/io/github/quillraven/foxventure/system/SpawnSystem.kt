@@ -12,6 +12,7 @@ import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.Box
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
@@ -72,6 +73,7 @@ class SpawnSystem(
                     peakVelocityThreshold = 2f
                 )
                 it += Velocity(prevPosition = vec2(x, y))
+                it += Controller()
                 it += EntityTag.CAMERA_FOCUS
             }
         }

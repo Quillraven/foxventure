@@ -1,7 +1,5 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Entity
@@ -10,10 +8,12 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 import kotlin.math.sign
@@ -36,11 +36,14 @@ class MoveSystem(
         // Remember the previous position for smooth rendering
         velocity.prevPosition.set(velocity.targetPosition)
 
-        // Input handling
+        // Read input from the controller if available
         var inputX = 0f
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) inputX -= 1f
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) inputX += 1f
-        val jumpPressed = Gdx.input.isKeyPressed(Input.Keys.SPACE)
+        var jumpPressed = false
+        entity.getOrNull(Controller)?.let { controller ->
+            if (controller.isActive(Command.MOVE_LEFT)) inputX -= 1f
+            if (controller.isActive(Command.MOVE_RIGHT)) inputX += 1f
+            jumpPressed = controller.isActive(Command.JUMP)
+        }
 
         // Horizontal movement with acceleration
         val isGrounded = collision.isGrounded
