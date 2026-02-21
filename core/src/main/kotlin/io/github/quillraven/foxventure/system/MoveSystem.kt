@@ -92,6 +92,7 @@ class MoveSystem(
         // Exit ladder
         if (collision.isOnLadder && (inputX != 0f || jumpPressed || !ladderNearby)) {
             collision.isOnLadder = false
+            jumpControl.jumpInput = false // Prevent hang time when exiting
         }
 
         // Climb
