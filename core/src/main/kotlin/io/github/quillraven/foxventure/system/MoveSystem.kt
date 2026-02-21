@@ -71,12 +71,12 @@ class MoveSystem(
         // Ladder climbing
         if (collision.isOnLadder) {
             velocity.current.x = 0f
-            if (jumpPressed) {
-                inputY = -1f
-                collision.isOnLadder = false
-                collision.isGrounded = false
-            }
             velocity.current.y = inputY * physics.climbSpeed
+            
+            // Exit ladder when pressing jump
+            if (jumpPressed) {
+                collision.isOnLadder = false
+            }
         } else {
             // Normal horizontal movement with acceleration
             val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
@@ -221,13 +221,26 @@ class MoveSystem(
             }
         }
 
-        // Check ladder only if falling and DOWN is not pressed and at the top of the ladder (=last ladder tile)
-        // -> this prevents entities from falling down ladder tiles when walking over them
-        if (deltaY < 0f && !downPressed && checkLadderNearby(velocity, collision, tolerance = 0f)) {
-            if (prevBottom >= tileRect.y + tileRect.height) {
-                velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
-                velocity.current.y = 0f
-                collision.isGrounded = true
+        // Check ladder only if falling and DOWN is not pressed
+        // Only stop on TOP ladder tile (no ladder above it)
+        if (deltaY < 0f && !downPressed) {
+            val startX = checkRect.x.toInt()
+            val endX = (checkRect.x + checkRect.width).toInt()
+            val startY = checkRect.y.toInt()
+            val endY = (checkRect.y + checkRect.height).toInt()
+
+            for (y in startY..endY) {
+                for (x in startX..endX) {
+                    tiledService.getLadderRect(x, y, tileRect)
+                    if (tileRect.width > 0f && checkRect.overlaps(tileRect) && tiledService.isTopLadderTile(x, y)) {
+                        if (prevBottom >= tileRect.y + tileRect.height) {
+                            velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
+                            velocity.current.y = 0f
+                            collision.isGrounded = true
+                            return
+                        }
+                    }
+                }
             }
         }
     }
