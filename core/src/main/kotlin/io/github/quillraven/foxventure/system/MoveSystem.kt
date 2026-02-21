@@ -95,13 +95,15 @@ class MoveSystem(
             }
         }
 
-        // Exit ladder
+        // Exit ladder (instant dismount on jump)
         if (collision.isOnLadder && (inputX != 0f || jumpPressed || !ladderNearby)) {
             collision.isOnLadder = false
-            jumpControl.jumpInput = false // Prevent hang time when exiting
+            jumpControl.jumpInput = false
+            jumpControl.coyoteTimer = 0f
+            jumpControl.jumpBufferTimer = 0f
         }
 
-        // Climb
+        // Climb (no gravity, vertical movement only)
         if (collision.isOnLadder) {
             collision.isGrounded = false
             jumpControl.coyoteTimer = 0f

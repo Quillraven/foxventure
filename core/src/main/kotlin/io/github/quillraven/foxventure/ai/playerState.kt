@@ -21,12 +21,12 @@ data object PlayerStateIdle : FsmState {
 
         if (velocity.x != 0f || controller.hasAnyCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
             entity[Fsm].state.changeState(PlayerStateRun)
+        } else if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+            entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (velocity.y > 0f || (collision.isGrounded && controller.hasCommand(Command.JUMP))) {
             entity[Fsm].state.changeState(PlayerStateJump)
         } else if (velocity.y < 0f) {
             entity[Fsm].state.changeState(PlayerStateFall)
-        } else if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
-            entity[Fsm].state.changeState(PlayerStateClimb)
         }
     }
 }
