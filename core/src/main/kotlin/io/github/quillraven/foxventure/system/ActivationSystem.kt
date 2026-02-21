@@ -43,7 +43,7 @@ private class Chunk {
 class ActivationSystem(
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
-    family = family { all(Transform).none(Player) },
+    family = family { all(Transform, EntityTag.ACTIVE).none(Player) },
     interval = Fixed(1 / 20f),
 ), MapChangeListener {
     private val chunks = gdxArrayOf<Chunk>()
@@ -52,6 +52,7 @@ class ActivationSystem(
     private var chunksX = 0
 
     override fun onTick() {
+        println("family ${family.entities.size}")
         // update entity chunks
         super.onTick()
         updateActivation()
@@ -62,10 +63,9 @@ class ActivationSystem(
         val (x, y) = transform.position
         val newChunk = getChunkAt(x, y)
 
-        // on the first onTickEntity call the entity is not in any chunk, and therefore entityToChunk returns null
-        val currentChunk = entityToChunk[entity]
+        val currentChunk = entityToChunk[entity] ?: gdxError("Entity $entity is not part of any chunk")
         if (currentChunk != newChunk) {
-            currentChunk?.entities?.removeValue(entity, true)
+            currentChunk.entities.removeValue(entity, true)
             newChunk.entities.add(entity)
             entityToChunk[entity] = newChunk
         }
@@ -123,11 +123,20 @@ class ActivationSystem(
         val chunksY = ((mapHeight + CHUNK_HEIGHT - 1) / CHUNK_HEIGHT).toInt()
 
         repeat(chunksX * chunksY) { chunks.add(Chunk()) }
+
+        // Initial chunk assignment for all entities
+        world.family { all(Transform).none(Player) }.forEach { entity ->
+            val transform = entity[Transform]
+            val (x, y) = transform.position
+            val chunk = getChunkAt(x, y)
+            chunk.entities.add(entity)
+            entityToChunk[entity] = chunk
+        }
     }
 
     companion object {
-        private const val CHUNK_WIDTH = 21f
-        private const val CHUNK_HEIGHT = 9f
+        private const val CHUNK_WIDTH = 24f
+        private const val CHUNK_HEIGHT = 13f
         private const val BUFFER = 2f
     }
 }
