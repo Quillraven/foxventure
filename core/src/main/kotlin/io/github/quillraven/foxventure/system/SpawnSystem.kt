@@ -19,10 +19,6 @@ import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
-import ktx.math.component1
-import ktx.math.component2
-import ktx.math.component3
-import ktx.math.component4
 import ktx.math.vec2
 import ktx.tiled.height
 import ktx.tiled.property
@@ -59,8 +55,7 @@ class SpawnSystem(
             it += EntityTag.ACTIVE
 
             if ("player" == mapObject.name) {
-                val (x, y, w, h) = (mapObject.tile.objects.single() as RectangleMapObject).rectangle
-                it += Collision(Box(x.toWorldUnits(), y.toWorldUnits(), w.toWorldUnits(), h.toWorldUnits()))
+                it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
                 it += JumpControl()
                 it += PhysicsConfig(
                     gravity = 35f,
@@ -76,7 +71,7 @@ class SpawnSystem(
                     peakGravityMultiplier = 0.3f,
                     peakVelocityThreshold = 2f
                 )
-                it += Velocity()
+                it += Velocity(prevPosition = vec2(x, y))
                 it += EntityTag.CAMERA_FOCUS
             }
         }

@@ -6,7 +6,9 @@ import com.github.quillraven.fleks.ComponentType
 import ktx.math.vec2
 
 data class Velocity(
-    val current: Vector2 = vec2()
+    val current: Vector2 = vec2(),
+    val prevPosition: Vector2,
+    val targetPosition: Vector2 = prevPosition.cpy(),
 ) : Component<Velocity> {
     override fun type() = Velocity
 

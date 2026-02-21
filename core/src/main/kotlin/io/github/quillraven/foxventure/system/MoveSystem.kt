@@ -2,6 +2,7 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.Fixed
@@ -28,10 +29,12 @@ class MoveSystem(
 
     override fun onTickEntity(entity: Entity) {
         val velocity = entity[Velocity]
-        val transform = entity[Transform]
         val collision = entity[Collision]
         val physics = entity[PhysicsConfig]
         val jumpControl = entity[JumpControl]
+
+        // Remember the previous position for smooth rendering
+        velocity.prevPosition.set(velocity.targetPosition)
 
         // Input handling
         var inputX = 0f
@@ -40,8 +43,9 @@ class MoveSystem(
         val jumpPressed = Gdx.input.isKeyPressed(Input.Keys.SPACE)
 
         // Horizontal movement with acceleration
-        val accel = if (collision.isGrounded) physics.acceleration else physics.acceleration * physics.airControl
-        val decel = if (collision.isGrounded) physics.deceleration else physics.deceleration * 0.5f
+        val isGrounded = collision.isGrounded
+        val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
+        val decel = if (isGrounded) physics.deceleration else physics.deceleration * 0.5f
 
         if (inputX != 0f) {
             // Check if skidding (pressing an opposite direction)
@@ -71,7 +75,7 @@ class MoveSystem(
         jumpControl.coyoteTimer -= deltaTime
         jumpControl.jumpBufferTimer -= deltaTime
 
-        if (collision.isGrounded) {
+        if (isGrounded) {
             jumpControl.coyoteTimer = physics.coyoteThreshold
         }
 
@@ -83,55 +87,54 @@ class MoveSystem(
             velocity.current.y = physics.jumpImpulse
             jumpControl.jumpBufferTimer = 0f
             jumpControl.coyoteTimer = 0f
-            jumpControl.isRequestingJump = true
+            jumpControl.jumpInput = true
         }
 
         // Variable jump height
-        if (!jumpPressed && jumpControl.isRequestingJump && velocity.current.y > 0f) {
+        if (!jumpPressed && jumpControl.jumpInput && velocity.current.y > 0f) {
             velocity.current.y *= 0.4f
-            jumpControl.isRequestingJump = false
+            jumpControl.jumpInput = false
         }
 
         // Gravity with peak hang time
-        val isAtPeak =
-            abs(velocity.current.y) < physics.peakVelocityThreshold && !collision.isGrounded && jumpControl.isRequestingJump
+        val isAtPeak = abs(velocity.current.y) < physics.peakVelocityThreshold && !isGrounded && jumpControl.jumpInput
         val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
         velocity.current.y -= physics.gravity * gravityMultiplier * deltaTime
         velocity.current.y = velocity.current.y.coerceAtLeast(-physics.maxFallSpeed)
 
         // Move and collide
-        moveX(transform, collision, velocity, velocity.current.x * deltaTime)
-        moveY(transform, collision, velocity, velocity.current.y * deltaTime)
+        moveX(collision, velocity, velocity.current.x * deltaTime)
+        moveY(collision, velocity, velocity.current.y * deltaTime)
     }
 
-    private fun moveX(transform: Transform, collision: Collision, velocity: Velocity, deltaX: Float) {
+    private fun moveX(collision: Collision, velocity: Velocity, deltaX: Float) {
         if (deltaX == 0f) return
 
-        transform.position.x += deltaX
+        velocity.targetPosition.x += deltaX
 
         // Clamp to map boundaries
         val minX = -collision.box.x
         val maxX = tiledService.mapWidth - collision.box.x - collision.box.width
-        transform.position.x = transform.position.x.coerceIn(minX, maxX)
+        velocity.targetPosition.x = velocity.targetPosition.x.coerceIn(minX, maxX)
 
-        updateCheckRect(transform, collision)
+        updateCheckRect(velocity, collision)
 
         if (checkCollision(includeSemiSolid = false)) {
             if (deltaX > 0f) {
-                transform.position.x = tempRect.x - collision.box.x - collision.box.width
+                velocity.targetPosition.x = tempRect.x - collision.box.x - collision.box.width
             } else {
-                transform.position.x = tempRect.x + tempRect.width - collision.box.x
+                velocity.targetPosition.x = tempRect.x + tempRect.width - collision.box.x
             }
             velocity.current.x = 0f
         }
     }
 
-    private fun moveY(transform: Transform, collision: Collision, velocity: Velocity, deltaY: Float) {
+    private fun moveY(collision: Collision, velocity: Velocity, deltaY: Float) {
         if (deltaY == 0f) return
 
-        val prevBottom = transform.position.y + collision.box.y
-        transform.position.y += deltaY
-        updateCheckRect(transform, collision)
+        val prevBottom = velocity.targetPosition.y + collision.box.y
+        velocity.targetPosition.y += deltaY
+        updateCheckRect(velocity, collision)
 
         collision.isGrounded = false
 
@@ -139,28 +142,28 @@ class MoveSystem(
             if (deltaY > 0f) {
                 // Ceiling collision - try corner correction
                 val tolerance = 0.3f
-                val originalX = transform.position.x
+                val originalX = velocity.targetPosition.x
 
                 // Try moving right
-                transform.position.x = originalX + tolerance
-                updateCheckRect(transform, collision)
+                velocity.targetPosition.x = originalX + tolerance
+                updateCheckRect(velocity, collision)
                 if (!checkCollision(includeSemiSolid = false)) {
                     return // Successfully corrected to the right
                 }
 
                 // Try moving left
-                transform.position.x = originalX - tolerance
-                updateCheckRect(transform, collision)
+                velocity.targetPosition.x = originalX - tolerance
+                updateCheckRect(velocity, collision)
                 if (!checkCollision(includeSemiSolid = false)) {
                     return // Successfully corrected to the left
                 }
 
                 // No correction possible, revert and stop
-                transform.position.x = originalX
-                transform.position.y = tempRect.y - collision.box.y - collision.box.height
+                velocity.targetPosition.x = originalX
+                velocity.targetPosition.y = tempRect.y - collision.box.y - collision.box.height
                 velocity.current.y = 0f
             } else {
-                transform.position.y = tempRect.y + tempRect.height - collision.box.y
+                velocity.targetPosition.y = tempRect.y + tempRect.height - collision.box.y
                 velocity.current.y = 0f
                 collision.isGrounded = true
             }
@@ -170,17 +173,17 @@ class MoveSystem(
         // Check semisolid only if falling and was above the platform
         if (deltaY < 0f && checkCollision(includeSemiSolid = true)) {
             if (prevBottom >= tempRect.y + tempRect.height) {
-                transform.position.y = tempRect.y + tempRect.height - collision.box.y
+                velocity.targetPosition.y = tempRect.y + tempRect.height - collision.box.y
                 velocity.current.y = 0f
                 collision.isGrounded = true
             }
         }
     }
 
-    private fun updateCheckRect(transform: Transform, collision: Collision) {
+    private fun updateCheckRect(velocity: Velocity, collision: Collision) {
         checkRect.set(
-            transform.position.x + collision.box.x,
-            transform.position.y + collision.box.y,
+            velocity.targetPosition.x + collision.box.x,
+            velocity.targetPosition.y + collision.box.y,
             collision.box.width,
             collision.box.height
         )
@@ -201,5 +204,13 @@ class MoveSystem(
             }
         }
         return false
+    }
+
+    override fun onAlphaEntity(entity: Entity, alpha: Float) {
+        val (_, prevPosition, targetPosition) = entity[Velocity]
+        entity[Transform].position.set(
+            MathUtils.lerp(prevPosition.x, targetPosition.x, alpha),
+            MathUtils.lerp(prevPosition.y, targetPosition.y, alpha),
+        )
     }
 }
