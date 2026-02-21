@@ -22,6 +22,12 @@ class ControllerSystem : IteratingSystem(
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             controller.commands.add(Command.MOVE_RIGHT)
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            controller.commands.add(Command.MOVE_UP)
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            controller.commands.add(Command.MOVE_DOWN)
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             controller.commands.add(Command.JUMP)
         }

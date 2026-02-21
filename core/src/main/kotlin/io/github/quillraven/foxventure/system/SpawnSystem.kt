@@ -70,7 +70,8 @@ class SpawnSystem(
                     skidDeceleration = 40f,
                     airControl = 0.65f,
                     peakGravityMultiplier = 0.3f,
-                    peakVelocityThreshold = 2f
+                    peakVelocityThreshold = 2f,
+                    climbSpeed = 3f
                 )
                 it += Velocity(prevPosition = vec2(x, y))
                 it += Controller()

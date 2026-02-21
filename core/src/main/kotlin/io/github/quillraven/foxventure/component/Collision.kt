@@ -17,6 +17,7 @@ data class Box(val x: Float, val y: Float, val width: Float, val height: Float) 
 data class Collision(
     val box: Box,
     var isGrounded: Boolean = false,
+    var isOnLadder: Boolean = false,
 ) : Component<Collision> {
     override fun type() = Collision
 

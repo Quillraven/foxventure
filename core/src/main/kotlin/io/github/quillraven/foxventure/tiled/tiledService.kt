@@ -77,7 +77,28 @@ class TiledService(
 
         currentTileLayers.forEach { layer ->
             val cell = layer.getCell(cellX, cellY) ?: return@forEach
-            if (!includeSemiSolid && cell.tile.property<String>("type", "") == "semisolid") return@forEach
+            val tileType = cell.tile.property<String>("type", "")
+            if (!includeSemiSolid && tileType == "semisolid") return@forEach
+            if (tileType == "ladder") return@forEach // Ladders don't block movement
+            val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
+
+            result.set(
+                cellX + mapObject.x.toWorldUnits(),
+                cellY + mapObject.y.toWorldUnits(),
+                mapObject.width.toWorldUnits(),
+                mapObject.height.toWorldUnits()
+            )
+            return
+        }
+    }
+
+    fun getLadderRect(cellX: Int, cellY: Int, result: Rectangle) {
+        result.set(0f, 0f, 0f, 0f)
+        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
+
+        currentTileLayers.forEach { layer ->
+            val cell = layer.getCell(cellX, cellY) ?: return@forEach
+            if (cell.tile.property<String>("type", "") != "ladder") return@forEach
             val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
 
             result.set(

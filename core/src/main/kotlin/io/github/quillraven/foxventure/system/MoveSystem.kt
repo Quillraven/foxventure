@@ -38,76 +38,115 @@ class MoveSystem(
 
         // Read input from the controller if available
         var inputX = 0f
+        var inputY = 0f
         var jumpPressed = false
         entity.getOrNull(Controller)?.let { controller ->
             if (controller.isActive(Command.MOVE_LEFT)) inputX -= 1f
             if (controller.isActive(Command.MOVE_RIGHT)) inputX += 1f
+            if (controller.isActive(Command.MOVE_UP)) inputY += 1f
+            if (controller.isActive(Command.MOVE_DOWN)) inputY -= 1f
             jumpPressed = controller.isActive(Command.JUMP)
         }
 
-        // Horizontal movement with acceleration
+        // Check for a nearby ladder (within X units tolerance)
+        val ladderNearby = checkLadderNearby(velocity, collision)
+
+        // Ladder attachment logic
+        if (ladderNearby && inputY != 0f) {
+            collision.isOnLadder = true
+            // Snap to ladder center horizontally
+            velocity.targetPosition.x =
+                tempRect.x + tempRect.width * 0.5f - collision.box.width * 0.5f - collision.box.x
+        }
+
+        // Exit ladder when moving horizontally
+        if (collision.isOnLadder && inputX != 0f) {
+            collision.isOnLadder = false
+        }
+
         val isGrounded = collision.isGrounded
-        val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
-        val decel = if (isGrounded) physics.deceleration else physics.deceleration * 0.5f
 
-        if (inputX != 0f) {
-            // Check if skidding (pressing an opposite direction)
-            val isSkidding = sign(inputX) != sign(velocity.current.x) && velocity.current.x != 0f
+        // Ladder climbing
+        if (collision.isOnLadder) {
+            velocity.current.x = 0f
+            velocity.current.y = inputY * physics.climbSpeed
 
-            if (isSkidding) {
-                val reduction = physics.skidDeceleration * deltaTime
+            // Jump from the ladder
+            if (jumpPressed && inputY >= 0f) {
+                collision.isOnLadder = false
+                velocity.current.y = physics.jumpImpulse
+                jumpControl.jumpInput = true
+            }
+        } else {
+            // Normal horizontal movement with acceleration
+            val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
+            val decel = if (isGrounded) physics.deceleration else physics.deceleration * 0.5f
+
+            if (inputX != 0f) {
+                // Check if skidding (pressing an opposite direction)
+                val isSkidding = sign(inputX) != sign(velocity.current.x) && velocity.current.x != 0f
+
+                if (isSkidding) {
+                    val reduction = physics.skidDeceleration * deltaTime
+                    if (abs(velocity.current.x) <= reduction) {
+                        velocity.current.x = 0f
+                    } else {
+                        velocity.current.x -= sign(velocity.current.x) * reduction
+                    }
+                } else {
+                    velocity.current.x += inputX * accel * deltaTime
+                    velocity.current.x = velocity.current.x.coerceIn(-physics.maxSpeed, physics.maxSpeed)
+                }
+            } else {
+                val reduction = decel * deltaTime
                 if (abs(velocity.current.x) <= reduction) {
                     velocity.current.x = 0f
                 } else {
                     velocity.current.x -= sign(velocity.current.x) * reduction
                 }
-            } else {
-                velocity.current.x += inputX * accel * deltaTime
-                velocity.current.x = velocity.current.x.coerceIn(-physics.maxSpeed, physics.maxSpeed)
             }
-        } else {
-            val reduction = decel * deltaTime
-            if (abs(velocity.current.x) <= reduction) {
-                velocity.current.x = 0f
-            } else {
-                velocity.current.x -= sign(velocity.current.x) * reduction
+
+            // handle jump
+            jumpControl.coyoteTimer -= deltaTime
+            jumpControl.jumpBufferTimer -= deltaTime
+
+            if (isGrounded) {
+                jumpControl.coyoteTimer = physics.coyoteThreshold
             }
+
+            if (jumpPressed) {
+                jumpControl.jumpBufferTimer = physics.jumpBufferThreshold
+            }
+
+            if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {
+                velocity.current.y = physics.jumpImpulse
+                jumpControl.jumpBufferTimer = 0f
+                jumpControl.coyoteTimer = 0f
+                jumpControl.jumpInput = true
+            }
+
+            // Variable jump height
+            if (!jumpPressed && jumpControl.jumpInput && velocity.current.y > 0f) {
+                velocity.current.y *= 0.4f
+                jumpControl.jumpInput = false
+            }
+
+            // Gravity with peak hang time
+            val isAtPeak =
+                abs(velocity.current.y) < physics.peakVelocityThreshold && !isGrounded && jumpControl.jumpInput
+            val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
+            velocity.current.y -= physics.gravity * gravityMultiplier * deltaTime
+            velocity.current.y = velocity.current.y.coerceAtLeast(-physics.maxFallSpeed)
         }
-
-        // handle jump
-        jumpControl.coyoteTimer -= deltaTime
-        jumpControl.jumpBufferTimer -= deltaTime
-
-        if (isGrounded) {
-            jumpControl.coyoteTimer = physics.coyoteThreshold
-        }
-
-        if (jumpPressed) {
-            jumpControl.jumpBufferTimer = physics.jumpBufferThreshold
-        }
-
-        if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {
-            velocity.current.y = physics.jumpImpulse
-            jumpControl.jumpBufferTimer = 0f
-            jumpControl.coyoteTimer = 0f
-            jumpControl.jumpInput = true
-        }
-
-        // Variable jump height
-        if (!jumpPressed && jumpControl.jumpInput && velocity.current.y > 0f) {
-            velocity.current.y *= 0.4f
-            jumpControl.jumpInput = false
-        }
-
-        // Gravity with peak hang time
-        val isAtPeak = abs(velocity.current.y) < physics.peakVelocityThreshold && !isGrounded && jumpControl.jumpInput
-        val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
-        velocity.current.y -= physics.gravity * gravityMultiplier * deltaTime
-        velocity.current.y = velocity.current.y.coerceAtLeast(-physics.maxFallSpeed)
 
         // Move and collide
         moveX(collision, velocity, velocity.current.x * deltaTime)
         moveY(collision, velocity, velocity.current.y * deltaTime)
+
+        // Check if still on the ladder after movement
+        if (collision.isOnLadder && !ladderNearby) {
+            collision.isOnLadder = false
+        }
     }
 
     private fun moveX(collision: Collision, velocity: Velocity, deltaX: Float) {
@@ -201,6 +240,32 @@ class MoveSystem(
         for (y in startY..endY) {
             for (x in startX..endX) {
                 tiledService.getCollisionRect(x, y, includeSemiSolid, tempRect)
+                if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun checkLadderNearby(velocity: Velocity, collision: Collision): Boolean {
+        val tolerance = 0.3f
+        // Expand check area by tolerance
+        checkRect.set(
+            velocity.targetPosition.x + collision.box.x - tolerance,
+            velocity.targetPosition.y + collision.box.y,
+            collision.box.width + tolerance * 2f,
+            collision.box.height
+        )
+
+        val startX = checkRect.x.toInt()
+        val endX = (checkRect.x + checkRect.width).toInt()
+        val startY = checkRect.y.toInt()
+        val endY = (checkRect.y + checkRect.height).toInt()
+
+        for (y in startY..endY) {
+            for (x in startX..endX) {
+                tiledService.getLadderRect(x, y, tempRect)
                 if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
                     return true
                 }
