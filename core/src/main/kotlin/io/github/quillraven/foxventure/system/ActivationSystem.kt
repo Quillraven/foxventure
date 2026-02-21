@@ -52,7 +52,6 @@ class ActivationSystem(
     private var chunksX = 0
 
     override fun onTick() {
-        println("family ${family.entities.size}")
         // update entity chunks
         super.onTick()
         updateActivation()
