@@ -42,8 +42,20 @@ class MoveSystem(
         val decel = if (collision.isGrounded) physics.deceleration else physics.deceleration * 0.5f
 
         if (inputX != 0f) {
-            velocity.current.x += inputX * accel * deltaTime
-            velocity.current.x = velocity.current.x.coerceIn(-physics.maxSpeed, physics.maxSpeed)
+            // Check if skidding (pressing opposite direction)
+            val isSkidding = sign(inputX) != sign(velocity.current.x) && velocity.current.x != 0f
+            
+            if (isSkidding) {
+                val reduction = physics.skidDeceleration * deltaTime
+                if (abs(velocity.current.x) <= reduction) {
+                    velocity.current.x = 0f
+                } else {
+                    velocity.current.x -= sign(velocity.current.x) * reduction
+                }
+            } else {
+                velocity.current.x += inputX * accel * deltaTime
+                velocity.current.x = velocity.current.x.coerceIn(-physics.maxSpeed, physics.maxSpeed)
+            }
         } else {
             val reduction = decel * deltaTime
             if (abs(velocity.current.x) <= reduction) {
@@ -66,8 +78,7 @@ class MoveSystem(
         }
 
         if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {
-            val speedBonus = abs(velocity.current.x) / physics.maxSpeed * 0.25f
-            velocity.current.y = physics.jumpImpulse * (1f + speedBonus)
+            velocity.current.y = physics.jumpImpulse
             jumpControl.jumpBufferTimer = 0f
             jumpControl.coyoteTimer = 0f
             jumpControl.isRequestingJump = true

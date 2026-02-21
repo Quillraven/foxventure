@@ -65,12 +65,13 @@ class SpawnSystem(
                 it += PhysicsConfig(
                     gravity = 35f,
                     maxFallSpeed = 16f,
-                    jumpImpulse = 12f,
+                    jumpImpulse = 15f,
                     coyoteThreshold = 0.08f,
                     jumpBufferThreshold = 0.08f,
                     maxSpeed = 4.5f,
                     acceleration = 40f,
-                    deceleration = 35f,
+                    deceleration = 20f,
+                    skidDeceleration = 40f,
                     airControl = 0.65f
                 )
                 it += Velocity()
