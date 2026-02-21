@@ -68,7 +68,7 @@ class SpawnSystem(
                     jumpImpulse = 15f,
                     coyoteThreshold = 0.08f,
                     jumpBufferThreshold = 0.08f,
-                    maxSpeed = 4.5f,
+                    maxSpeed = 5f,
                     acceleration = 40f,
                     deceleration = 20f,
                     skidDeceleration = 40f,

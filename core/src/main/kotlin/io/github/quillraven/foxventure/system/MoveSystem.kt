@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
@@ -19,7 +20,8 @@ import kotlin.math.sign
 class MoveSystem(
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl) }
+    family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl) },
+    interval = Fixed(1 / 60f),
 ) {
     private val tempRect = Rectangle()
     private val checkRect = Rectangle()
@@ -91,7 +93,8 @@ class MoveSystem(
         }
 
         // Gravity with peak hang time
-        val isAtPeak = abs(velocity.current.y) < physics.peakVelocityThreshold && !collision.isGrounded && jumpControl.isRequestingJump
+        val isAtPeak =
+            abs(velocity.current.y) < physics.peakVelocityThreshold && !collision.isGrounded && jumpControl.isRequestingJump
         val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
         velocity.current.y -= physics.gravity * gravityMultiplier * deltaTime
         velocity.current.y = velocity.current.y.coerceAtLeast(-physics.maxFallSpeed)
@@ -134,6 +137,26 @@ class MoveSystem(
 
         if (checkCollision(includeSemiSolid = false)) {
             if (deltaY > 0f) {
+                // Ceiling collision - try corner correction
+                val tolerance = 0.3f
+                val originalX = transform.position.x
+
+                // Try moving right
+                transform.position.x = originalX + tolerance
+                updateCheckRect(transform, collision)
+                if (!checkCollision(includeSemiSolid = false)) {
+                    return // Successfully corrected to the right
+                }
+
+                // Try moving left
+                transform.position.x = originalX - tolerance
+                updateCheckRect(transform, collision)
+                if (!checkCollision(includeSemiSolid = false)) {
+                    return // Successfully corrected to the left
+                }
+
+                // No correction possible, revert and stop
+                transform.position.x = originalX
                 transform.position.y = tempRect.y - collision.rect.y - collision.rect.height
                 velocity.current.y = 0f
             } else {
