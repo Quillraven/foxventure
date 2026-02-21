@@ -51,7 +51,7 @@ class MoveSystem(
         }
 
         // Check for a nearby ladder (within X units tolerance)
-        val ladderNearby = checkLadderNearby(velocity, collision)
+        val ladderNearby = checkLadderNearby(velocity, collision, tolerance = 0.3f)
 
         // Ladder attachment logic
         if (ladderNearby && inputY != 0f) {
@@ -71,14 +71,12 @@ class MoveSystem(
         // Ladder climbing
         if (collision.isOnLadder) {
             velocity.current.x = 0f
-            velocity.current.y = inputY * physics.climbSpeed
-
-            // Jump from the ladder
-            if (jumpPressed && inputY >= 0f) {
+            if (jumpPressed) {
+                inputY = -1f
                 collision.isOnLadder = false
-                velocity.current.y = physics.jumpImpulse
-                jumpControl.jumpInput = true
+                collision.isGrounded = false
             }
+            velocity.current.y = inputY * physics.climbSpeed
         } else {
             // Normal horizontal movement with acceleration
             val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
@@ -163,7 +161,7 @@ class MoveSystem(
 
         updateCheckRect(velocity, collision)
 
-        if (checkCollision(includeSemiSolid = false, includeLadder = false)) {
+        if (checkCollision(includeSemiSolid = false)) {
             if (deltaX > 0f) {
                 velocity.targetPosition.x = tileRect.x - collision.box.x - collision.box.width
             } else {
@@ -182,7 +180,7 @@ class MoveSystem(
 
         collision.isGrounded = false
 
-        if (checkCollision(includeSemiSolid = false, includeLadder = false)) {
+        if (checkCollision(includeSemiSolid = false)) {
             if (deltaY > 0f) {
                 // Ceiling collision - try corner correction
                 val tolerance = 0.3f
@@ -191,14 +189,14 @@ class MoveSystem(
                 // Try moving right
                 velocity.targetPosition.x = originalX + tolerance
                 updateCheckRect(velocity, collision)
-                if (!checkCollision(includeSemiSolid = false, includeLadder = false)) {
+                if (!checkCollision(includeSemiSolid = false)) {
                     return // Successfully corrected to the right
                 }
 
                 // Try moving left
                 velocity.targetPosition.x = originalX - tolerance
                 updateCheckRect(velocity, collision)
-                if (!checkCollision(includeSemiSolid = false, includeLadder = false)) {
+                if (!checkCollision(includeSemiSolid = false)) {
                     return // Successfully corrected to the left
                 }
 
@@ -215,8 +213,17 @@ class MoveSystem(
         }
 
         // Check semisolid only if falling and was above the platform
-        val includeLadder = deltaY < 0f && !downPressed
-        if (deltaY < 0f && checkCollision(includeSemiSolid = true, includeLadder)) {
+        if (deltaY < 0f && checkCollision(includeSemiSolid = true)) {
+            if (prevBottom >= tileRect.y + tileRect.height) {
+                velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
+                velocity.current.y = 0f
+                collision.isGrounded = true
+            }
+        }
+
+        // Check ladder only if falling and DOWN is not pressed and at the top of the ladder (=last ladder tile)
+        // -> this prevents entities from falling down ladder tiles when walking over them
+        if (deltaY < 0f && !downPressed && checkLadderNearby(velocity, collision, tolerance = 0f)) {
             if (prevBottom >= tileRect.y + tileRect.height) {
                 velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
                 velocity.current.y = 0f
@@ -234,7 +241,7 @@ class MoveSystem(
         )
     }
 
-    private fun checkCollision(includeSemiSolid: Boolean, includeLadder: Boolean): Boolean {
+    private fun checkCollision(includeSemiSolid: Boolean): Boolean {
         val startX = checkRect.x.toInt()
         val endX = (checkRect.x + checkRect.width).toInt()
         val startY = checkRect.y.toInt()
@@ -242,7 +249,7 @@ class MoveSystem(
 
         for (y in startY..endY) {
             for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, includeSemiSolid, includeLadder, tileRect)
+                tiledService.getCollisionRect(x, y, includeSemiSolid, tileRect)
                 if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
                     return true
                 }
@@ -251,13 +258,12 @@ class MoveSystem(
         return false
     }
 
-    private fun checkLadderNearby(velocity: Velocity, collision: Collision): Boolean {
-        val tolerance = 0.3f
+    private fun checkLadderNearby(velocity: Velocity, collision: Collision, tolerance: Float): Boolean {
         // Expand check area by tolerance
         checkRect.set(
             velocity.targetPosition.x + collision.box.x - tolerance,
             velocity.targetPosition.y + collision.box.y,
-            collision.box.width + tolerance * 2f,
+            collision.box.width + tolerance,
             collision.box.height
         )
 

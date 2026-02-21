@@ -71,7 +71,7 @@ class TiledService(
         }
     }
 
-    fun getCollisionRect(cellX: Int, cellY: Int, includeSemiSolid: Boolean, includeLadder: Boolean, result: Rectangle) {
+    fun getCollisionRect(cellX: Int, cellY: Int, includeSemiSolid: Boolean, result: Rectangle) {
         result.set(0f, 0f, 0f, 0f)
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
 
@@ -79,7 +79,7 @@ class TiledService(
             val cell = layer.getCell(cellX, cellY) ?: return@forEach
             val tileType = cell.tile.property<String>("type", "")
             if (!includeSemiSolid && tileType == "semisolid") return@forEach
-            if (!includeLadder && tileType == "ladder") return@forEach
+            if (tileType == "ladder") return@forEach
             val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
 
             result.set(

@@ -27,7 +27,7 @@
   </object>
   <object id="2" gid="577" x="48" y="112" width="51" height="113.62"/>
   <object id="3" gid="579" x="128" y="224" width="16" height="10"/>
-  <object id="4" name="player" gid="580" x="16" y="112" width="33" height="32"/>
+  <object id="4" name="player" gid="580" x="496" y="128" width="33" height="32"/>
   <object id="6" gid="577" x="560" y="128" width="51" height="113.62"/>
  </objectgroup>
 </map>
