@@ -19,10 +19,11 @@ data object PlayerStateIdle : FsmState {
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
 
-        if (velocity.x != 0f || controller.hasAnyCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
-            entity[Fsm].state.changeState(PlayerStateRun)
-        } else if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+        // Check ladder first - highest priority when on ladder
+        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
             entity[Fsm].state.changeState(PlayerStateClimb)
+        } else if (velocity.x != 0f || controller.hasAnyCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
+            entity[Fsm].state.changeState(PlayerStateRun)
         } else if (velocity.y > 0f || (collision.isGrounded && controller.hasCommand(Command.JUMP))) {
             entity[Fsm].state.changeState(PlayerStateJump)
         } else if (velocity.y < 0f) {
@@ -67,7 +68,12 @@ data object PlayerStateFall : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity[Collision].isGrounded) {
+        val collision = entity[Collision]
+        val controller = entity[Controller]
+
+        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+            entity[Fsm].state.changeState(PlayerStateClimb)
+        } else if (collision.isGrounded) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         }
     }
