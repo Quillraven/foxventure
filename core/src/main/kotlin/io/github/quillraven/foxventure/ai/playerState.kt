@@ -85,13 +85,15 @@ data object PlayerStateClimb : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
+        val velocityY = entity[Velocity].current.y
         if (!entity[Collision].isOnLadder) {
-            val velocityY = entity[Velocity].current.y
             when {
                 velocityY < 0f -> entity[Fsm].state.changeState(PlayerStateFall)
                 velocityY > 0f -> entity[Fsm].state.changeState(PlayerStateJump)
                 else -> entity[Fsm].state.changeState(PlayerStateIdle)
             }
+        } else {
+            entity[Animation].speed = if (velocityY == 0f) 0f else 1f
         }
     }
 }

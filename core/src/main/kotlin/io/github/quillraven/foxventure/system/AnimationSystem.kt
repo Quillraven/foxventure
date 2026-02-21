@@ -13,6 +13,6 @@ class AnimationSystem : IteratingSystem(
     override fun onTickEntity(entity: Entity) {
         val animation = entity[Animation]
         entity[Graphic].region = animation.active.getKeyFrame(animation.stateTime)
-        animation.stateTime += deltaTime
+        animation.stateTime += deltaTime * animation.speed
     }
 }

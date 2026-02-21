@@ -11,7 +11,6 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
-import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
@@ -20,10 +19,10 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 import kotlin.math.sign
 
-class MoveSystem(
+class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl, EntityTag.ACTIVE) },
+    family = family { all(Velocity, Transform, Collision, PhysicsConfig, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
     interval = Fixed(1 / 60f),
 ) {
     private val tileRect = Rectangle()
@@ -33,22 +32,14 @@ class MoveSystem(
         val velocity = entity[Velocity]
         val collision = entity[Collision]
         val physics = entity[PhysicsConfig]
-        val jumpControl = entity[JumpControl]
 
         velocity.prevPosition.set(velocity.targetPosition)
 
         val controller = entity.getOrNull(Controller)
         val inputX = getInputX(controller)
-        val inputY = getInputY(controller)
-        val jumpPressed = controller?.hasCommand(Command.JUMP) == true
         val downPressed = controller?.hasCommand(Command.MOVE_DOWN) == true
 
-        handleLadderLogic(velocity, collision, physics, jumpControl, inputX, inputY, jumpPressed)
-
-        if (!collision.isOnLadder) {
-            handleGroundMovement(velocity, collision, physics, jumpControl, inputX, jumpPressed, deltaTime)
-        }
-
+        updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, deltaTime)
         applyMovement(collision, velocity, downPressed)
 
         if (velocity.current.x != 0f) {
@@ -62,70 +53,6 @@ class MoveSystem(
         if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
         if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
         return input
-    }
-
-    private fun getInputY(controller: Controller?): Float {
-        if (controller == null) return 0f
-        var input = 0f
-        if (controller.hasCommand(Command.MOVE_UP)) input += 1f
-        if (controller.hasCommand(Command.MOVE_DOWN)) input -= 1f
-        return input
-    }
-
-    private fun handleLadderLogic(
-        velocity: Velocity,
-        collision: Collision,
-        physics: PhysicsConfig,
-        jumpControl: JumpControl,
-        inputX: Float,
-        inputY: Float,
-        jumpPressed: Boolean
-    ) {
-        val ladderNearby = checkLadderNearby(velocity, collision)
-
-        // Attach to ladder
-        if (ladderNearby && inputY != 0f && !jumpPressed && !collision.isOnLadder) {
-            val ladderCenterX = tileRect.x + tileRect.width * 0.5f
-            val playerCenterX = velocity.targetPosition.x + collision.box.x + collision.box.width * 0.5f
-
-            if (abs(ladderCenterX - playerCenterX) <= 0.3f) {
-                collision.isOnLadder = true
-                velocity.targetPosition.x =
-                    tileRect.x + tileRect.width * 0.5f - collision.box.width * 0.5f - collision.box.x
-            }
-        }
-
-        // Exit ladder (instant dismount on jump)
-        if (collision.isOnLadder && (inputX != 0f || jumpPressed || !ladderNearby)) {
-            collision.isOnLadder = false
-            jumpControl.jumpInput = false
-            jumpControl.coyoteTimer = 0f
-            jumpControl.jumpBufferTimer = 0f
-        }
-
-        // Climb (no gravity, vertical movement only)
-        if (collision.isOnLadder) {
-            collision.isGrounded = false
-            jumpControl.coyoteTimer = 0f
-            jumpControl.jumpBufferTimer = 0f
-            velocity.current.set(0f, inputY * physics.climbSpeed)
-        }
-    }
-
-    private fun handleGroundMovement(
-        velocity: Velocity,
-        collision: Collision,
-        physics: PhysicsConfig,
-        jumpControl: JumpControl,
-        inputX: Float,
-        jumpPressed: Boolean,
-        deltaTime: Float
-    ) {
-        val isGrounded = collision.isGrounded
-
-        updateHorizontalVelocity(velocity, physics, inputX, isGrounded, deltaTime)
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, isGrounded, deltaTime)
-        applyGravity(velocity, physics, jumpControl, isGrounded, deltaTime)
     }
 
     private fun updateHorizontalVelocity(
@@ -157,49 +84,6 @@ class MoveSystem(
     private fun moveTowards(current: Float, maxDelta: Float): Float {
         val diff = -current
         return if (abs(diff) <= maxDelta) 0f else current + sign(diff) * maxDelta
-    }
-
-    private fun updateJumpState(
-        velocity: Velocity,
-        physics: PhysicsConfig,
-        jumpControl: JumpControl,
-        jumpPressed: Boolean,
-        isGrounded: Boolean,
-        deltaTime: Float
-    ) {
-        jumpControl.coyoteTimer -= deltaTime
-        jumpControl.jumpBufferTimer -= deltaTime
-
-        if (isGrounded) jumpControl.coyoteTimer = physics.coyoteThreshold
-        if (jumpPressed) jumpControl.jumpBufferTimer = physics.jumpBufferThreshold
-
-        // Execute jump
-        if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {
-            velocity.current.y = physics.jumpImpulse
-            jumpControl.jumpBufferTimer = 0f
-            jumpControl.coyoteTimer = 0f
-            jumpControl.jumpInput = true
-        }
-
-        // Variable jump height
-        if (!jumpPressed && jumpControl.jumpInput && velocity.current.y > 0f) {
-            velocity.current.y *= 0.4f
-            jumpControl.jumpInput = false
-        }
-    }
-
-    private fun applyGravity(
-        velocity: Velocity,
-        physics: PhysicsConfig,
-        jumpControl: JumpControl,
-        isGrounded: Boolean,
-        deltaTime: Float
-    ) {
-        val isAtPeak = abs(velocity.current.y) < physics.peakVelocityThreshold && !isGrounded && jumpControl.jumpInput
-        val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
-
-        velocity.current.y = (velocity.current.y - physics.gravity * gravityMultiplier * deltaTime)
-            .coerceAtLeast(-physics.maxFallSpeed)
     }
 
     private fun applyMovement(collision: Collision, velocity: Velocity, downPressed: Boolean) {
@@ -336,23 +220,6 @@ class MoveSystem(
         for (y in startY..endY) {
             for (x in startX..endX) {
                 tiledService.getCollisionRect(x, y, includeSemiSolid, tileRect)
-                if (tileRect.width > 0f && checkRect.overlaps(tileRect)) return true
-            }
-        }
-        return false
-    }
-
-    private fun checkLadderNearby(velocity: Velocity, collision: Collision): Boolean {
-        updateCheckRect(velocity, collision)
-
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                tiledService.getLadderRect(x, y, tileRect)
                 if (tileRect.width > 0f && checkRect.overlaps(tileRect)) return true
             }
         }

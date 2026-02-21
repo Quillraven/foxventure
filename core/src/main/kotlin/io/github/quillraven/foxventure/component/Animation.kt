@@ -13,6 +13,7 @@ class Animation(
     val fall: GdxAnimation? = null,
     val climb: GdxAnimation? = null,
     var stateTime: Float = 0f,
+    var speed: Float = 1f,
 ) : Component<Animation> {
 
     var active: GdxAnimation = idle

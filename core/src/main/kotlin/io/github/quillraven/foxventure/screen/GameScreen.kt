@@ -10,12 +10,14 @@ import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.ActivationSystem
+import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
 import io.github.quillraven.foxventure.system.AudioSystem
 import io.github.quillraven.foxventure.system.CameraSystem
+import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.FsmSystem
-import io.github.quillraven.foxventure.system.MoveSystem
+import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -47,7 +49,9 @@ class GameScreen(
             add(ControllerSystem())
             add(SpawnSystem())
             add(ActivationSystem())
-            add(MoveSystem())
+            add(ClimbSystem())
+            add(AerialMoveSystem())
+            add(GroundMoveSystem())
             add(FsmSystem())
             add(CameraSystem())
             add(AnimationSystem())
