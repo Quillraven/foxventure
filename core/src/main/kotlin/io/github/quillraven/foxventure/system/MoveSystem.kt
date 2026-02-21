@@ -73,9 +73,12 @@ class MoveSystem(
             velocity.current.x = 0f
             velocity.current.y = inputY * physics.climbSpeed
             
-            // Exit ladder when pressing jump
+            // Exit ladder when pressing jump - clear grounded to prevent jumping
             if (jumpPressed) {
                 collision.isOnLadder = false
+                collision.isGrounded = false
+                jumpControl.coyoteTimer = 0f
+                jumpControl.jumpBufferTimer = 0f
             }
         } else {
             // Normal horizontal movement with acceleration
