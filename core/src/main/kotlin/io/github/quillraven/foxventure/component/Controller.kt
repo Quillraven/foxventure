@@ -11,7 +11,9 @@ data class Controller(
 ) : Component<Controller> {
     override fun type() = Controller
 
-    fun isActive(command: Command) = command in commands
+    fun hasCommand(command: Command) = command in commands
+
+    fun hasAnyCommand(command1: Command, command2: Command) = command1 in commands || command2 in commands
 
     companion object : ComponentType<Controller>()
 }

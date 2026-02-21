@@ -22,6 +22,7 @@ import ktx.math.vec2
  */
 class Graphic(
     region: TextureRegion,
+    var flip: Boolean = false,
 ) : Component<Graphic> {
 
     val regionSize: Vector2 = vec2(region.regionWidth.toWorldUnits(), region.regionHeight.toWorldUnits())
@@ -36,6 +37,8 @@ class Graphic(
     operator fun component1(): TextureRegion = region
 
     operator fun component2(): Vector2 = regionSize
+
+    operator fun component3(): Boolean = flip
 
     override fun type() = Graphic
 

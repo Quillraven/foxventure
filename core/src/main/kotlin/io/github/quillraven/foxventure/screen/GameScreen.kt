@@ -7,10 +7,11 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.system.AnimationSystem
 import io.github.quillraven.foxventure.system.AudioSystem
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
-import io.github.quillraven.foxventure.system.DebugRenderSystem
+import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.MoveSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
@@ -42,10 +43,12 @@ class GameScreen(
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
+            add(FsmSystem())
             add(MoveSystem())
             add(CameraSystem())
+            add(AnimationSystem())
             add(RenderSystem())
-            add(DebugRenderSystem())
+//            add(DebugRenderSystem())
             add(AudioSystem())
         }
     }

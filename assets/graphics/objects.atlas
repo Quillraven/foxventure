@@ -4,72 +4,107 @@ size: 256, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-characters/fox/idle
+characters/fox/climb
   rotate: false
   xy: 82, 186
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/idle
+characters/fox/climb
   rotate: false
   xy: 82, 152
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-characters/fox/idle
+characters/fox/climb
   rotate: false
   xy: 82, 118
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
-characters/fox/idle
+characters/fox/fall
   rotate: false
   xy: 82, 84
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 3
-characters/fox/run
+  index: 0
+characters/fox/idle
   rotate: false
   xy: 130, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/run
+characters/fox/idle
   rotate: false
   xy: 165, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-characters/fox/run
+characters/fox/idle
   rotate: false
   xy: 200, 216
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
-characters/fox/run
+characters/fox/idle
   rotate: false
   xy: 117, 182
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
-characters/fox/run
+characters/fox/jump
   rotate: false
   xy: 117, 148
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 0
+characters/fox/run
+  rotate: false
+  xy: 152, 182
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 0
+characters/fox/run
+  rotate: false
+  xy: 117, 114
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 1
+characters/fox/run
+  rotate: false
+  xy: 152, 148
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 2
+characters/fox/run
+  rotate: false
+  xy: 187, 182
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 3
+characters/fox/run
+  rotate: false
+  xy: 222, 182
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 4
 characters/fox/run
   rotate: false
-  xy: 152, 182
+  xy: 152, 114
   size: 33, 32
   orig: 33, 32
   offset: 0, 0

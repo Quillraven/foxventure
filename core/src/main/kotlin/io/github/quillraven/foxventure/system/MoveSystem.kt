@@ -9,6 +9,7 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Transform
@@ -38,8 +39,8 @@ class MoveSystem(
         val controller = entity.getOrNull(Controller)
         val inputX = getInputX(controller)
         val inputY = getInputY(controller)
-        val jumpPressed = controller?.isActive(Command.JUMP) == true
-        val downPressed = controller?.isActive(Command.MOVE_DOWN) == true
+        val jumpPressed = controller?.hasCommand(Command.JUMP) == true
+        val downPressed = controller?.hasCommand(Command.MOVE_DOWN) == true
 
         handleLadderLogic(velocity, collision, physics, jumpControl, inputX, inputY, jumpPressed)
 
@@ -48,21 +49,25 @@ class MoveSystem(
         }
 
         applyMovement(collision, velocity, downPressed)
+
+        if (velocity.current.x != 0f) {
+            entity.getOrNull(Graphic)?.let { it.flip = velocity.current.x < 0f }
+        }
     }
 
     private fun getInputX(controller: Controller?): Float {
         if (controller == null) return 0f
         var input = 0f
-        if (controller.isActive(Command.MOVE_LEFT)) input -= 1f
-        if (controller.isActive(Command.MOVE_RIGHT)) input += 1f
+        if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
+        if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
         return input
     }
 
     private fun getInputY(controller: Controller?): Float {
         if (controller == null) return 0f
         var input = 0f
-        if (controller.isActive(Command.MOVE_UP)) input += 1f
-        if (controller.isActive(Command.MOVE_DOWN)) input -= 1f
+        if (controller.hasCommand(Command.MOVE_UP)) input += 1f
+        if (controller.hasCommand(Command.MOVE_DOWN)) input -= 1f
         return input
     }
 

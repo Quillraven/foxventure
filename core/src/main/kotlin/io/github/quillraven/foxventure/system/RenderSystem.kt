@@ -49,7 +49,7 @@ class RenderSystem(
     }
 
     override fun onTickEntity(entity: Entity) {
-        val (region, regionSize) = entity[Graphic]
+        val (region, regionSize, flip) = entity[Graphic]
         val (position, size, rotationDegrees, scale) = entity[Transform]
 
         // fill texture inside transform size by keeping the aspect ratio
@@ -62,7 +62,7 @@ class RenderSystem(
             position.x, position.y,
             realSize.x / 2f, realSize.y / 2f,
             realSize.x, realSize.y,
-            1f, 1f,
+            if (flip) -1f else 1f, 1f,
             rotationDegrees
         )
     }
