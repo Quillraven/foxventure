@@ -51,18 +51,26 @@ class MoveSystem(
         }
 
         // Check for a nearby ladder (within X units tolerance)
-        val ladderNearby = checkLadderNearby(velocity, collision, tolerance = 0.3f)
+        val ladderNearby = checkLadderNearby(velocity, collision)
 
-        // Ladder attachment logic
-        if (ladderNearby && inputY != 0f) {
-            collision.isOnLadder = true
-            // Snap to ladder center horizontally
-            velocity.targetPosition.x =
-                tileRect.x + tileRect.width * 0.5f - collision.box.width * 0.5f - collision.box.x
+        // Ladder attachment logic - don't attach if jumping
+        if (ladderNearby && inputY != 0f && !jumpPressed) {
+            // Calculate horizontal distance to a ladder center
+            val ladderCenterX = tileRect.x + tileRect.width * 0.5f
+            val playerCenterX = velocity.targetPosition.x + collision.box.x + collision.box.width * 0.5f
+            val distanceToLadder = abs(ladderCenterX - playerCenterX)
+            
+            // Only snap if close enough (0.5 units tolerance)
+            if (distanceToLadder <= 0.3f) {
+                collision.isOnLadder = true
+                // Snap to ladder center horizontally
+                velocity.targetPosition.x =
+                    tileRect.x + tileRect.width * 0.5f - collision.box.width * 0.5f - collision.box.x
+            }
         }
 
-        // Exit ladder when moving horizontally
-        if (collision.isOnLadder && inputX != 0f) {
+        // Exit ladder when moving horizontally or jumping
+        if (collision.isOnLadder && (inputX != 0f || jumpPressed)) {
             collision.isOnLadder = false
         }
 
@@ -70,17 +78,15 @@ class MoveSystem(
 
         // Ladder climbing
         if (collision.isOnLadder) {
+            // Always clear grounded and timers while on a ladder
+            collision.isGrounded = false
+            jumpControl.coyoteTimer = 0f
+            jumpControl.jumpBufferTimer = 0f
             velocity.current.x = 0f
             velocity.current.y = inputY * physics.climbSpeed
-            
-            // Exit ladder when pressing jump - clear grounded to prevent jumping
-            if (jumpPressed) {
-                collision.isOnLadder = false
-                collision.isGrounded = false
-                jumpControl.coyoteTimer = 0f
-                jumpControl.jumpBufferTimer = 0f
-            }
-        } else {
+        }
+
+        if (!collision.isOnLadder) {
             // Normal horizontal movement with acceleration
             val accel = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
             val decel = if (isGrounded) physics.deceleration else physics.deceleration * 0.5f
@@ -274,12 +280,12 @@ class MoveSystem(
         return false
     }
 
-    private fun checkLadderNearby(velocity: Velocity, collision: Collision, tolerance: Float): Boolean {
+    private fun checkLadderNearby(velocity: Velocity, collision: Collision): Boolean {
         // Expand check area by tolerance
         checkRect.set(
-            velocity.targetPosition.x + collision.box.x - tolerance,
+            velocity.targetPosition.x + collision.box.x,
             velocity.targetPosition.y + collision.box.y,
-            collision.box.width + tolerance,
+            collision.box.width,
             collision.box.height
         )
 
