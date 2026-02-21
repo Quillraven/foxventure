@@ -42,9 +42,9 @@ class MoveSystem(
         val decel = if (collision.isGrounded) physics.deceleration else physics.deceleration * 0.5f
 
         if (inputX != 0f) {
-            // Check if skidding (pressing opposite direction)
+            // Check if skidding (pressing an opposite direction)
             val isSkidding = sign(inputX) != sign(velocity.current.x) && velocity.current.x != 0f
-            
+
             if (isSkidding) {
                 val reduction = physics.skidDeceleration * deltaTime
                 if (abs(velocity.current.x) <= reduction) {
@@ -65,7 +65,7 @@ class MoveSystem(
             }
         }
 
-        // Jump handling
+        // handle jump
         jumpControl.coyoteTimer -= deltaTime
         jumpControl.jumpBufferTimer -= deltaTime
 
@@ -90,8 +90,10 @@ class MoveSystem(
             jumpControl.isRequestingJump = false
         }
 
-        // Gravity
-        velocity.current.y -= physics.gravity * deltaTime
+        // Gravity with peak hang time
+        val isAtPeak = abs(velocity.current.y) < physics.peakVelocityThreshold && !collision.isGrounded && jumpControl.isRequestingJump
+        val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
+        velocity.current.y -= physics.gravity * gravityMultiplier * deltaTime
         velocity.current.y = velocity.current.y.coerceAtLeast(-physics.maxFallSpeed)
 
         // Move and collide
@@ -103,12 +105,12 @@ class MoveSystem(
         if (deltaX == 0f) return
 
         transform.position.x += deltaX
-        
+
         // Clamp to map boundaries
         val minX = -collision.rect.x
         val maxX = tiledService.mapWidth - collision.rect.x - collision.rect.width
         transform.position.x = transform.position.x.coerceIn(minX, maxX)
-        
+
         updateCheckRect(transform, collision)
 
         if (checkCollision(includeSemiSolid = false)) {
@@ -142,7 +144,7 @@ class MoveSystem(
             return
         }
 
-        // Check semisolids only if falling and was above the platform
+        // Check semisolid only if falling and was above the platform
         if (deltaY < 0f && checkCollision(includeSemiSolid = true)) {
             if (prevBottom >= tempRect.y + tempRect.height) {
                 transform.position.y = tempRect.y + tempRect.height - collision.rect.y

@@ -72,7 +72,9 @@ class SpawnSystem(
                     acceleration = 40f,
                     deceleration = 20f,
                     skidDeceleration = 40f,
-                    airControl = 0.65f
+                    airControl = 0.65f,
+                    peakGravityMultiplier = 0.3f,
+                    peakVelocityThreshold = 2f
                 )
                 it += Velocity()
                 it += EntityTag.CAMERA_FOCUS

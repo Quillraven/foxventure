@@ -14,6 +14,8 @@ data class PhysicsConfig(
     var deceleration: Float,
     var skidDeceleration: Float,
     var airControl: Float,
+    var peakGravityMultiplier: Float,
+    var peakVelocityThreshold: Float,
 ) : Component<PhysicsConfig> {
     override fun type() = PhysicsConfig
 
