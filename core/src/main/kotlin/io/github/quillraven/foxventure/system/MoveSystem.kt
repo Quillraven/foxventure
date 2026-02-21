@@ -9,6 +9,7 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.PhysicsConfig
@@ -22,7 +23,7 @@ import kotlin.math.sign
 class MoveSystem(
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl) },
+    family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl, EntityTag.ACTIVE) },
     interval = Fixed(1 / 60f),
 ) {
     private val tileRect = Rectangle()

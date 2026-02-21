@@ -1,5 +1,7 @@
 package io.github.quillraven.foxventure.screen
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -56,6 +58,8 @@ class GameScreen(
     }
 
     override fun show() {
+        Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
+
         registerTiledListeners()
         tiledService.setMap(MapAsset.TUTORIAL)
     }
