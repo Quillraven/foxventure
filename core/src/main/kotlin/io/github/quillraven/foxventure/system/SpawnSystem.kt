@@ -23,6 +23,7 @@ import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.PhysicsConfig
+import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -60,9 +61,10 @@ class SpawnSystem(
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Graphic(objectsAtlas.findRegions(atlasKey).first())
-            it += EntityTag.ACTIVE
 
             if ("player" == mapObject.name) {
+                it += EntityTag.ACTIVE
+                it += Player(health = 3f)
                 it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
                 it += JumpControl()
                 it += PhysicsConfig(

@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
 import io.github.quillraven.foxventure.system.AudioSystem
 import io.github.quillraven.foxventure.system.CameraSystem
@@ -43,6 +44,7 @@ class GameScreen(
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
+            add(ActivationSystem())
             add(FsmSystem())
             add(MoveSystem())
             add(CameraSystem())
