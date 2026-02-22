@@ -57,7 +57,12 @@ data object PlayerStateJump : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity[Velocity].current.y <= 0f) {
+        val collision = entity[Collision]
+        val controller = entity[Controller]
+
+        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+            entity[Fsm].state.changeState(PlayerStateClimb)
+        } else if (entity[Velocity].current.y <= 0f) {
             entity[Fsm].state.changeState(PlayerStateFall)
         }
     }
@@ -83,6 +88,10 @@ data object PlayerStateFall : FsmState {
 data object PlayerStateClimb : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].let { it.changeTo(it.climb) }
+    }
+
+    override fun World.onExit(entity: Entity) {
+        entity[Animation].speed = 1f
     }
 
     override fun World.onUpdate(entity: Entity) {
