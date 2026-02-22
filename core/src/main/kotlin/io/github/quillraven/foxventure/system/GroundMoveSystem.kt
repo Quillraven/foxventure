@@ -9,7 +9,7 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
-import io.github.quillraven.foxventure.component.PhysicsConfig
+import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
@@ -21,7 +21,7 @@ class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Transform, Collision, PhysicsConfig, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Transform, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
     private val tileRect = Rectangle()
     private val checkRect = Rectangle()
@@ -35,16 +35,14 @@ class GroundMoveSystem(
     override fun onTickEntity(entity: Entity) {
         val velocity = entity[Velocity]
         val collision = entity[Collision]
-        val physics = entity[PhysicsConfig]
-
-        velocity.prevPosition.set(velocity.targetPosition)
+        val physics = entity[Physics]
 
         val controller = entity.getOrNull(Controller)
         val inputX = getInputX(controller)
         val downPressed = controller?.hasCommand(Command.MOVE_DOWN) == true
 
         updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
-        applyMovement(collision, velocity, downPressed)
+        applyMovement(collision, physics, velocity, downPressed)
 
         if (velocity.current.x != 0f) {
             entity.getOrNull(Graphic)?.let { it.flip = velocity.current.x < 0f }
@@ -61,7 +59,7 @@ class GroundMoveSystem(
 
     private fun updateHorizontalVelocity(
         velocity: Velocity,
-        physics: PhysicsConfig,
+        physics: Physics,
         inputX: Float,
         isGrounded: Boolean,
         deltaTime: Float
@@ -90,13 +88,21 @@ class GroundMoveSystem(
         return if (abs(diff) <= maxDelta) 0f else current + sign(diff) * maxDelta
     }
 
-    private fun applyMovement(collision: Collision, velocity: Velocity, downPressed: Boolean) {
-        moveAxis(collision, velocity, velocity.current.x * physicsTimer.interval, isVertical = false)
-        moveAxis(collision, velocity, velocity.current.y * physicsTimer.interval, isVertical = true, downPressed)
+    private fun applyMovement(collision: Collision, physics: Physics, velocity: Velocity, downPressed: Boolean) {
+        moveAxis(collision, physics, velocity, velocity.current.x * physicsTimer.interval, isVertical = false)
+        moveAxis(
+            collision,
+            physics,
+            velocity,
+            velocity.current.y * physicsTimer.interval,
+            isVertical = true,
+            downPressed
+        )
     }
 
     private fun moveAxis(
         collision: Collision,
+        physics: Physics,
         velocity: Velocity,
         delta: Float,
         isVertical: Boolean,
@@ -105,19 +111,19 @@ class GroundMoveSystem(
         if (delta == 0f) return
 
         if (isVertical) {
-            val prevBottom = velocity.targetPosition.y + collision.box.y
-            velocity.targetPosition.y += delta
-            updateCheckRect(velocity, collision)
+            val prevBottom = physics.position.y + collision.box.y
+            physics.position.y += delta
+            updateCheckRect(physics, collision)
             collision.isGrounded = false
 
-            handleVerticalCollision(collision, velocity, delta, prevBottom, downPressed)
+            handleVerticalCollision(collision, velocity, physics, delta, prevBottom, downPressed)
         } else {
-            velocity.targetPosition.x += delta
-            clampToMapBounds(velocity, collision)
-            updateCheckRect(velocity, collision)
+            physics.position.x += delta
+            clampToMapBounds(physics, collision)
+            updateCheckRect(physics, collision)
 
             if (checkTileCollision(includeSemiSolid = false)) {
-                velocity.targetPosition.x = if (delta > 0f) {
+                physics.position.x = if (delta > 0f) {
                     tileRect.x - collision.box.x - collision.box.width
                 } else {
                     tileRect.x + tileRect.width - collision.box.x
@@ -127,15 +133,16 @@ class GroundMoveSystem(
         }
     }
 
-    private fun clampToMapBounds(velocity: Velocity, collision: Collision) {
+    private fun clampToMapBounds(physics: Physics, collision: Collision) {
         val minX = -collision.box.x
         val maxX = tiledService.mapWidth - collision.box.x - collision.box.width
-        velocity.targetPosition.x = velocity.targetPosition.x.coerceIn(minX, maxX)
+        physics.position.x = physics.position.x.coerceIn(minX, maxX)
     }
 
     private fun handleVerticalCollision(
         collision: Collision,
         velocity: Velocity,
+        physics: Physics,
         delta: Float,
         prevBottom: Float,
         downPressed: Boolean
@@ -143,12 +150,12 @@ class GroundMoveSystem(
         // Solid collision
         if (checkTileCollision(includeSemiSolid = false)) {
             if (delta > 0f) {
-                if (!tryCeilingCorrection(collision, velocity)) {
-                    velocity.targetPosition.y = tileRect.y - collision.box.y - collision.box.height
+                if (!tryCeilingCorrection(collision, physics)) {
+                    physics.position.y = tileRect.y - collision.box.y - collision.box.height
                     velocity.current.y = 0f
                 }
             } else {
-                velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
+                physics.position.y = tileRect.y + tileRect.height - collision.box.y
                 velocity.current.y = 0f
                 collision.isGrounded = true
             }
@@ -159,7 +166,7 @@ class GroundMoveSystem(
         if (delta >= 0f) return
 
         if (checkTileCollision(includeSemiSolid = true) && prevBottom >= tileRect.y + tileRect.height) {
-            velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
+            physics.position.y = tileRect.y + tileRect.height - collision.box.y
             velocity.current.y = 0f
             collision.isGrounded = true
             return
@@ -167,25 +174,30 @@ class GroundMoveSystem(
 
         // Top ladder tile collision
         if (!downPressed) {
-            checkTopLadderCollision(collision, velocity, prevBottom)
+            checkTopLadderCollision(collision, physics, velocity, prevBottom)
         }
     }
 
-    private fun tryCeilingCorrection(collision: Collision, velocity: Velocity): Boolean {
+    private fun tryCeilingCorrection(collision: Collision, physics: Physics): Boolean {
         val tolerance = 0.3f
-        val originalX = velocity.targetPosition.x
+        val originalX = physics.position.x
 
         for (offset in listOf(tolerance, -tolerance)) {
-            velocity.targetPosition.x = originalX + offset
-            updateCheckRect(velocity, collision)
+            physics.position.x = originalX + offset
+            updateCheckRect(physics, collision)
             if (!checkTileCollision(includeSemiSolid = false)) return true
         }
 
-        velocity.targetPosition.x = originalX
+        physics.position.x = originalX
         return false
     }
 
-    private fun checkTopLadderCollision(collision: Collision, velocity: Velocity, prevBottom: Float) {
+    private fun checkTopLadderCollision(
+        collision: Collision,
+        physics: Physics,
+        velocity: Velocity,
+        prevBottom: Float
+    ) {
         val startX = checkRect.x.toInt()
         val endX = (checkRect.x + checkRect.width).toInt()
         val startY = checkRect.y.toInt()
@@ -197,7 +209,7 @@ class GroundMoveSystem(
                 if (tileRect.width > 0f && checkRect.overlaps(tileRect) &&
                     tiledService.isTopLadderTile(x, y) && prevBottom >= tileRect.y + tileRect.height
                 ) {
-                    velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
+                    physics.position.y = tileRect.y + tileRect.height - collision.box.y
                     velocity.current.y = 0f
                     collision.isGrounded = true
                     return
@@ -206,10 +218,10 @@ class GroundMoveSystem(
         }
     }
 
-    private fun updateCheckRect(velocity: Velocity, collision: Collision) {
+    private fun updateCheckRect(physics: Physics, collision: Collision) {
         checkRect.set(
-            velocity.targetPosition.x + collision.box.x,
-            velocity.targetPosition.y + collision.box.y,
+            physics.position.x + collision.box.x,
+            physics.position.y + collision.box.y,
             collision.box.width,
             collision.box.height
         )

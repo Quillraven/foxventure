@@ -113,7 +113,7 @@ class TiledService(
 
     fun isTopLadderTile(cellX: Int, cellY: Int): Boolean {
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return false
-        
+
         // Check if current tile is a ladder
         var isLadder = false
         currentTileLayers.forEach { layer ->
@@ -123,20 +123,20 @@ class TiledService(
                 return@forEach
             }
         }
-        
+
         if (!isLadder) return false
-        
+
         // Check if tile above is NOT a ladder
         val cellAboveY = cellY + 1
         if (cellAboveY >= currentMap.height) return true
-        
+
         currentTileLayers.forEach { layer ->
             val cellAbove = layer.getCell(cellX, cellAboveY) ?: return@forEach
             if (cellAbove.tile.property<String>("type", "") == "ladder") {
                 return false // There's a ladder above, so not top
             }
         }
-        
+
         return true // No ladder above, this is the top
     }
 

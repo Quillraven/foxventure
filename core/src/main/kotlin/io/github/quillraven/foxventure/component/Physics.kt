@@ -1,9 +1,10 @@
 package io.github.quillraven.foxventure.component
 
+import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
-data class PhysicsConfig(
+data class Physics(
     var gravity: Float,
     var maxFallSpeed: Float,
     var jumpImpulse: Float,
@@ -17,8 +18,10 @@ data class PhysicsConfig(
     var peakGravityMultiplier: Float,
     var peakVelocityThreshold: Float,
     var climbSpeed: Float,
-) : Component<PhysicsConfig> {
-    override fun type() = PhysicsConfig
+    val prevPosition: Vector2,
+    val position: Vector2 = prevPosition.cpy(),
+) : Component<Physics> {
+    override fun type() = Physics
 
-    companion object : ComponentType<PhysicsConfig>()
+    companion object : ComponentType<Physics>()
 }

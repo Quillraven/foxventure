@@ -8,14 +8,14 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.JumpControl
-import io.github.quillraven.foxventure.component.PhysicsConfig
+import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Collision, PhysicsConfig, JumpControl, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Collision, Physics, JumpControl, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
@@ -24,9 +24,9 @@ class AerialMoveSystem(
     }
 
     override fun onTickEntity(entity: Entity) {
-        val velocity = entity[Velocity]
         val collision = entity[Collision]
-        val physics = entity[PhysicsConfig]
+        val velocity = entity[Velocity]
+        val physics = entity[Physics]
         val jumpControl = entity[JumpControl]
 
         val controller = entity.getOrNull(Controller)
@@ -39,7 +39,7 @@ class AerialMoveSystem(
 
     private fun updateJumpState(
         velocity: Velocity,
-        physics: PhysicsConfig,
+        physics: Physics,
         jumpControl: JumpControl,
         jumpPressed: Boolean,
         isGrounded: Boolean,
@@ -68,7 +68,7 @@ class AerialMoveSystem(
 
     private fun applyGravity(
         velocity: Velocity,
-        physics: PhysicsConfig,
+        physics: Physics,
         jumpControl: JumpControl,
         isGrounded: Boolean,
         deltaTime: Float

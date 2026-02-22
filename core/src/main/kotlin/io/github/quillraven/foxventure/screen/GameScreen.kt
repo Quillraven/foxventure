@@ -18,8 +18,9 @@ import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
-import io.github.quillraven.foxventure.system.InterpolationSystem
 import io.github.quillraven.foxventure.system.PhysicsTimer
+import io.github.quillraven.foxventure.system.PostInterpolationSystem
+import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -53,13 +54,14 @@ class GameScreen(
             add(ControllerSystem())
             add(SpawnSystem())
             add(ActivationSystem())
+            add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
             add(ClimbSystem())
             add(AerialMoveSystem())
             add(GroundMoveSystem())
             add(FsmSystem())
             add(CameraSystem())
             add(AnimationSystem())
-            add(InterpolationSystem())
+            add(PostInterpolationSystem()) // run it after all physics systems run
             add(RenderSystem())
 //            add(DebugRenderSystem())
             add(AudioSystem())

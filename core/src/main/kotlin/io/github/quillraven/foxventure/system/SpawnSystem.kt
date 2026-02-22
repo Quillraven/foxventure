@@ -22,7 +22,7 @@ import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
-import io.github.quillraven.foxventure.component.PhysicsConfig
+import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
@@ -67,7 +67,7 @@ class SpawnSystem(
                 it += Player(health = 3f)
                 it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
                 it += JumpControl()
-                it += PhysicsConfig(
+                it += Physics(
                     gravity = 35f,
                     maxFallSpeed = 16f,
                     jumpImpulse = 15f,
@@ -80,9 +80,10 @@ class SpawnSystem(
                     airControl = 0.65f,
                     peakGravityMultiplier = 0.3f,
                     peakVelocityThreshold = 2f,
-                    climbSpeed = 3f
+                    climbSpeed = 3f,
+                    prevPosition = vec2(x, y),
                 )
-                it += Velocity(prevPosition = vec2(x, y))
+                it += Velocity()
                 it += Controller()
                 it += EntityTag.CAMERA_FOCUS
 
