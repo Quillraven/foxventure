@@ -81,6 +81,8 @@ data object PlayerStateFall : FsmState {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (collision.isGrounded) {
             entity[Fsm].state.changeState(PlayerStateIdle)
+        } else if (entity[Velocity].current.y > 0f) {
+            entity[Fsm].state.changeState(PlayerStateJump)
         }
     }
 }
