@@ -49,7 +49,12 @@ class AerialMoveSystem(
         jumpControl.jumpBufferTimer -= deltaTime
 
         if (isGrounded) jumpControl.coyoteTimer = physics.coyoteThreshold
-        if (jumpPressed) jumpControl.jumpBufferTimer = physics.jumpBufferThreshold
+        
+        // Only set buffer on jump press (not hold)
+        if (jumpPressed && !jumpControl.wasJumpPressed) {
+            jumpControl.jumpBufferTimer = physics.jumpBufferThreshold
+        }
+        jumpControl.wasJumpPressed = jumpPressed
 
         // Execute jump
         if (jumpControl.jumpBufferTimer > 0f && jumpControl.coyoteTimer > 0f) {

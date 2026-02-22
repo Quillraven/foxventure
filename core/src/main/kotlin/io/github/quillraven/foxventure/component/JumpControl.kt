@@ -7,6 +7,7 @@ data class JumpControl(
     var coyoteTimer: Float = 0f,
     var jumpBufferTimer: Float = 0f,
     var jumpInput: Boolean = false,
+    var wasJumpPressed: Boolean = false,
 ) : Component<JumpControl> {
     override fun type() = JumpControl
 
