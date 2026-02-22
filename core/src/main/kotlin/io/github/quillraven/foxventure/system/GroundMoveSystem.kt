@@ -150,9 +150,13 @@ class GroundMoveSystem(
         // Solid collision
         if (checkTileCollision(includeSemiSolid = false)) {
             if (delta > 0f) {
-                if (!tryCeilingCorrection(collision, physics)) {
-                    physics.position.y = tileRect.y - collision.box.y - collision.box.height
-                    velocity.current.y = 0f
+                // Ceiling collision - find the closest (highest Y) tile
+                val ceilingY = findClosestCeilingTile()
+                if (ceilingY != null) {
+                    if (!tryCeilingCorrection(collision, physics)) {
+                        physics.position.y = ceilingY - collision.box.y - collision.box.height
+                        velocity.current.y = 0f
+                    }
                 }
             } else {
                 physics.position.y = tileRect.y + tileRect.height - collision.box.y
@@ -240,5 +244,29 @@ class GroundMoveSystem(
             }
         }
         return false
+    }
+
+    private fun findClosestCeilingTile(): Float? {
+        val startX = checkRect.x.toInt()
+        val endX = (checkRect.x + checkRect.width).toInt()
+        val startY = checkRect.y.toInt()
+        val endY = (checkRect.y + checkRect.height).toInt()
+
+        var closestY: Float? = null
+        val tempRect = Rectangle()
+
+        for (y in startY..endY) {
+            for (x in startX..endX) {
+                tiledService.getCollisionRect(x, y, false, tempRect)
+                if (tempRect.width > 0f && checkRect.overlaps(tempRect)) {
+                    val tileBottom = tempRect.y
+                    if (closestY == null || tileBottom > closestY) {
+                        closestY = tileBottom
+                        tileRect.set(tempRect)
+                    }
+                }
+            }
+        }
+        return closestY
     }
 }
