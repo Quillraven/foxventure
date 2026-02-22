@@ -22,6 +22,7 @@ class AerialMoveSystem(
 ) {
     private val tileRect = Rectangle()
     private val checkRect = Rectangle()
+
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -36,12 +37,11 @@ class AerialMoveSystem(
 
         val controller = entity.getOrNull(Controller)
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
-        val downPressed = controller?.hasCommand(Command.MOVE_DOWN) == true
         val isGrounded = collision.isGrounded
 
         updateJumpState(velocity, physics, jumpControl, jumpPressed, isGrounded, physicsTimer.interval)
         applyGravity(velocity, physics, jumpControl, isGrounded, physicsTimer.interval)
-        applyVerticalMovement(collision, velocity, physics, downPressed)
+        applyVerticalMovement(collision, velocity, physics)
     }
 
     private fun updateJumpState(
@@ -97,7 +97,6 @@ class AerialMoveSystem(
         collision: Collision,
         velocity: Velocity,
         physics: Physics,
-        downPressed: Boolean
     ) {
         val delta = velocity.current.y * physicsTimer.interval
         if (delta == 0f) return
@@ -107,7 +106,7 @@ class AerialMoveSystem(
         updateCheckRect(physics, collision)
         collision.isGrounded = false
 
-        handleVerticalCollision(collision, velocity, physics, delta, prevBottom, downPressed)
+        handleVerticalCollision(collision, velocity, physics, delta, prevBottom)
     }
 
     private fun handleVerticalCollision(
@@ -116,7 +115,6 @@ class AerialMoveSystem(
         physics: Physics,
         delta: Float,
         prevBottom: Float,
-        downPressed: Boolean
     ) {
         // Solid collision
         if (checkTileCollision(includeSemiSolid = false)) {
@@ -146,11 +144,6 @@ class AerialMoveSystem(
             collision.isGrounded = true
             return
         }
-
-        // Top ladder tile collision
-        if (!downPressed) {
-            checkTopLadderCollision(collision, physics, velocity, prevBottom)
-        }
     }
 
     private fun tryCeilingCorrection(collision: Collision, physics: Physics): Boolean {
@@ -165,32 +158,6 @@ class AerialMoveSystem(
 
         physics.position.x = originalX
         return false
-    }
-
-    private fun checkTopLadderCollision(
-        collision: Collision,
-        physics: Physics,
-        velocity: Velocity,
-        prevBottom: Float
-    ) {
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                tiledService.getLadderRect(x, y, tileRect)
-                if (tileRect.width > 0f && checkRect.overlaps(tileRect) &&
-                    tiledService.isTopLadderTile(x, y) && prevBottom >= tileRect.y + tileRect.height
-                ) {
-                    physics.position.y = tileRect.y + tileRect.height - collision.box.y
-                    velocity.current.y = 0f
-                    collision.isGrounded = true
-                    return
-                }
-            }
-        }
     }
 
     private fun updateCheckRect(physics: Physics, collision: Collision) {

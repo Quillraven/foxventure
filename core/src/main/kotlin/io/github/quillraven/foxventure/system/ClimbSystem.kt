@@ -65,6 +65,8 @@ class ClimbSystem(
             physics.position.y += delta
             if (delta < 0f) {
                 checkLadderBottom(entity, physics.position, velocity, collision)
+            } else {
+                checkLadderTop(entity, physics.position, collision, velocity)
             }
         }
     }
@@ -187,13 +189,44 @@ class ClimbSystem(
         }
     }
 
-    private fun getGroundTile(position: Vector2, collisionBox: Box): Rectangle? {
+    private fun getGroundTile(
+        position: Vector2,
+        collisionBox: Box
+    ): Rectangle? {
         return findCollidingTile(position, collisionBox) { cellX, cellY ->
             tiledService.getCollisionRect(cellX, cellY, true, tileRect)
             if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
                 return@findCollidingTile tileRect
             }
             return@findCollidingTile null
+        }
+    }
+
+    private fun getTopLadder(
+        position: Vector2,
+        collisionBox: Box,
+    ): Rectangle? {
+        return findCollidingTile(position, collisionBox) { cellX, cellY ->
+            tiledService.getLadderRect(cellX, cellY, tileRect)
+            if (tileRect.width > 0f && checkRect.overlaps(tileRect) && tiledService.isTopLadderTile(cellX, cellY)) {
+                return@findCollidingTile tileRect
+            }
+            return@findCollidingTile null
+        }
+    }
+
+    private fun checkLadderTop(
+        entity: Entity,
+        position: Vector2,
+        collision: Collision,
+        velocity: Vector2,
+    ) {
+        getTopLadder(position, collision.box)?.let { tileRect ->
+            if (position.y >= tileRect.y + tileRect.height * 0.4f) {
+                position.y = tileRect.y + tileRect.height - collision.box.y
+                collision.isGrounded = true
+                stopClimbing(entity, collision, velocity)
+            }
         }
     }
 }
