@@ -1,9 +1,7 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Entity
-import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
@@ -21,12 +19,18 @@ import kotlin.math.sign
 
 class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
+    private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Transform, Collision, PhysicsConfig, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
-    interval = Fixed(1 / 60f),
 ) {
     private val tileRect = Rectangle()
     private val checkRect = Rectangle()
+
+    override fun onTick() {
+        repeat(physicsTimer.numSteps) {
+            super.onTick()
+        }
+    }
 
     override fun onTickEntity(entity: Entity) {
         val velocity = entity[Velocity]
@@ -39,7 +43,7 @@ class GroundMoveSystem(
         val inputX = getInputX(controller)
         val downPressed = controller?.hasCommand(Command.MOVE_DOWN) == true
 
-        updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, deltaTime)
+        updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
         applyMovement(collision, velocity, downPressed)
 
         if (velocity.current.x != 0f) {
@@ -87,8 +91,8 @@ class GroundMoveSystem(
     }
 
     private fun applyMovement(collision: Collision, velocity: Velocity, downPressed: Boolean) {
-        moveAxis(collision, velocity, velocity.current.x * deltaTime, isVertical = false)
-        moveAxis(collision, velocity, velocity.current.y * deltaTime, isVertical = true, downPressed)
+        moveAxis(collision, velocity, velocity.current.x * physicsTimer.interval, isVertical = false)
+        moveAxis(collision, velocity, velocity.current.y * physicsTimer.interval, isVertical = true, downPressed)
     }
 
     private fun moveAxis(
@@ -224,13 +228,5 @@ class GroundMoveSystem(
             }
         }
         return false
-    }
-
-    override fun onAlphaEntity(entity: Entity, alpha: Float) {
-        val (_, prevPosition, targetPosition) = entity[Velocity]
-        entity[Transform].position.set(
-            MathUtils.lerp(prevPosition.x, targetPosition.x, alpha),
-            MathUtils.lerp(prevPosition.y, targetPosition.y, alpha),
-        )
     }
 }

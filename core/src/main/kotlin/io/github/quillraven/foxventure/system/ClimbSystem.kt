@@ -2,7 +2,6 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.math.Rectangle
 import com.github.quillraven.fleks.Entity
-import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
@@ -19,12 +18,18 @@ import kotlin.math.abs
 
 class ClimbSystem(
     private val tiledService: TiledService = inject(),
+    private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Transform, Collision, PhysicsConfig, JumpControl, EntityTag.ACTIVE) },
-    interval = Fixed(1 / 60f),
 ) {
     private val tileRect = Rectangle()
     private val checkRect = Rectangle()
+
+    override fun onTick() {
+        repeat(physicsTimer.numSteps) {
+            super.onTick()
+        }
+    }
 
     override fun onTickEntity(entity: Entity) {
         val velocity = entity[Velocity]
@@ -69,12 +74,12 @@ class ClimbSystem(
             jumpControl.coyoteTimer = 0f
             jumpControl.jumpBufferTimer = 0f
             velocity.current.set(0f, inputY * physics.climbSpeed)
-            
-            val delta = velocity.current.y * deltaTime
+
+            val delta = velocity.current.y * physicsTimer.interval
             if (delta != 0f) {
                 velocity.targetPosition.y += delta
                 updateCheckRect(velocity, collision)
-                
+
                 if (delta < 0f && checkTileCollision()) {
                     velocity.targetPosition.y = tileRect.y + tileRect.height - collision.box.y
                     velocity.current.y = 0f
@@ -139,15 +144,5 @@ class ClimbSystem(
             }
         }
         return false
-    }
-
-    override fun onAlphaEntity(entity: Entity, alpha: Float) {
-        if (entity.has(EntityTag.CLIMBING)) {
-            val (_, prevPosition, targetPosition) = entity[Velocity]
-            entity[Transform].position.set(
-                com.badlogic.gdx.math.MathUtils.lerp(prevPosition.x, targetPosition.x, alpha),
-                com.badlogic.gdx.math.MathUtils.lerp(prevPosition.y, targetPosition.y, alpha),
-            )
-        }
     }
 }

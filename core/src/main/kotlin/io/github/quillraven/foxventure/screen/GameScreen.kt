@@ -18,6 +18,8 @@ import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
+import io.github.quillraven.foxventure.system.InterpolationSystem
+import io.github.quillraven.foxventure.system.PhysicsTimer
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -34,6 +36,7 @@ class GameScreen(
     private val tiledService: TiledService = game.serviceLocator.tiledService,
 ) : KtxScreen {
 
+    private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
     private val world = ecsWorld()
 
     private fun ecsWorld() = configureWorld {
@@ -43,6 +46,7 @@ class GameScreen(
             add(stage)
             add(assets)
             add(tiledService)
+            add(physicsTimer)
         }
 
         systems {
@@ -55,6 +59,7 @@ class GameScreen(
             add(FsmSystem())
             add(CameraSystem())
             add(AnimationSystem())
+            add(InterpolationSystem())
             add(RenderSystem())
 //            add(DebugRenderSystem())
             add(AudioSystem())
@@ -69,6 +74,7 @@ class GameScreen(
     }
 
     override fun render(delta: Float) {
+        physicsTimer.update(delta)
         world.update(delta)
     }
 

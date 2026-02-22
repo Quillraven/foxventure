@@ -1,9 +1,9 @@
 package io.github.quillraven.foxventure.system
 
 import com.github.quillraven.fleks.Entity
-import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
+import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -12,10 +12,17 @@ import io.github.quillraven.foxventure.component.PhysicsConfig
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 
-class AerialMoveSystem : IteratingSystem(
+class AerialMoveSystem(
+    private val physicsTimer: PhysicsTimer = inject(),
+) : IteratingSystem(
     family = family { all(Velocity, Collision, PhysicsConfig, JumpControl, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
-    interval = Fixed(1 / 60f),
 ) {
+    override fun onTick() {
+        repeat(physicsTimer.numSteps) {
+            super.onTick()
+        }
+    }
+
     override fun onTickEntity(entity: Entity) {
         val velocity = entity[Velocity]
         val collision = entity[Collision]
@@ -26,8 +33,8 @@ class AerialMoveSystem : IteratingSystem(
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
         val isGrounded = collision.isGrounded
 
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, isGrounded, deltaTime)
-        applyGravity(velocity, physics, jumpControl, isGrounded, deltaTime)
+        updateJumpState(velocity, physics, jumpControl, jumpPressed, isGrounded, physicsTimer.interval)
+        applyGravity(velocity, physics, jumpControl, isGrounded, physicsTimer.interval)
     }
 
     private fun updateJumpState(
