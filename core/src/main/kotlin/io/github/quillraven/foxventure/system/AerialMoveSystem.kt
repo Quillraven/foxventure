@@ -138,7 +138,7 @@ class AerialMoveSystem(
         // Semisolid and ladder collision (only when falling)
         if (delta >= 0f) return
 
-        if (checkTileCollision(includeSemiSolid = true) && prevBottom >= tileRect.y + tileRect.height) {
+        if ((checkTileCollision(includeSemiSolid = true) || checkTopLadderCollision()) && prevBottom >= tileRect.y + tileRect.height) {
             physics.position.y = tileRect.y + tileRect.height - collision.box.y
             velocity.current.y = 0f
             collision.isGrounded = true
@@ -179,6 +179,23 @@ class AerialMoveSystem(
             for (x in startX..endX) {
                 tiledService.getCollisionRect(x, y, includeSemiSolid, tileRect)
                 if (tileRect.width > 0f && checkRect.overlaps(tileRect)) return true
+            }
+        }
+        return false
+    }
+
+    private fun checkTopLadderCollision(): Boolean {
+        val startX = checkRect.x.toInt()
+        val endX = (checkRect.x + checkRect.width).toInt()
+        val startY = checkRect.y.toInt()
+        val endY = (checkRect.y + checkRect.height).toInt()
+
+        for (y in startY..endY) {
+            for (x in startX..endX) {
+                if (tiledService.isTopLadderTile(x, y)) {
+                    tileRect.set(x.toFloat(), y.toFloat(), 1f, 1f)
+                    if (checkRect.overlaps(tileRect)) return true
+                }
             }
         }
         return false
