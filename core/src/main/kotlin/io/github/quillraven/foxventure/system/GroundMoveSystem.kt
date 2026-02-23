@@ -8,9 +8,7 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
-import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Physics
-import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -21,7 +19,7 @@ class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Transform, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
     private val tileRect = Rectangle()
     private val checkRect = Rectangle()
@@ -42,10 +40,6 @@ class GroundMoveSystem(
 
         updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
         applyHorizontalMovement(collision, physics, velocity)
-
-        if (velocity.current.x != 0f) {
-            entity.getOrNull(Graphic)?.let { it.flip = velocity.current.x < 0f }
-        }
     }
 
     private fun getInputX(controller: Controller?): Float {

@@ -19,6 +19,7 @@ import ktx.math.vec2
  * dynamically recalculates the size of the graphic in world units.
  * @property regionSize The size of the texture region in world units. This value is automatically
  * updated based on the [region].
+ * @property flip Boolean property that indicates whether the texture is horizontally flipped.
  */
 class Graphic(
     region: TextureRegion,

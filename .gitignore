@@ -43,3 +43,5 @@ bin/
 
 ### Tiled ###
 *.tiled-session
+### Minder mindmap ###
+*.minder

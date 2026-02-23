@@ -17,6 +17,7 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.collections.gdxArrayOf
 import ktx.tiled.use
@@ -49,7 +50,8 @@ class RenderSystem(
     }
 
     override fun onTickEntity(entity: Entity) {
-        val (region, regionSize, flip) = entity[Graphic]
+        val graphic = entity[Graphic]
+        val (region, regionSize) = graphic
         val (position, size, rotationDegrees, scale) = entity[Transform]
 
         // fill texture inside transform size by keeping the aspect ratio
@@ -57,12 +59,19 @@ class RenderSystem(
         val targetH = size.y * scale
         val realSize = Scaling.fill.apply(regionSize.x, regionSize.y, targetW, targetH)
 
+        // flip graphic if moving left
+        entity.getOrNull(Velocity)?.let { velocity ->
+            if (velocity.current.x != 0f) {
+                graphic.flip = velocity.current.x < 0f
+            }
+        }
+
         batch.draw(
             region,
             position.x, position.y,
             realSize.x / 2f, realSize.y / 2f,
             realSize.x, realSize.y,
-            if (flip) -1f else 1f, 1f,
+            if (graphic.flip) -1f else 1f, 1f,
             rotationDegrees
         )
     }
