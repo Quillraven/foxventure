@@ -54,7 +54,7 @@ class ClimbSystem(
         // check if there is no ladder anymore or the entity wants to abort climbing
         val ladderRect = getNearbyLadder(physics.position, collBox, false)
         val velocity = entity[Velocity].current
-        val abortClimbing = getInputX(controller) != 0f || jumpPressed || ladderRect == null
+        val abortClimbing = inputY == 0f && (getInputX(controller) != 0f || jumpPressed || ladderRect == null)
         if (abortClimbing) {
             stopClimbing(entity, collision, velocity)
             return
