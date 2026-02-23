@@ -13,9 +13,5 @@ data class Controller(
 
     fun hasCommand(command: Command) = command in commands
 
-    fun hasAnyCommand(command1: Command, command2: Command) = command1 in commands || command2 in commands
-
-    fun hasNoCommand(command1: Command, command2: Command) = command1 !in commands && command2 !in commands
-
     companion object : ComponentType<Controller>()
 }

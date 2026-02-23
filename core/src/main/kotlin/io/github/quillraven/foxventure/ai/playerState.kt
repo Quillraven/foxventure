@@ -4,10 +4,8 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
-import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Velocity
-import io.github.quillraven.foxventure.input.Command
 
 data object PlayerStateIdle : FsmState {
     override fun World.onEnter(entity: Entity) {
@@ -15,14 +13,13 @@ data object PlayerStateIdle : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        val controller = entity[Controller]
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
 
         // Check ladder first - highest priority when on ladder
-        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+        if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
-        } else if (velocity.x != 0f || controller.hasAnyCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
+        } else if (velocity.x != 0f) {
             entity[Fsm].state.changeState(PlayerStateRun)
         } else if (velocity.y > 0f) {
             entity[Fsm].state.changeState(PlayerStateJump)
@@ -39,9 +36,8 @@ data object PlayerStateRun : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val velocity = entity[Velocity].current
-        val controller = entity[Controller]
 
-        if (velocity.x == 0f && controller.hasNoCommand(Command.MOVE_LEFT, Command.MOVE_RIGHT)) {
+        if (velocity.x == 0f) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         } else if (velocity.y > 0f) {
             entity[Fsm].state.changeState(PlayerStateJump)
@@ -58,9 +54,8 @@ data object PlayerStateJump : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
-        val controller = entity[Controller]
 
-        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+        if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (entity[Velocity].current.y <= 0f) {
             entity[Fsm].state.changeState(PlayerStateFall)
@@ -75,9 +70,8 @@ data object PlayerStateFall : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
-        val controller = entity[Controller]
 
-        if (collision.isOnLadder && controller.hasAnyCommand(Command.MOVE_DOWN, Command.MOVE_UP)) {
+        if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (collision.isGrounded) {
             entity[Fsm].state.changeState(PlayerStateIdle)
