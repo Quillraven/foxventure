@@ -10,5 +10,74 @@
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 1,
+            "members": [
+                {
+                    "name": "acceleration",
+                    "type": "float",
+                    "value": 30
+                },
+                {
+                    "name": "air_control",
+                    "type": "float",
+                    "value": 0.65
+                },
+                {
+                    "name": "climb_speed",
+                    "type": "float",
+                    "value": 3
+                },
+                {
+                    "name": "deceleration",
+                    "type": "float",
+                    "value": 20
+                },
+                {
+                    "name": "gravity",
+                    "type": "float",
+                    "value": 35
+                },
+                {
+                    "name": "jump_impulse",
+                    "type": "float",
+                    "value": 15
+                },
+                {
+                    "name": "max_fall_speed",
+                    "type": "float",
+                    "value": 16
+                },
+                {
+                    "name": "max_speed",
+                    "type": "float",
+                    "value": 7
+                },
+                {
+                    "name": "peak_gravity_multiplier",
+                    "type": "float",
+                    "value": 0.3
+                },
+                {
+                    "name": "peak_velocity_threshold",
+                    "type": "float",
+                    "value": 2
+                },
+                {
+                    "name": "skid_deceleration",
+                    "type": "float",
+                    "value": 40
+                }
+            ],
+            "name": "Physics",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        }
     ]
 }

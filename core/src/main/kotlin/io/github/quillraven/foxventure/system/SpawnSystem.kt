@@ -3,6 +3,7 @@ package io.github.quillraven.foxventure.system
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.graphics.glutils.FileTextureData
+import com.badlogic.gdx.maps.MapProperties
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
@@ -32,6 +33,7 @@ import ktx.app.gdxError
 import ktx.collections.gdxMapOf
 import ktx.math.vec2
 import ktx.tiled.height
+import ktx.tiled.isNotEmpty
 import ktx.tiled.property
 import ktx.tiled.width
 
@@ -64,28 +66,44 @@ class SpawnSystem(
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Graphic(objectsAtlas.findRegions(atlasKey).first())
 
+            // physics, velocity and jump control
+            val physicsProps = tile.properties.get("physics")
+            if (physicsProps is MapProperties) {
+                val maxSpeed = physicsProps.get("max_speed", Float::class.java)
+                val jumpImpulse = physicsProps.get("jump_impulse", Float::class.java)
+
+                it += Physics(
+                    gravity = physicsProps.get("gravity", Float::class.java),
+                    maxFallSpeed = physicsProps.get("max_fall_speed", Float::class.java),
+                    jumpImpulse = jumpImpulse,
+                    coyoteThreshold = 0.08f,
+                    jumpBufferThreshold = 0.08f,
+                    maxSpeed = maxSpeed,
+                    acceleration = physicsProps.get("acceleration", Float::class.java),
+                    deceleration = physicsProps.get("deceleration", Float::class.java),
+                    skidDeceleration = physicsProps.get("skid_deceleration", Float::class.java),
+                    airControl = physicsProps.get("air_control", Float::class.java),
+                    peakGravityMultiplier = physicsProps.get("peak_gravity_multiplier", Float::class.java),
+                    peakVelocityThreshold = physicsProps.get("peak_velocity_threshold", Float::class.java),
+                    climbSpeed = physicsProps.get("climb_speed", Float::class.java),
+                    position = vec2(x, y),
+                )
+                if (maxSpeed > 0f) {
+                    it += Velocity()
+                }
+                if (jumpImpulse > 0f) {
+                    it += JumpControl()
+                }
+            }
+
+            // collision
+            if (mapObject.tile.objects.isNotEmpty()) {
+                it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
+            }
+
             if ("player" == mapObject.name) {
                 it += EntityTag.ACTIVE
                 it += Player(health = 3f)
-                it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
-                it += JumpControl()
-                it += Physics(
-                    gravity = 35f,
-                    maxFallSpeed = 16f,
-                    jumpImpulse = 15f,
-                    coyoteThreshold = 0.08f,
-                    jumpBufferThreshold = 0.08f,
-                    maxSpeed = 7f,
-                    acceleration = 30f,
-                    deceleration = 20f,
-                    skidDeceleration = 40f,
-                    airControl = 0.65f,
-                    peakGravityMultiplier = 0.3f,
-                    peakVelocityThreshold = 2f,
-                    climbSpeed = 3f,
-                    prevPosition = vec2(x, y),
-                )
-                it += Velocity()
                 it += Controller()
                 it += EntityTag.CAMERA_FOCUS
 

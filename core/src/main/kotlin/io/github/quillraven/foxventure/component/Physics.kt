@@ -18,8 +18,8 @@ data class Physics(
     var peakGravityMultiplier: Float,
     var peakVelocityThreshold: Float,
     var climbSpeed: Float,
-    val prevPosition: Vector2,
-    val position: Vector2 = prevPosition.cpy(),
+    val position: Vector2,
+    val prevPosition: Vector2 = position.cpy(),
 ) : Component<Physics> {
     override fun type() = Physics
 
