@@ -155,7 +155,12 @@ class AerialMoveSystem(
     }
 
     private fun findCollidingTiles(position: Vector2, collisionBox: Rect): Boolean {
-        updateCheckRect(position, collisionBox)
+        checkRect.set(
+            position.x + collisionBox.x,
+            position.y + collisionBox.y,
+            collisionBox.width,
+            collisionBox.height
+        )
         return tiledService.getAllCollisionRects(
             checkRect,
             solidRect,
@@ -245,14 +250,5 @@ class AerialMoveSystem(
         }
 
         position.x = originalX
-    }
-
-    private fun updateCheckRect(position: Vector2, collisionBox: Rect) {
-        checkRect.set(
-            position.x + collisionBox.x,
-            position.y + collisionBox.y,
-            collisionBox.width,
-            collisionBox.height
-        )
     }
 }

@@ -41,7 +41,7 @@ class ClimbSystem(
         if (!collision.isOnLadder) {
             // skip any other climb logic if not attached to a ladder yet
             val includeTileBelow = inputY < 0f
-            val ladderTile = getNearbyLadder(physics.position, collBox, includeTileBelow)
+            val ladderTile = tiledService.getLadderTile(physics.position, collBox, includeTileBelow)
             attachToLadder(inputY, jumpPressed, ladderTile, physics, entity, collision)
             return
         }
@@ -49,7 +49,7 @@ class ClimbSystem(
         // At this point we know the entity is on a ladder
         //
         // check if there is no ladder anymore or the entity wants to abort climbing
-        val ladderTile = getNearbyLadder(physics.position, collBox, false)
+        val ladderTile = tiledService.getLadderTile(physics.position, collBox, false)
         val velocity = entity[Velocity].current
         val abortClimbing = inputY == 0f && (getInputX(controller) != 0f || jumpPressed || ladderTile == null)
         if (abortClimbing) {
@@ -156,15 +156,7 @@ class ClimbSystem(
         return input
     }
 
-    private fun getNearbyLadder(
-        position: Vector2,
-        collisionBox: Rect,
-        includeTileBelow: Boolean,
-    ): GroundTile? {
-        return tiledService.getLadderTile(position, collisionBox, includeTileBelow)
-    }
-
-    private fun getTopLadder(
+    private fun getLadderTop(
         position: Vector2,
         collisionBox: Rect,
     ): Rect? {
@@ -181,7 +173,7 @@ class ClimbSystem(
         collision: Collision,
         velocity: Vector2,
     ) {
-        getTopLadder(position, collision.box)?.let { tileRect ->
+        getLadderTop(position, collision.box)?.let { tileRect ->
             if (position.y >= tileRect.y + tileRect.height * 0.4f) {
                 position.y = tileRect.y + tileRect.height - collision.box.y
                 collision.isGrounded = true
