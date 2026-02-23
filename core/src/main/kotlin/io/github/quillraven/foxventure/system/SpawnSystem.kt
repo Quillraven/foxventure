@@ -16,7 +16,7 @@ import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
-import io.github.quillraven.foxventure.component.Box
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -97,7 +97,7 @@ class SpawnSystem(
 
             // collision
             if (mapObject.tile.objects.isNotEmpty()) {
-                it += Collision(Box.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
+                it += Collision(Rect.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
             }
 
             if ("player" == mapObject.name) {

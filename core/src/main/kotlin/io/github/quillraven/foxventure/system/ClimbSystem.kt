@@ -6,7 +6,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Box
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -163,7 +163,7 @@ class ClimbSystem(
 
     private fun findCollidingTile(
         position: Vector2,
-        collisionBox: Box,
+        collisionBox: Rect,
         includeTileBelow: Boolean,
         action: (cellX: Int, cellY: Int) -> Rectangle?
     ): Rectangle? {
@@ -192,7 +192,7 @@ class ClimbSystem(
 
     private fun getNearbyLadder(
         position: Vector2,
-        collisionBox: Box,
+        collisionBox: Rect,
         includeTileBelow: Boolean,
     ): Rectangle? {
         return findCollidingTile(position, collisionBox, includeTileBelow) { cellX, cellY ->
@@ -206,7 +206,7 @@ class ClimbSystem(
 
     private fun getGroundTile(
         position: Vector2,
-        collisionBox: Box
+        collisionBox: Rect
     ): Rectangle? {
         return findCollidingTile(position, collisionBox, false) { cellX, cellY ->
             tiledService.getCollisionRect(cellX, cellY, true, tileRect)
@@ -219,7 +219,7 @@ class ClimbSystem(
 
     private fun getTopLadder(
         position: Vector2,
-        collisionBox: Box,
+        collisionBox: Rect,
     ): Rectangle? {
         return findCollidingTile(position, collisionBox, false) { cellX, cellY ->
             tiledService.getLadderRect(cellX, cellY, tileRect)

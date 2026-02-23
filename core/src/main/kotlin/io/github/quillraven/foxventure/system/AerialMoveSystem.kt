@@ -6,7 +6,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Box
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -155,7 +155,7 @@ class AerialMoveSystem(
         handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY)
     }
 
-    private fun findCollidingTiles(position: Vector2, collisionBox: Box): Boolean {
+    private fun findCollidingTiles(position: Vector2, collisionBox: Rect): Boolean {
         updateCheckRect(position, collisionBox)
         return tiledService.getAllCollisionRects(
             checkRect,
@@ -229,7 +229,7 @@ class AerialMoveSystem(
      * @param position The current position of the entity, which may be updated during the correction process.
      * @return `true` if a valid correction was applied to avoid a ceiling collision, otherwise `false`.
      */
-    private fun tryCeilingCorrection(position: Vector2, collisionBox: Box) {
+    private fun tryCeilingCorrection(position: Vector2, collisionBox: Rect) {
         val tolerance = 0.3f
         val originalX = position.x
 
@@ -266,7 +266,7 @@ class AerialMoveSystem(
         position.x = originalX
     }
 
-    private fun updateCheckRect(position: Vector2, collisionBox: Box) {
+    private fun updateCheckRect(position: Vector2, collisionBox: Rect) {
         checkRect.set(
             position.x + collisionBox.x,
             position.y + collisionBox.y,

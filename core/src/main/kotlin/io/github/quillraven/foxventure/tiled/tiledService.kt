@@ -8,10 +8,14 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.badlogic.gdx.math.Rectangle
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Rect.Companion.set
 import ktx.app.gdxError
 import ktx.assets.loadAsset
+import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 import ktx.tiled.height
+import ktx.tiled.isEmpty
 import ktx.tiled.layer
 import ktx.tiled.property
 import ktx.tiled.width
@@ -26,14 +30,18 @@ interface LoadTileObjectListener {
     fun onLoadTileObject(x: Float, y: Float, mapObject: TiledMapTileMapObject, tile: TiledMapTile)
 }
 
+private data class GroundRect(val type: String, val rect: Rect) {
+    val isLadder get() = type == "ladder"
+    val isSemiSolid get() = type == "semisolid"
+}
+
 class TiledService(
     private val assets: AssetManager,
 ) {
     private var currentMap: TiledMap = TiledMap()
-    private var groundLayer = TiledMapTileLayer(0, 0, 0, 0)
+    private val groundTiles = GdxArray<GroundRect>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
-    private val tmpRect = Rectangle()
 
     val mapWidth: Int get() = currentMap.width
 
@@ -51,13 +59,49 @@ class TiledService(
         tiledMapAsset.finishLoading()
         currentMap = tiledMapAsset.asset
         currentMap.properties.put("gdxFilePath", asset.descriptor.fileName)
-        groundLayer = currentMap.layer("ground") as TiledMapTileLayer
+
+        // load ground collision information
+        loadGroundCollisionInfo()
 
         // load objects
         loadObjects()
 
         // notify listeners
         mapChangeListeners.forEach { it.onMapChanged(currentMap) }
+    }
+
+    private fun loadGroundCollisionInfo() {
+        groundTiles.clear()
+
+        val groundLayer = currentMap.layer("ground") as TiledMapTileLayer
+        for (y in 0 until currentMap.height) {
+            for (x in 0 until currentMap.width) {
+                val cell = groundLayer.getCell(x, y)
+                if (cell == null) {
+                    // no cell -> no collision
+                    groundTiles.add(null)
+                    continue
+                }
+
+                val tile = cell.tile
+                if (tile.objects.isEmpty()) {
+                    // no collision objects defined for the cell -> no collision
+                    groundTiles.add(null)
+                    continue
+                }
+
+                // convert a single collision object to world units and store it according to 'type'
+                val mapObject = tile.objects.single()
+                val collisionRect = Rect(
+                    x + mapObject.x.toWorldUnits(),
+                    y + mapObject.y.toWorldUnits(),
+                    mapObject.width.toWorldUnits(),
+                    mapObject.height.toWorldUnits()
+                )
+                val tileType = tile.property("type", "")
+                groundTiles.add(GroundRect(tileType, collisionRect))
+            }
+        }
     }
 
     private fun loadObjects() {
@@ -76,18 +120,11 @@ class TiledService(
         result.set(0f, 0f, 0f, 0f)
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
 
-        val cell = groundLayer.getCell(cellX, cellY) ?: return
-        val tileType = cell.tile.property<String>("type", "")
-        if (!includeSemiSolid && tileType == "semisolid") return
-        if (tileType == "ladder") return
-        val mapObject = cell.tile.objects.singleOrNull() ?: return
+        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return
+        if (!includeSemiSolid && groundTile.isSemiSolid) return
+        if (groundTile.isLadder) return
 
-        result.set(
-            cellX + mapObject.x.toWorldUnits(),
-            cellY + mapObject.y.toWorldUnits(),
-            mapObject.width.toWorldUnits(),
-            mapObject.height.toWorldUnits()
-        )
+        result.set(groundTile.rect)
     }
 
     fun getAllCollisionRects(
@@ -112,23 +149,16 @@ class TiledService(
                     continue
                 }
 
-                val cell = groundLayer.getCell(x, y) ?: continue
-                val tileType = cell.tile.property<String>("type", "")
-                val mapObject = cell.tile.objects.singleOrNull() ?: continue
-                tmpRect.set(
-                    x + mapObject.x.toWorldUnits(),
-                    y + mapObject.y.toWorldUnits(),
-                    mapObject.width.toWorldUnits(),
-                    mapObject.height.toWorldUnits()
-                )
+                val index = (y * currentMap.width) + x
+                val groundTile = groundTiles.get(index) ?: continue
 
-                if (tmpRect.overlaps(checkRect)) {
+                if (groundTile.rect.overlaps(checkRect)) {
                     foundAnyRect = true
-                    when (tileType) {
-                        "" if solidRect.width == 0f -> solidRect.set(tmpRect)
-                        "semisolid" if semiSolidRect.width == 0f -> semiSolidRect.set(tmpRect)
+                    when (groundTile.type) {
+                        "" if solidRect.width == 0f -> solidRect.set(groundTile.rect)
+                        "semisolid" if semiSolidRect.width == 0f -> semiSolidRect.set(groundTile.rect)
                         "ladder" if topLadderRect.width == 0f && isTopLadderTile(x, y, true) -> {
-                            topLadderRect.set(tmpRect)
+                            topLadderRect.set(groundTile.rect)
                         }
                     }
 
@@ -145,16 +175,10 @@ class TiledService(
         result.set(0f, 0f, 0f, 0f)
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
 
-        val cell = groundLayer.getCell(cellX, cellY) ?: return
-        if (cell.tile.property<String>("type", "") != "ladder") return
-        val mapObject = cell.tile.objects.singleOrNull() ?: return
+        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return
+        if (!groundTile.isLadder) return
 
-        result.set(
-            cellX + mapObject.x.toWorldUnits(),
-            cellY + mapObject.y.toWorldUnits(),
-            mapObject.width.toWorldUnits(),
-            mapObject.height.toWorldUnits()
-        )
+        result.set(groundTile.rect)
     }
 
     fun isTopLadderTile(cellX: Int, cellY: Int, ignoreSelfCheck: Boolean = false): Boolean {
@@ -162,8 +186,8 @@ class TiledService(
             if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return false
 
             // Check if the current tile is a ladder
-            val cell = groundLayer.getCell(cellX, cellY) ?: return false
-            if (cell.tile.property("type", "") != "ladder") {
+            val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return false
+            if (!groundTile.isLadder) {
                 return false
             }
         }
@@ -172,8 +196,8 @@ class TiledService(
         val cellAboveY = cellY + 1
         if (cellAboveY >= currentMap.height) return true
 
-        val cellAbove = groundLayer.getCell(cellX, cellAboveY) ?: return true
-        if (cellAbove.tile.property("type", "") == "ladder") {
+        val groundTile = groundTiles.get((cellAboveY * currentMap.width) + cellX) ?: return true
+        if (groundTile.isLadder) {
             return false // There's a ladder above, so not top
         }
         return true // No ladder above, this is the top

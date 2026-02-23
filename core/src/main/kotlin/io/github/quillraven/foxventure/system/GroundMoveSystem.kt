@@ -6,7 +6,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Box
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -105,7 +105,7 @@ class GroundMoveSystem(
     private fun applyHorizontalMovement(
         velocity: Vector2,
         position: Vector2,
-        collisionBox: Box,
+        collisionBox: Rect,
     ) {
         val delta = velocity.x * physicsTimer.interval
         if (delta == 0f) return
@@ -123,13 +123,13 @@ class GroundMoveSystem(
         }
     }
 
-    private fun clampToMapBounds(position: Vector2, collisionBox: Box) {
+    private fun clampToMapBounds(position: Vector2, collisionBox: Rect) {
         val minX = -collisionBox.x
         val maxX = tiledService.mapWidth - collisionBox.x - collisionBox.width
         position.x = position.x.coerceIn(minX, maxX)
     }
 
-    private fun checkSolidCollision(position: Vector2, collisionBox: Box): Boolean {
+    private fun checkSolidCollision(position: Vector2, collisionBox: Rect): Boolean {
         checkRect.set(
             position.x + collisionBox.x,
             position.y + collisionBox.y,
