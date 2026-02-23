@@ -26,6 +26,7 @@ class AerialMoveSystem(
     private val solidRect = Rectangle()
     private val semiSolidRect = Rectangle()
     private val topLadderRect = Rectangle()
+    private val ceilingRect = Rectangle()
     private val checkRect = Rectangle()
 
     override fun onTick() {
@@ -175,7 +176,7 @@ class AerialMoveSystem(
 
         if (delta > 0f) {
             // ceiling collision
-//            tryCeilingCorrection(position, collision.box)
+            tryCeilingCorrection(position, collision.box)
             position.y = solidRect.y - collision.box.y - collision.box.height
             velocity.y = 0f
             return true
@@ -226,26 +227,41 @@ class AerialMoveSystem(
      * @param position The current position of the entity, which may be updated during the correction process.
      * @return `true` if a valid correction was applied to avoid a ceiling collision, otherwise `false`.
      */
-    private fun tryCeilingCorrection(position: Vector2, collisionBox: Box): Boolean {
-//        val tolerance = 0.3f
-//        val originalX = position.x
-//
-//        // 1) try on the right side
-//        position.x = originalX + tolerance
-//        updateCheckRect(position, collisionBox)
-//        if (!findCollidingTile(includeSemiSolid = false)) {
-//            return true
-//        }
-//
-//        // 2) try on the left side
-//        position.x = originalX - tolerance
-//        updateCheckRect(position, collisionBox)
-//        if (!findCollidingTile(includeSemiSolid = false)) {
-//            return true
-//        }
-//
-//        position.x = originalX
-        return false
+    private fun tryCeilingCorrection(position: Vector2, collisionBox: Box) {
+        val tolerance = 0.3f
+        val originalX = position.x
+
+        fun hasNoCeilingCollision(checkPosition: Vector2): Boolean {
+            updateCheckRect(checkPosition, collisionBox)
+            val startX = checkRect.x.toInt()
+            val endX = (checkRect.x + checkRect.width).toInt()
+            val startY = checkRect.y.toInt()
+            val endY = (checkRect.y + checkRect.height).toInt()
+
+            for (y in startY..endY) {
+                for (x in startX..endX) {
+                    tiledService.getCollisionRect(x, y, includeSemiSolid = false, ceilingRect)
+                    if (ceilingRect.width > 0f && checkRect.overlaps(ceilingRect)) {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
+
+        // 1) try on the right side
+        position.x = originalX + tolerance
+        if (hasNoCeilingCollision(position)) {
+            return
+        }
+
+        // 2) try on the left side
+        position.x = originalX - tolerance
+        if (hasNoCeilingCollision(position)) {
+            return
+        }
+
+        position.x = originalX
     }
 
     private fun updateCheckRect(position: Vector2, collisionBox: Box) {
