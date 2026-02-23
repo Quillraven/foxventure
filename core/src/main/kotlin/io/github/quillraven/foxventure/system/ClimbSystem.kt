@@ -1,6 +1,5 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
@@ -14,6 +13,7 @@ import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
+import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 
@@ -23,9 +23,6 @@ class ClimbSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE) },
 ) {
-    private val tileRect = Rectangle()
-    private val checkRect = Rectangle()
-
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -44,17 +41,17 @@ class ClimbSystem(
         if (!collision.isOnLadder) {
             // skip any other climb logic if not attached to a ladder yet
             val includeTileBelow = inputY < 0f
-            val ladderRect = getNearbyLadder(physics.position, collBox, includeTileBelow)
-            attachToLadder(inputY, jumpPressed, ladderRect, physics, entity, collision)
+            val ladderTile = getNearbyLadder(physics.position, collBox, includeTileBelow)
+            attachToLadder(inputY, jumpPressed, ladderTile, physics, entity, collision)
             return
         }
 
         // At this point we know the entity is on a ladder
         //
         // check if there is no ladder anymore or the entity wants to abort climbing
-        val ladderRect = getNearbyLadder(physics.position, collBox, false)
+        val ladderTile = getNearbyLadder(physics.position, collBox, false)
         val velocity = entity[Velocity].current
-        val abortClimbing = inputY == 0f && (getInputX(controller) != 0f || jumpPressed || ladderRect == null)
+        val abortClimbing = inputY == 0f && (getInputX(controller) != 0f || jumpPressed || ladderTile == null)
         if (abortClimbing) {
             stopClimbing(entity, collision, velocity)
             return
@@ -89,33 +86,31 @@ class ClimbSystem(
     private fun attachToLadder(
         inputY: Float,
         jumpPressed: Boolean,
-        ladderRect: Rectangle?,
+        ladderTile: GroundTile?,
         physics: Physics,
         entity: Entity,
         collision: Collision
     ) {
-        if (inputY == 0f || jumpPressed || ladderRect == null) {
+        if (inputY == 0f || jumpPressed || ladderTile == null) {
             // if no climb input or jump is pressed or no nearby ladder -> do nothing
             return
         }
-        val ladderX = ladderRect.x.toInt()
-        val ladderY = ladderRect.y.toInt()
-        if (inputY < 0f && collision.isGrounded && !tiledService.isTopLadderTile(ladderX, ladderY)) {
-            // climbing down only allowed on a top ladder tile. This prevents graphical jittering when pressing
+        if (inputY < 0f && collision.isGrounded && !ladderTile.isLadderTop) {
+            // climbing down only allowed on the top of a ladder tile. This prevents graphical jittering when pressing
             // DOWN while standing on the ground and the bottom of a ladder.
             return
         }
 
         // trying to climb -> attach to ladder if it is close enough
         val collBox = collision.box
-        val ladderCenterX = ladderRect.x + ladderRect.width * 0.5f
+        val ladderCenterX = ladderTile.rect.x + ladderTile.rect.width * 0.5f
         val playerCenterX = physics.position.x + collBox.x + collBox.width * 0.5f
         val tolerance = 0.3f
 
         if (abs(ladderCenterX - playerCenterX) <= tolerance) {
             startClimbing(entity, collision)
-            physics.position.x = ladderRect.x + ladderRect.width * 0.5f - collBox.width * 0.5f - collBox.x
-            physics.position.y = ladderRect.y + ladderRect.height * 0.5f - collBox.y
+            physics.position.x = ladderTile.rect.x + ladderTile.rect.width * 0.5f - collBox.width * 0.5f - collBox.x
+            physics.position.y = ladderTile.rect.y + ladderTile.rect.height * 0.5f - collBox.y
         }
     }
 
@@ -161,60 +156,23 @@ class ClimbSystem(
         return input
     }
 
-    private fun findCollidingTile(
-        position: Vector2,
-        collisionBox: Rect,
-        includeTileBelow: Boolean,
-        action: (cellX: Int, cellY: Int) -> Rectangle?
-    ): Rectangle? {
-        checkRect.set(
-            position.x + collisionBox.x,
-            if (includeTileBelow) position.y + collisionBox.y - 1 else position.y + collisionBox.y,
-            collisionBox.width,
-            if (includeTileBelow) collisionBox.height + 1 else collisionBox.height
-        )
-
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                val result = action(x, y)
-                if (result != null) {
-                    return result
-                }
-            }
-        }
-        return null
-    }
-
     private fun getNearbyLadder(
         position: Vector2,
         collisionBox: Rect,
         includeTileBelow: Boolean,
-    ): Rectangle? {
-        return findCollidingTile(position, collisionBox, includeTileBelow) { cellX, cellY ->
-            tiledService.getLadderRect(cellX, cellY, tileRect)
-            if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
-                return@findCollidingTile tileRect
-            }
-            return@findCollidingTile null
-        }
+    ): GroundTile? {
+        return tiledService.getLadderTile(position, collisionBox, includeTileBelow)
     }
 
     private fun getTopLadder(
         position: Vector2,
         collisionBox: Rect,
-    ): Rectangle? {
-        return findCollidingTile(position, collisionBox, false) { cellX, cellY ->
-            tiledService.getLadderRect(cellX, cellY, tileRect)
-            if (tileRect.width > 0f && checkRect.overlaps(tileRect) && tiledService.isTopLadderTile(cellX, cellY)) {
-                return@findCollidingTile tileRect
-            }
-            return@findCollidingTile null
+    ): Rect? {
+        val ladder = tiledService.getLadderTile(position, collisionBox, false) ?: return null
+        if (ladder.isLadderTop) {
+            return ladder.rect
         }
+        return null
     }
 
     private fun checkLadderTop(

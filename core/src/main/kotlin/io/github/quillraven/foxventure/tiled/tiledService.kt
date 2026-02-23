@@ -31,8 +31,10 @@ interface LoadTileObjectListener {
     fun onLoadTileObject(x: Float, y: Float, mapObject: TiledMapTileMapObject, tile: TiledMapTile)
 }
 
-private data class GroundRect(val type: String, val rect: Rect) {
-    val isLadder get() = type == "ladder"
+data class GroundTile(val type: String, val rect: Rect) {
+    val isSolid get() = type == ""
+    val isLadder get() = type == "ladder" || type == "ladder_top"
+    val isLadderTop get() = type == "ladder_top"
     val isSemiSolid get() = type == "semisolid"
 }
 
@@ -40,8 +42,7 @@ class TiledService(
     private val assets: AssetManager,
 ) {
     private var currentMap: TiledMap = TiledMap()
-    private val groundTiles = GdxArray<GroundRect>()
-    private val collisionRect = Rectangle()
+    private val groundTiles = GdxArray<GroundTile>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
 
@@ -101,7 +102,25 @@ class TiledService(
                     mapObject.height.toWorldUnits()
                 )
                 val tileType = tile.property("type", "")
-                groundTiles.add(GroundRect(tileType, collisionRect))
+                if (tileType == "ladder") {
+                    // the top of a ladder has a special meaning in ClimbSystem.
+                    // For simplicity, we will use a special "ladder_top" type instead of just "ladder"
+                    // for future ladder queries
+                    val cellAboveY = y + 1
+                    if (cellAboveY >= currentMap.height) {
+                        // topmost tile of the map -> ladder_top
+                        groundTiles.add(GroundTile("ladder_top", collisionRect))
+                        continue
+                    }
+
+                    val type = groundLayer.getCell(x, cellAboveY)?.tile?.property("type", "")
+                    if (type != "ladder") {
+                        // the tile above is no ladder -> ladder_top
+                        groundTiles.add(GroundTile("ladder_top", collisionRect))
+                        continue
+                    }
+                }
+                groundTiles.add(GroundTile(tileType, collisionRect))
             }
         }
     }
@@ -119,22 +138,15 @@ class TiledService(
     }
 
     fun getCollisionRect(position: Vector2, collisionBox: Rect, includeSemiSolid: Boolean): Rect? {
-        collisionRect.set(
-            position.x + collisionBox.x,
-            position.y + collisionBox.y,
-            collisionBox.width,
-            collisionBox.height
-        )
+        val startX = position.x + collisionBox.x
+        val endX = startX + collisionBox.width
+        val startY = position.y + collisionBox.y
+        val endY = position.y + collisionBox.y + collisionBox.height
 
-        val startX = collisionRect.x.toInt()
-        val endX = (collisionRect.x + collisionRect.width).toInt()
-        val startY = collisionRect.y.toInt()
-        val endY = (collisionRect.y + collisionRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
+        for (y in startY.toInt()..endY.toInt()) {
+            for (x in startX.toInt()..endX.toInt()) {
                 val rect = getCollisionRect(x, y, includeSemiSolid) ?: continue
-                if (rect.overlaps(collisionRect)) {
+                if (rect.overlaps(startX, startY, collisionBox.width, collisionBox.height)) {
                     return rect
                 }
             }
@@ -180,12 +192,10 @@ class TiledService(
 
                 if (groundTile.rect.overlaps(checkRect)) {
                     foundAnyRect = true
-                    when (groundTile.type) {
-                        "" if solidRect.width == 0f -> solidRect.set(groundTile.rect)
-                        "semisolid" if semiSolidRect.width == 0f -> semiSolidRect.set(groundTile.rect)
-                        "ladder" if topLadderRect.width == 0f && isTopLadderTile(x, y, true) -> {
-                            topLadderRect.set(groundTile.rect)
-                        }
+                    when {
+                        groundTile.isSolid && solidRect.width == 0f -> solidRect.set(groundTile.rect)
+                        groundTile.isSemiSolid && semiSolidRect.width == 0f -> semiSolidRect.set(groundTile.rect)
+                        groundTile.isLadderTop && topLadderRect.width == 0f -> topLadderRect.set(groundTile.rect)
                     }
 
                     if (solidRect.width > 0f && semiSolidRect.width > 0f && topLadderRect.width > 0f) {
@@ -197,36 +207,34 @@ class TiledService(
         return foundAnyRect
     }
 
-    fun getLadderRect(cellX: Int, cellY: Int, result: Rectangle) {
-        result.set(0f, 0f, 0f, 0f)
-        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
+    fun getLadderTile(position: Vector2, collisionBox: Rect, includeTileBelow: Boolean): GroundTile? {
+        val startX = position.x + collisionBox.x
+        val endX = startX + collisionBox.width
+        var startY = position.y + collisionBox.y
+        var endY = position.y + collisionBox.y + collisionBox.height
+        if (includeTileBelow) {
+            startY -= 1
+            endY += 1
+        }
 
-        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return
-        if (!groundTile.isLadder) return
-
-        result.set(groundTile.rect)
-    }
-
-    fun isTopLadderTile(cellX: Int, cellY: Int, ignoreSelfCheck: Boolean = false): Boolean {
-        if (!ignoreSelfCheck) {
-            if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return false
-
-            // Check if the current tile is a ladder
-            val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return false
-            if (!groundTile.isLadder) {
-                return false
+        for (y in startY.toInt()..endY.toInt()) {
+            for (x in startX.toInt()..endX.toInt()) {
+                val ladder = getLadderTile(x, y) ?: continue
+                if (ladder.rect.overlaps(startX, startY, collisionBox.width, collisionBox.height)) {
+                    return ladder
+                }
             }
         }
+        return null
+    }
 
-        // Check if the tile above is NOT a ladder
-        val cellAboveY = cellY + 1
-        if (cellAboveY >= currentMap.height) return true
+    fun getLadderTile(cellX: Int, cellY: Int): GroundTile? {
+        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return null
 
-        val groundTile = groundTiles.get((cellAboveY * currentMap.width) + cellX) ?: return true
-        if (groundTile.isLadder) {
-            return false // There's a ladder above, so not top
-        }
-        return true // No ladder above, this is the top
+        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return null
+        if (!groundTile.isLadder) return null
+
+        return groundTile
     }
 
     fun addMapChangeListener(listener: MapChangeListener) {

@@ -10,6 +10,10 @@ data class Rect(val x: Float, val y: Float, val width: Float, val height: Float)
         return x < rect.x + rect.width && x + width > rect.x && y < rect.y + rect.height && y + height > rect.y
     }
 
+    fun overlaps(otherX: Float, otherY: Float, otherWidth: Float, otherHeight: Float): Boolean {
+        return x < otherX + otherWidth && x + width > otherX && y < otherY + otherHeight && y + height > otherY
+    }
+
     companion object {
         fun ofRect(rect: Rectangle) = Rect(
             rect.x.toWorldUnits(), rect.y.toWorldUnits(),
