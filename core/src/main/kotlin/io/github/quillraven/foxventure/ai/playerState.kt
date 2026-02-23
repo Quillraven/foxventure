@@ -3,13 +3,14 @@ package io.github.quillraven.foxventure.ai
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Velocity
 
 data object PlayerStateIdle : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].let { it.changeTo(it.idle) }
+        entity[Animation].changeTo(AnimationType.IDLE)
     }
 
     override fun World.onUpdate(entity: Entity) {
@@ -31,7 +32,7 @@ data object PlayerStateIdle : FsmState {
 
 data object PlayerStateRun : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].let { it.changeTo(it.run) }
+        entity[Animation].changeTo(AnimationType.RUN)
     }
 
     override fun World.onUpdate(entity: Entity) {
@@ -49,7 +50,7 @@ data object PlayerStateRun : FsmState {
 
 data object PlayerStateJump : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].let { it.changeTo(it.jump) }
+        entity[Animation].changeTo(AnimationType.JUMP)
     }
 
     override fun World.onUpdate(entity: Entity) {
@@ -65,7 +66,7 @@ data object PlayerStateJump : FsmState {
 
 data object PlayerStateFall : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].let { it.changeTo(it.fall) }
+        entity[Animation].changeTo(AnimationType.FALL)
     }
 
     override fun World.onUpdate(entity: Entity) {
@@ -83,7 +84,7 @@ data object PlayerStateFall : FsmState {
 
 data object PlayerStateClimb : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].let { it.changeTo(it.climb) }
+        entity[Animation].changeTo(AnimationType.CLIMB)
     }
 
     override fun World.onExit(entity: Entity) {

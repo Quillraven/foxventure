@@ -14,6 +14,7 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Box
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
@@ -28,6 +29,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.app.gdxError
+import ktx.collections.gdxMapOf
 import ktx.math.vec2
 import ktx.tiled.height
 import ktx.tiled.property
@@ -90,10 +92,12 @@ class SpawnSystem(
                 val objectKey = atlasKey.substringBeforeLast("/")
                 it += Animation(
                     idle = getAnimation(objectKey, "idle"),
-                    run = getAnimation(objectKey, "run"),
-                    jump = getAnimation(objectKey, "jump"),
-                    fall = getAnimation(objectKey, "fall"),
-                    climb = getAnimation(objectKey, "climb"),
+                    gdxAnimations = gdxMapOf(
+                        AnimationType.RUN to getAnimation(objectKey, "run"),
+                        AnimationType.JUMP to getAnimation(objectKey, "jump"),
+                        AnimationType.FALL to getAnimation(objectKey, "fall"),
+                        AnimationType.CLIMB to getAnimation(objectKey, "climb"),
+                    ),
                 )
 
                 it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
