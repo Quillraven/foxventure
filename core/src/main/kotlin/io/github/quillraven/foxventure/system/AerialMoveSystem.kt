@@ -23,8 +23,9 @@ class AerialMoveSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, JumpControl, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
-    private val tileRect = Rectangle()
-    private val ceilingCheckRect = Rectangle()
+    private val solidRect = Rectangle()
+    private val semiSolidRect = Rectangle()
+    private val topLadderRect = Rectangle()
     private val checkRect = Rectangle()
 
     override fun onTick() {
@@ -42,7 +43,7 @@ class AerialMoveSystem(
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
 
         updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded)
-        applyGravity(velocity, physics, jumpControl, collision.isGrounded)
+        applyGravity(velocity, physics, jumpControl.isJumping, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
     }
 
@@ -98,17 +99,27 @@ class AerialMoveSystem(
         return false
     }
 
+    /**
+     * Applies gravitational force to the vertical velocity of an entity, considering various physics parameters
+     * and the state of the jump. This method adjusts the entity's y-velocity to simulate realistic gravity effects,
+     * including peak gravity reduction for a "floaty" experience at the top of a jump and fall speed limitation.
+     *
+     * @param velocity The current velocity of the entity, which will be modified in this method.
+     * @param physics The physics configuration containing parameters like gravity, maximum fall speed, and peak gravity multiplier.
+     * @param isJumping A boolean indicating whether the entity is currently jumping.
+     * @param isGrounded A boolean indicating whether the entity is currently on the ground.
+     */
     private fun applyGravity(
         velocity: Vector2,
         physics: Physics,
-        jumpControl: JumpControl,
+        isJumping: Boolean,
         isGrounded: Boolean,
     ) {
         // velocity.y is high when the jump starts (=initial impulse) and then slows down over time
         // due to gravity until it is zero. Then the fall starts (=velocity.y < 0).
         // When close to the turning point and the jump is not aborted (=jumpControl.isJumping), then
         // apply lower gravity at the peak to give a more "floaty" experience at the top of the jump.
-        val isAtPeak = abs(velocity.y) < physics.peakVelocityThreshold && !isGrounded && jumpControl.isJumping
+        val isAtPeak = abs(velocity.y) < physics.peakVelocityThreshold && !isGrounded && isJumping
         val gravityMultiplier = if (isAtPeak) physics.peakGravityMultiplier else 1f
 
         // cap fall speed according to physics configuration (=maxFallSpeed)
@@ -127,15 +138,28 @@ class AerialMoveSystem(
             return
         }
 
+        collision.isGrounded = false
         val prevPositionY = position.y + collision.box.y
         position.y += delta
-        updateCheckRect(position, collision.box)
-        collision.isGrounded = false
+        if (!findCollidingTiles(position, collision.box)) {
+            // no colliding tiles -> nothing to do
+            return
+        }
 
         if (handleSolidCollision(position, collision, velocity, delta)) {
             return
         }
         handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY)
+    }
+
+    private fun findCollidingTiles(position: Vector2, collisionBox: Box): Boolean {
+        updateCheckRect(position, collisionBox)
+        return tiledService.getAllCollisionRects(
+            checkRect,
+            solidRect,
+            semiSolidRect,
+            topLadderRect
+        )
     }
 
     private fun handleSolidCollision(
@@ -144,20 +168,21 @@ class AerialMoveSystem(
         velocity: Vector2,
         delta: Float,
     ): Boolean {
+        if (solidRect.width == 0f) {
+            // no solid collision -> do nothing
+            return false
+        }
+
         if (delta > 0f) {
             // ceiling collision
-            val ceilingY = findClosestCeilingY() ?: return false
-            tryCeilingCorrection(position, collision.box)
-            position.y = ceilingY - collision.box.y - collision.box.height
+//            tryCeilingCorrection(position, collision.box)
+            position.y = solidRect.y - collision.box.y - collision.box.height
             velocity.y = 0f
             return true
         }
 
         // ground collision
-        if (!findCollidingTile(includeSemiSolid = false)) {
-            return false
-        }
-        position.y = tileRect.y + tileRect.height - collision.box.y
+        position.y = solidRect.y + solidRect.height - collision.box.y
         velocity.y = 0f
         collision.isGrounded = true
         return true
@@ -170,14 +195,16 @@ class AerialMoveSystem(
         delta: Float,
         prevPositionY: Float,
     ) {
-        if (delta > 0f) {
-            // no semisolid collision during jump
+        if (delta > 0f || (semiSolidRect.width == 0f && topLadderRect.width == 0f)) {
+            // no semisolid collision during jump or no semisolid/ladder collision
             return
         }
-        if (!findCollidingTile(includeSemiSolid = true) && !findTopLadderTile()) {
-            // no semisolid collision or top of a ladder collision
-            return
+
+        val tileRect = when {
+            semiSolidRect.y + semiSolidRect.height > topLadderRect.y + topLadderRect.height -> semiSolidRect
+            else -> topLadderRect
         }
+
         if (prevPositionY < tileRect.y + tileRect.height) {
             // the previous position was below semisolid -> fall through it
             return
@@ -200,24 +227,24 @@ class AerialMoveSystem(
      * @return `true` if a valid correction was applied to avoid a ceiling collision, otherwise `false`.
      */
     private fun tryCeilingCorrection(position: Vector2, collisionBox: Box): Boolean {
-        val tolerance = 0.3f
-        val originalX = position.x
-
-        // 1) try on the right side
-        position.x = originalX + tolerance
-        updateCheckRect(position, collisionBox)
-        if (!findCollidingTile(includeSemiSolid = false)) {
-            return true
-        }
-
-        // 2) try on the left side
-        position.x = originalX - tolerance
-        updateCheckRect(position, collisionBox)
-        if (!findCollidingTile(includeSemiSolid = false)) {
-            return true
-        }
-
-        position.x = originalX
+//        val tolerance = 0.3f
+//        val originalX = position.x
+//
+//        // 1) try on the right side
+//        position.x = originalX + tolerance
+//        updateCheckRect(position, collisionBox)
+//        if (!findCollidingTile(includeSemiSolid = false)) {
+//            return true
+//        }
+//
+//        // 2) try on the left side
+//        position.x = originalX - tolerance
+//        updateCheckRect(position, collisionBox)
+//        if (!findCollidingTile(includeSemiSolid = false)) {
+//            return true
+//        }
+//
+//        position.x = originalX
         return false
     }
 
@@ -228,59 +255,5 @@ class AerialMoveSystem(
             collisionBox.width,
             collisionBox.height
         )
-    }
-
-    private fun findCollidingTile(includeSemiSolid: Boolean): Boolean {
-        return scanTiles { x, y ->
-            tiledService.getCollisionRect(x, y, includeSemiSolid, tileRect)
-            tileRect.width > 0f && checkRect.overlaps(tileRect)
-        }
-    }
-
-    private fun findTopLadderTile(): Boolean {
-        return scanTiles { x, y ->
-            if (tiledService.isTopLadderTile(x, y)) {
-                tileRect.set(x.toFloat(), y.toFloat(), 1f, 1f)
-                checkRect.overlaps(tileRect)
-            } else {
-                false
-            }
-        }
-    }
-
-    private inline fun scanTiles(predicate: (x: Int, y: Int) -> Boolean): Boolean {
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                if (predicate(x, y)) return true
-            }
-        }
-        return false
-    }
-
-    private fun findClosestCeilingY(): Float? {
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        var closestY: Float? = null
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, false, ceilingCheckRect)
-                if (ceilingCheckRect.width > 0f && checkRect.overlaps(ceilingCheckRect)) {
-                    val tileBottom = ceilingCheckRect.y
-                    if (closestY == null || tileBottom > closestY) {
-                        closestY = tileBottom
-                        tileRect.set(ceilingCheckRect)
-                    }
-                }
-            }
-        }
-        return closestY
     }
 }

@@ -30,9 +30,10 @@ class TiledService(
     private val assets: AssetManager,
 ) {
     private var currentMap: TiledMap = TiledMap()
-    private val currentTileLayers = gdxArrayOf<TiledMapTileLayer>()
+    private var groundLayer = TiledMapTileLayer(0, 0, 0, 0)
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
+    private val tmpRect = Rectangle()
 
     val mapWidth: Int get() = currentMap.width
 
@@ -50,7 +51,7 @@ class TiledService(
         tiledMapAsset.finishLoading()
         currentMap = tiledMapAsset.asset
         currentMap.properties.put("gdxFilePath", asset.descriptor.fileName)
-        currentMap.layers.getByType(TiledMapTileLayer::class.java, currentTileLayers)
+        groundLayer = currentMap.layer("ground") as TiledMapTileLayer
 
         // load objects
         loadObjects()
@@ -75,68 +76,106 @@ class TiledService(
         result.set(0f, 0f, 0f, 0f)
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
 
-        currentTileLayers.forEach { layer ->
-            val cell = layer.getCell(cellX, cellY) ?: return@forEach
-            val tileType = cell.tile.property<String>("type", "")
-            if (!includeSemiSolid && tileType == "semisolid") return@forEach
-            if (tileType == "ladder") return@forEach
-            val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
+        val cell = groundLayer.getCell(cellX, cellY) ?: return
+        val tileType = cell.tile.property<String>("type", "")
+        if (!includeSemiSolid && tileType == "semisolid") return
+        if (tileType == "ladder") return
+        val mapObject = cell.tile.objects.singleOrNull() ?: return
 
-            result.set(
-                cellX + mapObject.x.toWorldUnits(),
-                cellY + mapObject.y.toWorldUnits(),
-                mapObject.width.toWorldUnits(),
-                mapObject.height.toWorldUnits()
-            )
-            return
+        result.set(
+            cellX + mapObject.x.toWorldUnits(),
+            cellY + mapObject.y.toWorldUnits(),
+            mapObject.width.toWorldUnits(),
+            mapObject.height.toWorldUnits()
+        )
+    }
+
+    fun getAllCollisionRects(
+        checkRect: Rectangle,
+        solidRect: Rectangle,
+        semiSolidRect: Rectangle,
+        topLadderRect: Rectangle
+    ): Boolean {
+        solidRect.set(0f, 0f, 0f, 0f)
+        semiSolidRect.set(0f, 0f, 0f, 0f)
+        topLadderRect.set(0f, 0f, 0f, 0f)
+
+        val startX = checkRect.x.toInt()
+        val endX = (checkRect.x + checkRect.width).toInt()
+        val startY = checkRect.y.toInt()
+        val endY = (checkRect.y + checkRect.height).toInt()
+        var foundAnyRect = false
+
+        for (y in endY downTo startY) {
+            for (x in startX..endX) {
+                if (x !in 0..<currentMap.width || y !in 0..<currentMap.height) {
+                    continue
+                }
+
+                val cell = groundLayer.getCell(x, y) ?: continue
+                val tileType = cell.tile.property<String>("type", "")
+                val mapObject = cell.tile.objects.singleOrNull() ?: continue
+                tmpRect.set(
+                    x + mapObject.x.toWorldUnits(),
+                    y + mapObject.y.toWorldUnits(),
+                    mapObject.width.toWorldUnits(),
+                    mapObject.height.toWorldUnits()
+                )
+
+                if (tmpRect.overlaps(checkRect)) {
+                    foundAnyRect = true
+                    when (tileType) {
+                        "" if solidRect.width == 0f -> solidRect.set(tmpRect)
+                        "semisolid" if semiSolidRect.width == 0f -> semiSolidRect.set(tmpRect)
+                        "ladder" if topLadderRect.width == 0f && isTopLadderTile(x, y, true) -> {
+                            topLadderRect.set(tmpRect)
+                        }
+                    }
+
+                    if (solidRect.width > 0f && semiSolidRect.width > 0f && topLadderRect.width > 0f) {
+                        return true
+                    }
+                }
+            }
         }
+        return foundAnyRect
     }
 
     fun getLadderRect(cellX: Int, cellY: Int, result: Rectangle) {
         result.set(0f, 0f, 0f, 0f)
         if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
 
-        currentTileLayers.forEach { layer ->
-            val cell = layer.getCell(cellX, cellY) ?: return@forEach
-            if (cell.tile.property<String>("type", "") != "ladder") return@forEach
-            val mapObject = cell.tile.objects.singleOrNull() ?: return@forEach
+        val cell = groundLayer.getCell(cellX, cellY) ?: return
+        if (cell.tile.property<String>("type", "") != "ladder") return
+        val mapObject = cell.tile.objects.singleOrNull() ?: return
 
-            result.set(
-                cellX + mapObject.x.toWorldUnits(),
-                cellY + mapObject.y.toWorldUnits(),
-                mapObject.width.toWorldUnits(),
-                mapObject.height.toWorldUnits()
-            )
-            return
-        }
+        result.set(
+            cellX + mapObject.x.toWorldUnits(),
+            cellY + mapObject.y.toWorldUnits(),
+            mapObject.width.toWorldUnits(),
+            mapObject.height.toWorldUnits()
+        )
     }
 
-    fun isTopLadderTile(cellX: Int, cellY: Int): Boolean {
-        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return false
+    fun isTopLadderTile(cellX: Int, cellY: Int, ignoreSelfCheck: Boolean = false): Boolean {
+        if (!ignoreSelfCheck) {
+            if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return false
 
-        // Check if the current tile is a ladder
-        var isLadder = false
-        currentTileLayers.forEach { layer ->
-            val cell = layer.getCell(cellX, cellY) ?: return@forEach
-            if (cell.tile.property("type", "") == "ladder") {
-                isLadder = true
-                return@forEach
+            // Check if the current tile is a ladder
+            val cell = groundLayer.getCell(cellX, cellY) ?: return false
+            if (cell.tile.property("type", "") != "ladder") {
+                return false
             }
         }
-
-        if (!isLadder) return false
 
         // Check if the tile above is NOT a ladder
         val cellAboveY = cellY + 1
         if (cellAboveY >= currentMap.height) return true
 
-        currentTileLayers.forEach { layer ->
-            val cellAbove = layer.getCell(cellX, cellAboveY) ?: return@forEach
-            if (cellAbove.tile.property("type", "") == "ladder") {
-                return false // There's a ladder above, so not top
-            }
+        val cellAbove = groundLayer.getCell(cellX, cellAboveY) ?: return true
+        if (cellAbove.tile.property("type", "") == "ladder") {
+            return false // There's a ladder above, so not top
         }
-
         return true // No ladder above, this is the top
     }
 
