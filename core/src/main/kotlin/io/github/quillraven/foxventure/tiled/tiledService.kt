@@ -5,12 +5,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.component.Rect
-import io.github.quillraven.foxventure.component.Rect.Companion.set
 import ktx.app.gdxError
 import ktx.assets.loadAsset
 import ktx.collections.GdxArray
@@ -165,46 +163,39 @@ class TiledService(
         return groundTile.rect
     }
 
-    fun getAllCollisionRects(
-        checkRect: Rectangle,
-        solidRect: Rectangle,
-        semiSolidRect: Rectangle,
-        topLadderRect: Rectangle
-    ): Boolean {
-        solidRect.set(0f, 0f, 0f, 0f)
-        semiSolidRect.set(0f, 0f, 0f, 0f)
-        topLadderRect.set(0f, 0f, 0f, 0f)
+    /**
+     * Determines the first aerial ground tile that collides with the given position and collision box.
+     * The method iterates through the collision box area and checks for any overlapping tiles,
+     * considering only solid tiles, semi-solid tiles, and ladder-top tiles.
+     *
+     * @param position The position vector of the entity, used as the reference for tile collision detection.
+     * @param collisionBox The bounding box representing the area to check for potential collisions.
+     * @return The first `GroundTile` that overlaps with the collision box, or `null` if no such tile exists.
+     */
+    fun getAerialCollisionTile(position: Vector2, collisionBox: Rect): GroundTile? {
+        val startX = position.x + collisionBox.x
+        val endX = startX + collisionBox.width
+        val startY = position.y + collisionBox.y
+        val endY = startY + collisionBox.height
 
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-        var foundAnyRect = false
-
-        for (y in endY downTo startY) {
-            for (x in startX..endX) {
+        for (y in endY.toInt() downTo startY.toInt()) {
+            for (x in startX.toInt()..endX.toInt()) {
                 if (x !in 0..<currentMap.width || y !in 0..<currentMap.height) {
                     continue
                 }
 
                 val index = (y * currentMap.width) + x
                 val groundTile = groundTiles.get(index) ?: continue
+                // ignore ladder tiles but consider ladder tops
+                if (groundTile.isLadder && !groundTile.isLadderTop) continue
 
-                if (groundTile.rect.overlaps(checkRect)) {
-                    foundAnyRect = true
-                    when {
-                        groundTile.isSolid && solidRect.width == 0f -> solidRect.set(groundTile.rect)
-                        groundTile.isSemiSolid && semiSolidRect.width == 0f -> semiSolidRect.set(groundTile.rect)
-                        groundTile.isLadderTop && topLadderRect.width == 0f -> topLadderRect.set(groundTile.rect)
-                    }
-
-                    if (solidRect.width > 0f && semiSolidRect.width > 0f && topLadderRect.width > 0f) {
-                        return true
-                    }
+                if (groundTile.rect.overlaps(startX, startY, collisionBox.width, collisionBox.height)) {
+                    return groundTile
                 }
             }
         }
-        return foundAnyRect
+
+        return null
     }
 
     fun getLadderTile(position: Vector2, collisionBox: Rect, includeTileBelow: Boolean): GroundTile? {

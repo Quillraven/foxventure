@@ -1,6 +1,5 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
@@ -23,11 +22,6 @@ class AerialMoveSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
-    private val solidRect = Rectangle()
-    private val semiSolidRect = Rectangle()
-    private val topLadderRect = Rectangle()
-    private val checkRect = Rectangle()
-
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -143,30 +137,13 @@ class AerialMoveSystem(
         collision.isGrounded = false
         val prevPositionY = position.y + collision.box.y
         position.y += delta
-        if (!findCollidingTiles(position, collision.box)) {
-            // no colliding tiles -> nothing to do
-            return
-        }
+        val tile = tiledService.getAerialCollisionTile(position, collision.box) ?: return
 
-        if (handleSolidCollision(position, collision, velocity, delta)) {
-            return
+        if (tile.isSolid) {
+            handleSolidCollision(position, collision, velocity, delta, tile.rect)
+        } else if (tile.isSemiSolid || tile.isLadderTop) {
+            handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY, tile.rect)
         }
-        handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY)
-    }
-
-    private fun findCollidingTiles(position: Vector2, collisionBox: Rect): Boolean {
-        checkRect.set(
-            position.x + collisionBox.x,
-            position.y + collisionBox.y,
-            collisionBox.width,
-            collisionBox.height
-        )
-        return tiledService.getAllCollisionRects(
-            checkRect,
-            solidRect,
-            semiSolidRect,
-            topLadderRect
-        )
     }
 
     private fun handleSolidCollision(
@@ -174,25 +151,20 @@ class AerialMoveSystem(
         collision: Collision,
         velocity: Vector2,
         delta: Float,
-    ): Boolean {
-        if (solidRect.width == 0f) {
-            // no solid collision -> do nothing
-            return false
-        }
-
+        solidRect: Rect,
+    ) {
         if (delta > 0f) {
             // ceiling collision
             tryCeilingCorrection(position, collision.box)
             position.y = solidRect.y - collision.box.y - collision.box.height
             velocity.y = 0f
-            return true
+            return
         }
 
         // ground collision
         position.y = solidRect.y + solidRect.height - collision.box.y
         velocity.y = 0f
         collision.isGrounded = true
-        return true
     }
 
     private fun handleSemiSolidCollision(
@@ -201,15 +173,11 @@ class AerialMoveSystem(
         velocity: Vector2,
         delta: Float,
         prevPositionY: Float,
+        tileRect: Rect,
     ) {
-        if (delta > 0f || (semiSolidRect.width == 0f && topLadderRect.width == 0f)) {
-            // no semisolid collision during jump or no semisolid/ladder collision
+        if (delta > 0f) {
+            // no semisolid collision during jump
             return
-        }
-
-        val tileRect = when {
-            semiSolidRect.y + semiSolidRect.height > topLadderRect.y + topLadderRect.height -> semiSolidRect
-            else -> topLadderRect
         }
 
         if (prevPositionY < tileRect.y + tileRect.height) {
