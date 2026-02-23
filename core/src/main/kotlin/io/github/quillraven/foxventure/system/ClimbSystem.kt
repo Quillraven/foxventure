@@ -139,7 +139,7 @@ class ClimbSystem(
 
         // reset jump settings to not accidentally start a midair jump immediately after stopping the climb
         entity[JumpControl].let { jumpControl ->
-            jumpControl.jumpInput = false
+            jumpControl.isJumping = false
             jumpControl.coyoteTimer = 0f
             jumpControl.jumpBufferTimer = 0f
         }

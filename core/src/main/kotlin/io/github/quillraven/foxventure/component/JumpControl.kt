@@ -6,8 +6,8 @@ import com.github.quillraven.fleks.ComponentType
 data class JumpControl(
     var coyoteTimer: Float = 0f,
     var jumpBufferTimer: Float = 0f,
-    var jumpInput: Boolean = false,
-    var wasJumpPressed: Boolean = false,
+    var isJumping: Boolean = false,
+    var isJumpCommandHeld: Boolean = false,
 ) : Component<JumpControl> {
     override fun type() = JumpControl
 
