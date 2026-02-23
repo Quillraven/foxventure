@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.component.Rect
@@ -40,6 +41,7 @@ class TiledService(
 ) {
     private var currentMap: TiledMap = TiledMap()
     private val groundTiles = GdxArray<GroundRect>()
+    private val collisionRect = Rectangle()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
 
@@ -116,15 +118,39 @@ class TiledService(
         }
     }
 
-    fun getCollisionRect(cellX: Int, cellY: Int, includeSemiSolid: Boolean, result: Rectangle) {
-        result.set(0f, 0f, 0f, 0f)
-        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return
+    fun getCollisionRect(position: Vector2, collisionBox: Rect, includeSemiSolid: Boolean): Rect? {
+        collisionRect.set(
+            position.x + collisionBox.x,
+            position.y + collisionBox.y,
+            collisionBox.width,
+            collisionBox.height
+        )
 
-        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return
-        if (!includeSemiSolid && groundTile.isSemiSolid) return
-        if (groundTile.isLadder) return
+        val startX = collisionRect.x.toInt()
+        val endX = (collisionRect.x + collisionRect.width).toInt()
+        val startY = collisionRect.y.toInt()
+        val endY = (collisionRect.y + collisionRect.height).toInt()
 
-        result.set(groundTile.rect)
+        for (y in startY..endY) {
+            for (x in startX..endX) {
+                val rect = getCollisionRect(x, y, includeSemiSolid) ?: continue
+                if (rect.overlaps(collisionRect)) {
+                    return rect
+                }
+            }
+        }
+        return null
+    }
+
+    fun getCollisionRect(cellX: Int, cellY: Int, includeSemiSolid: Boolean): Rect? {
+        if (cellX !in 0..<currentMap.width || cellY !in 0..<currentMap.height) return null
+
+        val groundTile = groundTiles.get((cellY * currentMap.width) + cellX) ?: return null
+        if (!includeSemiSolid && groundTile.isSemiSolid) return null
+        // ignore ladders because you can run inside ladder tiles. Ladders are handled via separate methods.
+        if (groundTile.isLadder) return null
+
+        return groundTile.rect
     }
 
     fun getAllCollisionRects(

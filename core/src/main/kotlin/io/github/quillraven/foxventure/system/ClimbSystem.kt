@@ -6,12 +6,12 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -79,7 +79,7 @@ class ClimbSystem(
         velocity: Vector2,
         collision: Collision
     ) {
-        getGroundTile(position, collision.box)?.let { groundTile ->
+        tiledService.getCollisionRect(position, collision.box, false)?.let { groundTile ->
             position.y = groundTile.y + groundTile.height - collision.box.y
             stopClimbing(entity, collision, velocity)
             collision.isGrounded = true
@@ -197,19 +197,6 @@ class ClimbSystem(
     ): Rectangle? {
         return findCollidingTile(position, collisionBox, includeTileBelow) { cellX, cellY ->
             tiledService.getLadderRect(cellX, cellY, tileRect)
-            if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
-                return@findCollidingTile tileRect
-            }
-            return@findCollidingTile null
-        }
-    }
-
-    private fun getGroundTile(
-        position: Vector2,
-        collisionBox: Rect
-    ): Rectangle? {
-        return findCollidingTile(position, collisionBox, false) { cellX, cellY ->
-            tiledService.getCollisionRect(cellX, cellY, true, tileRect)
             if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
                 return@findCollidingTile tileRect
             }

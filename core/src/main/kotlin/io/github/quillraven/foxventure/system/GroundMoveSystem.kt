@@ -1,16 +1,15 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -23,9 +22,6 @@ class GroundMoveSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
-    private val tileRect = Rectangle()
-    private val checkRect = Rectangle()
-
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -113,11 +109,12 @@ class GroundMoveSystem(
         position.x += delta
         clampToMapBounds(position, collisionBox)
 
-        if (checkSolidCollision(position, collisionBox)) {
+        val rect = tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false)
+        if (rect != null) {
             // colliding with a solid -> move to edge of solid and stop movement
             position.x = when {
-                delta > 0f -> tileRect.x - collisionBox.x - collisionBox.width
-                else -> tileRect.x + tileRect.width - collisionBox.x
+                delta > 0f -> rect.x - collisionBox.x - collisionBox.width
+                else -> rect.x + rect.width - collisionBox.x
             }
             velocity.x = 0f
         }
@@ -127,29 +124,5 @@ class GroundMoveSystem(
         val minX = -collisionBox.x
         val maxX = tiledService.mapWidth - collisionBox.x - collisionBox.width
         position.x = position.x.coerceIn(minX, maxX)
-    }
-
-    private fun checkSolidCollision(position: Vector2, collisionBox: Rect): Boolean {
-        checkRect.set(
-            position.x + collisionBox.x,
-            position.y + collisionBox.y,
-            collisionBox.width,
-            collisionBox.height
-        )
-
-        val startX = checkRect.x.toInt()
-        val endX = (checkRect.x + checkRect.width).toInt()
-        val startY = checkRect.y.toInt()
-        val endY = (checkRect.y + checkRect.height).toInt()
-
-        for (y in startY..endY) {
-            for (x in startX..endX) {
-                tiledService.getCollisionRect(x, y, includeSemiSolid = false, tileRect)
-                if (tileRect.width > 0f && checkRect.overlaps(tileRect)) {
-                    return true
-                }
-            }
-        }
-        return false
     }
 }

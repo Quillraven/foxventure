@@ -6,12 +6,12 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -26,7 +26,6 @@ class AerialMoveSystem(
     private val solidRect = Rectangle()
     private val semiSolidRect = Rectangle()
     private val topLadderRect = Rectangle()
-    private val ceilingRect = Rectangle()
     private val checkRect = Rectangle()
 
     override fun onTick() {
@@ -233,33 +232,15 @@ class AerialMoveSystem(
         val tolerance = 0.3f
         val originalX = position.x
 
-        fun hasNoCeilingCollision(checkPosition: Vector2): Boolean {
-            updateCheckRect(checkPosition, collisionBox)
-            val startX = checkRect.x.toInt()
-            val endX = (checkRect.x + checkRect.width).toInt()
-            val startY = checkRect.y.toInt()
-            val endY = (checkRect.y + checkRect.height).toInt()
-
-            for (y in startY..endY) {
-                for (x in startX..endX) {
-                    tiledService.getCollisionRect(x, y, includeSemiSolid = false, ceilingRect)
-                    if (ceilingRect.width > 0f && checkRect.overlaps(ceilingRect)) {
-                        return false
-                    }
-                }
-            }
-            return true
-        }
-
         // 1) try on the right side
         position.x = originalX + tolerance
-        if (hasNoCeilingCollision(position)) {
+        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null) {
             return
         }
 
         // 2) try on the left side
         position.x = originalX - tolerance
-        if (hasNoCeilingCollision(position)) {
+        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null) {
             return
         }
 
