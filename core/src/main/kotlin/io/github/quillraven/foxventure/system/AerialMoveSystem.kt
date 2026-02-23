@@ -21,7 +21,7 @@ class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Collision, Physics, JumpControl, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
     private val solidRect = Rectangle()
     private val semiSolidRect = Rectangle()
@@ -39,22 +39,24 @@ class AerialMoveSystem(
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
         val physics = entity[Physics]
-        val jumpControl = entity[JumpControl]
+        val jumpControl = entity.getOrNull(JumpControl)
         val controller = entity.getOrNull(Controller)
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
 
         updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded)
-        applyGravity(velocity, physics, jumpControl.isJumping, collision.isGrounded)
+        applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
     }
 
     private fun updateJumpState(
         velocity: Vector2,
         physics: Physics,
-        jumpControl: JumpControl,
+        jumpControl: JumpControl?,
         jumpPressed: Boolean,
         isGrounded: Boolean,
     ) {
+        if (jumpControl == null) return
+
         if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded)) {
             return
         }
