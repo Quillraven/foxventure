@@ -64,9 +64,11 @@ class RenderSystem(
         val targetH = size.y * scale
         val realSize = Scaling.fill.apply(regionSize.x, regionSize.y, targetW, targetH)
 
-        // flip graphic if moving left
+        // flip graphic if moving left or when skidding
         entity.getOrNull(Velocity)?.let { velocity ->
-            if (velocity.current.x != 0f) {
+            if (velocity.isSkidding) {
+                graphic.flip = velocity.current.x > 0f
+            } else if (velocity.current.x != 0f) {
                 graphic.flip = velocity.current.x < 0f
             }
         }
