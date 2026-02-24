@@ -26,12 +26,14 @@ import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.app.gdxError
 import ktx.math.vec2
 import ktx.tiled.height
+import ktx.tiled.id
 import ktx.tiled.isNotEmpty
 import ktx.tiled.property
 import ktx.tiled.width
@@ -63,6 +65,8 @@ class SpawnSystem(
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
+            val tiledType = tile.property("type", "")
+            it += Tiled(id = mapObject.id, type = tiledType)
 
             // graphic, animation
             val regions = objectsAtlas.findRegions(atlasKey)
@@ -119,9 +123,9 @@ class SpawnSystem(
                 it += Collision(Rect.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
             }
 
-            if ("player" == mapObject.name) {
+            if ("player" == tiledType) {
                 it += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                it += Player(health = 3f)
+                it += Player()
                 it += Controller()
                 it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
             }
