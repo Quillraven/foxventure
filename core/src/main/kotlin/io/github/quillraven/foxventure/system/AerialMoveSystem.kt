@@ -28,6 +28,7 @@ import kotlin.math.abs
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),
+    private val audioService: AudioService = inject(),
     assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
@@ -57,7 +58,7 @@ class AerialMoveSystem(
         val landingDustThresholdSpeed = -7f
         val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
 
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded)
+        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, entity has Player)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
 
@@ -72,10 +73,11 @@ class AerialMoveSystem(
         jumpControl: JumpControl?,
         jumpPressed: Boolean,
         isGrounded: Boolean,
+        isPlayer: Boolean,
     ) {
         if (jumpControl == null) return
 
-        if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded)) {
+        if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded, isPlayer)) {
             return
         }
 
@@ -91,7 +93,8 @@ class AerialMoveSystem(
         physics: Physics,
         jumpControl: JumpControl,
         jumpPressed: Boolean,
-        isGrounded: Boolean
+        isGrounded: Boolean,
+        isPlayer: Boolean,
     ): Boolean {
         // update coyote timer (time to allow jump even when not grounded)
         if (isGrounded) {
@@ -115,6 +118,11 @@ class AerialMoveSystem(
             jumpControl.jumpBufferTimer = 0f
             jumpControl.coyoteTimer = 0f
             jumpControl.isJumping = true
+
+            if (isPlayer) {
+                audioService.playSound("jump.wav")
+            }
+
             return true
         }
         return false
