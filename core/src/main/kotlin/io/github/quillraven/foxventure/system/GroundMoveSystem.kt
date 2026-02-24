@@ -48,15 +48,12 @@ class GroundMoveSystem(
         return input
     }
 
-    /**
-     * Updates the x-velocity of an entity based on input, physics properties, and environmental factors.
-     *
-     * @param velocity The current velocity vector of the entity, which will be modified in place.
-     * @param physics The physics configuration containing properties like acceleration, deceleration, and max speed.
-     * @param inputX The horizontal input value. Typically ranges between -1.0 and 1.0, representing directional input.
-     * @param isGrounded A flag indicating whether the entity is currently grounded (true) or airborne (false).
-     * @param deltaTime The time that has passed since the last update, used for framerate-independent adjustments.
-     */
+    private fun sCurveAcceleration(speedPercent: Float): Float {
+        val t = speedPercent.coerceIn(0.25f, 1f)
+        val smoothed = t * t * (3f - 2f * t)
+        return 0.5f + smoothed * 0.5f
+    }
+
     private fun updateHorizontalVelocity(
         velocity: Vector2,
         physics: Physics,
@@ -68,7 +65,12 @@ class GroundMoveSystem(
             inputX != 0f -> {
                 val acceleration = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
                 val isSkidding = velocity.x != 0f && sign(inputX) != sign(velocity.x)
-                val rate = if (isSkidding) physics.skidDeceleration else acceleration
+                val rate = if (isSkidding) {
+                    physics.skidDeceleration
+                } else {
+                    val speedPercent = abs(velocity.x) / physics.maxSpeed
+                    acceleration * sCurveAcceleration(speedPercent)
+                }
 
                 velocity.x = when {
                     isSkidding -> adjustToZero(velocity.x, rate * deltaTime)
