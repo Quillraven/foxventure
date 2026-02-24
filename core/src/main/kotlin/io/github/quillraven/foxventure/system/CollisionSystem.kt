@@ -1,12 +1,20 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntity
+import io.github.quillraven.foxventure.Asset.Companion.get
+import io.github.quillraven.foxventure.AtlasAsset
+import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.GdxAnimation
+import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
@@ -14,10 +22,19 @@ import io.github.quillraven.foxventure.component.Transform
 class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val audioService: AudioService = inject(),
+    assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Collision, EntityTag.ACTIVE) },
     comparator = compareEntity { e1, e2 -> e1.id.compareTo(e2.id) }
 ) {
+    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
+    private val pickupAnimation: GdxAnimation
+
+    init {
+        val regions = objectsAtlas.findRegions("sfx/item-feedback/idle")
+        pickupAnimation = GdxAnimation(1 / 12f, regions, PlayMode.NORMAL)
+    }
+
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -57,9 +74,27 @@ class CollisionSystem(
         when (otherType) {
             "gem" -> {
                 player[Player].gems++
+
+                val transform = other[Transform]
+                spawnPickupSfx(transform)
+
                 other.remove()
                 audioService.playSound("pickup.wav")
             }
+        }
+    }
+
+    private fun spawnPickupSfx(transform: Transform) {
+        val scaledSize = transform.size.cpy().scl(1.5f)
+        val offset = (scaledSize.x - transform.size.x) * 0.5f
+        val centeredPosition = transform.position.cpy().sub(offset, offset)
+
+        world.entity {
+            it += Transform(centeredPosition, scaledSize, z = 10)
+            it += Graphic(pickupAnimation.getKeyFrame(0f))
+            it += Animation(pickupAnimation, gdxAnimations = emptyMap(), speed = 1.5f)
+            it += DelayRemoval(pickupAnimation.animationDuration)
+            it += EntityTag.ACTIVE
         }
     }
 }
