@@ -42,6 +42,7 @@ class SpawnSystem(
     assets: AssetManager = inject(),
 ) : IntervalSystem(enabled = false), LoadTileObjectListener {
     private val objectsAtlas = assets[AtlasAsset.OBJECTS]
+    private val animationCache = mutableMapOf<String, Map<AnimationType, GdxAnimation>>()
 
     override fun onTick() = Unit
 
@@ -74,13 +75,18 @@ class SpawnSystem(
             if (regions.size > 1) {
                 // multiple texture regions -> add Animation component
                 val objectKey = atlasKey.substringBeforeLast("/")
-                val gdxAnimations = objectsAtlas.regions
-                    // get all regions of the object via its key
-                    .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
-                    // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
-                    .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
-                    // map AnimationType to real GdxAnimation
-                    .associateWith { animationType -> getAnimation(objectKey, animationType) }
+                val gdxAnimations = animationCache.getOrPut(objectKey) {
+                    if (animationCache.size >= 100) {
+                        animationCache.clear()
+                    }
+                    objectsAtlas.regions
+                        // get all regions of the object via its key
+                        .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
+                        // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
+                        .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
+                        // map AnimationType to real GdxAnimation
+                        .associateWith { animationType -> getAnimation(objectKey, animationType) }
+                }
 
                 val idleAnimation = gdxAnimations.getOrElse(AnimationType.IDLE) {
                     gdxError("No idle animation for object $atlasKey")

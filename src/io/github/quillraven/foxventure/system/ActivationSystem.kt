@@ -4,16 +4,19 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.FamilyOnRemove
 import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.app.gdxError
 import ktx.collections.gdxArrayOf
+import ktx.collections.gdxMapOf
 import ktx.math.component1
 import ktx.math.component2
 import ktx.tiled.height
@@ -43,11 +46,11 @@ private class Chunk {
 class ActivationSystem(
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
-    family = family { all(Transform, EntityTag.ACTIVE).none(Player) },
+    family = family { all(Transform, EntityTag.ACTIVE).none(Player, DelayRemoval) },
     interval = Fixed(1 / 20f),
-), MapChangeListener {
+), MapChangeListener, FamilyOnRemove {
     private val chunks = gdxArrayOf<Chunk>()
-    private val entityToChunk = mutableMapOf<Entity, Chunk>()
+    private val entityToChunk = gdxMapOf<Int, Chunk>()
     private val visibleRect = Rectangle()
     private var chunksX = 0
 
@@ -62,12 +65,17 @@ class ActivationSystem(
         val (x, y) = transform.position
         val newChunk = getChunkAt(x, y)
 
-        val currentChunk = entityToChunk[entity] ?: gdxError("Entity $entity is not part of any chunk")
+        val currentChunk = entityToChunk[entity.id] ?: gdxError("Entity $entity is not part of any chunk")
         if (currentChunk != newChunk) {
             currentChunk.entities.removeValue(entity, true)
             newChunk.entities.add(entity)
-            entityToChunk[entity] = newChunk
+            entityToChunk.put(entity.id, newChunk)
         }
+    }
+
+    override fun onRemoveEntity(entity: Entity) {
+        val currentChunk = entityToChunk.remove(entity.id) ?: gdxError("Entity $entity is not part of any chunk")
+        currentChunk.entities.removeValue(entity, true)
     }
 
     private fun updateActivation() {
@@ -129,7 +137,7 @@ class ActivationSystem(
             val (x, y) = transform.position
             val chunk = getChunkAt(x, y)
             chunk.entities.add(entity)
-            entityToChunk[entity] = chunk
+            entityToChunk.put(entity.id, chunk)
         }
     }
 
