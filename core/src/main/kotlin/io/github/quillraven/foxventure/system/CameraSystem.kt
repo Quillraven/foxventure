@@ -55,7 +55,7 @@ class CameraSystem(
         val halfViewWidth = gameViewport.worldWidth * 0.5f
         val halfViewHeight = gameViewport.worldHeight * 0.5f
 
-        camera.position.x = camera.position.x.coerceIn(halfViewWidth, tiledService.mapWidth - halfViewWidth)
-        camera.position.y = camera.position.y.coerceIn(halfViewHeight, tiledService.mapHeight - halfViewHeight)
+        camera.position.x = camera.position.x.coerceIn(halfViewWidth, maxOf(halfViewWidth, tiledService.mapWidth - halfViewWidth))
+        camera.position.y = camera.position.y.coerceIn(halfViewHeight, maxOf(halfViewHeight, tiledService.mapHeight - halfViewHeight))
     }
 }
