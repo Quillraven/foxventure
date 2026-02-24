@@ -16,7 +16,6 @@ import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -26,11 +25,11 @@ import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.app.gdxError
-import ktx.collections.gdxMapOf
 import ktx.math.vec2
 import ktx.tiled.height
 import ktx.tiled.isNotEmpty
@@ -64,7 +63,27 @@ class SpawnSystem(
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
-            it += Graphic(objectsAtlas.findRegions(atlasKey).first())
+
+            // graphic, animation
+            val regions = objectsAtlas.findRegions(atlasKey)
+            it += Graphic(regions.first())
+            if (regions.size > 1) {
+                // multiple texture regions -> add Animation component
+                val objectKey = atlasKey.substringBeforeLast("/")
+                val gdxAnimations = objectsAtlas.regions
+                    // get all regions of the object via its key
+                    .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
+                    // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
+                    .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
+                    // map AnimationType to real GdxAnimation
+                    .associateWith { animationType -> getAnimation(objectKey, animationType) }
+
+                val idleAnimation = gdxAnimations.getOrElse(AnimationType.IDLE) {
+                    gdxError("No idle animation for object $atlasKey")
+                }
+                val animationSpeed = tile.property("animation_speed", 1f)
+                it += Animation(idle = idleAnimation, gdxAnimations = gdxAnimations, speed = animationSpeed)
+            }
 
             // physics, velocity and jump control
             (tile.properties.get("physics") as? MapProperties)?.let { physicsProps ->
@@ -101,22 +120,9 @@ class SpawnSystem(
             }
 
             if ("player" == mapObject.name) {
-                it += EntityTag.ACTIVE
+                it += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
                 it += Player(health = 3f)
                 it += Controller()
-                it += EntityTag.CAMERA_FOCUS
-
-                val objectKey = atlasKey.substringBeforeLast("/")
-                it += Animation(
-                    idle = getAnimation(objectKey, "idle"),
-                    gdxAnimations = gdxMapOf(
-                        AnimationType.RUN to getAnimation(objectKey, "run"),
-                        AnimationType.JUMP to getAnimation(objectKey, "jump"),
-                        AnimationType.FALL to getAnimation(objectKey, "fall"),
-                        AnimationType.CLIMB to getAnimation(objectKey, "climb"),
-                    ),
-                )
-
                 it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
             }
         }
@@ -124,16 +130,13 @@ class SpawnSystem(
 
     private fun getAnimation(
         objectKey: String,
-        animationType: String
+        animationType: AnimationType
     ): GdxAnimation {
-        var regions = objectsAtlas.findRegions("$objectKey/$animationType")
+        val animationKey = "$objectKey/${animationType.atlasKey}"
+        val regions = objectsAtlas.findRegions(animationKey)
         if (regions.isEmpty) {
-            regions = objectsAtlas.findRegions("$objectKey/idle")
+            gdxError("No regions for animation $animationKey")
         }
-        if (regions.isEmpty) {
-            gdxError("No regions found for $objectKey/$animationType")
-        }
-
         return GdxAnimation(1 / 12f, regions, PlayMode.LOOP)
     }
 }

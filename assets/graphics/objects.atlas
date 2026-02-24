@@ -6,134 +6,197 @@ filter: Nearest, Nearest
 repeat: none
 characters/fox/climb
   rotate: false
-  xy: 82, 186
+  xy: 82, 189
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/climb
   rotate: false
-  xy: 82, 152
+  xy: 82, 155
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/climb
   rotate: false
-  xy: 82, 118
+  xy: 82, 121
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/fall
   rotate: false
-  xy: 82, 84
+  xy: 82, 87
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/idle
   rotate: false
-  xy: 130, 216
+  xy: 130, 219
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/idle
   rotate: false
-  xy: 165, 216
+  xy: 165, 219
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/idle
   rotate: false
-  xy: 200, 216
+  xy: 200, 219
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/idle
   rotate: false
-  xy: 117, 182
+  xy: 117, 185
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
 characters/fox/jump
   rotate: false
-  xy: 117, 148
+  xy: 117, 151
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/run
   rotate: false
-  xy: 152, 182
+  xy: 152, 185
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/run
   rotate: false
-  xy: 117, 114
+  xy: 117, 117
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/run
   rotate: false
-  xy: 152, 148
+  xy: 152, 151
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/run
   rotate: false
-  xy: 187, 182
+  xy: 187, 185
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
 characters/fox/run
   rotate: false
-  xy: 222, 182
+  xy: 222, 185
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 4
 characters/fox/run
   rotate: false
-  xy: 152, 114
+  xy: 152, 117
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 5
 props/bush
   rotate: false
-  xy: 82, 220
+  xy: 82, 223
   size: 46, 28
   orig: 46, 28
   offset: 0, 0
   index: -1
 props/palm
   rotate: false
-  xy: 1, 72
+  xy: 1, 75
   size: 79, 176
   orig: 79, 176
   offset: 0, 0
   index: -1
 props/rock2
   rotate: false
-  xy: 1, 13
+  xy: 1, 16
   size: 66, 57
   orig: 66, 57
   offset: 0, 0
   index: -1
 props/skulls
   rotate: false
-  xy: 1, 1
+  xy: 82, 75
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
+sfx/gem/idle
+  rotate: false
+  xy: 1, 1
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 0
+sfx/gem/idle
+  rotate: false
+  xy: 117, 102
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 1
+sfx/gem/idle
+  rotate: false
+  xy: 235, 238
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 2
+sfx/gem/idle
+  rotate: false
+  xy: 18, 1
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 3
+sfx/gem/idle
+  rotate: false
+  xy: 117, 87
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 4
+sfx/item-feedback/idle
+  rotate: false
+  xy: 187, 151
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+sfx/item-feedback/idle
+  rotate: false
+  xy: 187, 117
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+sfx/item-feedback/idle
+  rotate: false
+  xy: 221, 151
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+sfx/item-feedback/idle
+  rotate: false
+  xy: 221, 117
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
