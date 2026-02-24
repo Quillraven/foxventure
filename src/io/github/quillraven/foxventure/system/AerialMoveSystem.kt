@@ -1,27 +1,47 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.Asset.Companion.get
+import io.github.quillraven.foxventure.AtlasAsset
+import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.GdxAnimation
+import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.TiledService
+import ktx.math.vec2
 import kotlin.math.abs
 
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),
+    assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
+    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
+    private val landingDustAnimation: GdxAnimation
+
+    init {
+        val regions = objectsAtlas.findRegions("sfx/dust2/idle")
+        landingDustAnimation = GdxAnimation(1 / 17f, regions, PlayMode.NORMAL)
+    }
+
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -36,9 +56,16 @@ class AerialMoveSystem(
         val controller = entity.getOrNull(Controller)
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
 
+        val landingDustThresholdSpeed = -7f
+        val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
+
         updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
+
+        if (wasFalling && collision.isGrounded && entity.has(Player)) {
+            spawnLandingDust(entity)
+        }
     }
 
     private fun updateJumpState(
@@ -218,5 +245,24 @@ class AerialMoveSystem(
         }
 
         position.x = originalX
+    }
+
+    private fun spawnLandingDust(entity: Entity) {
+        val transform = entity[Transform]
+        val collision = entity[Collision]
+
+        val dustSize = vec2(1.25f, 1.25f)
+        val dustPosition = vec2(
+            transform.position.x + collision.box.x + (collision.box.width * 0.5f) - dustSize.x,
+            transform.position.y
+        )
+
+        world.entity {
+            it += Transform(dustPosition, dustSize, z = 10)
+            it += Graphic(landingDustAnimation.getKeyFrame(0f))
+            it += Animation(landingDustAnimation, gdxAnimations = emptyMap(), speed = 1f)
+            it += DelayRemoval(landingDustAnimation.animationDuration)
+            it += EntityTag.ACTIVE
+        }
     }
 }
