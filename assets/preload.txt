@@ -1,4 +1,5 @@
 i:b:/sound/pickup.wav:31592:1
+i:b:/sound/jump.wav:15114:1
 i:b:/graphics/sky.png:8230:1
 i:b:/graphics/objects.png:19873:1
 i:b:/graphics/sprites/characters/fox/run_0.png:1312:1
@@ -51,7 +52,7 @@ i:b:/graphics/sprites/sfx/dust1/idle_6.png:113:1
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/objects.atlas:4928:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
-i:b:/maps/foxventure.tiled-project:2211:1
+i:b:/maps/foxventure.tiled-project:2210:1
 i:b:/maps/props.tsx:635:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/objects.tsx:885:1

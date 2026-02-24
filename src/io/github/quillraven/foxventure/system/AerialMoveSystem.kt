@@ -9,13 +9,10 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
-import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
-import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
-import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
@@ -23,6 +20,7 @@ import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
+import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.vec2
 import kotlin.math.abs
@@ -30,6 +28,7 @@ import kotlin.math.abs
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),
+    private val audioService: AudioService = inject(),
     assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
@@ -59,7 +58,7 @@ class AerialMoveSystem(
         val landingDustThresholdSpeed = -7f
         val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
 
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded)
+        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, entity has Player)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
 
@@ -74,10 +73,11 @@ class AerialMoveSystem(
         jumpControl: JumpControl?,
         jumpPressed: Boolean,
         isGrounded: Boolean,
+        isPlayer: Boolean,
     ) {
         if (jumpControl == null) return
 
-        if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded)) {
+        if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded, isPlayer)) {
             return
         }
 
@@ -93,7 +93,8 @@ class AerialMoveSystem(
         physics: Physics,
         jumpControl: JumpControl,
         jumpPressed: Boolean,
-        isGrounded: Boolean
+        isGrounded: Boolean,
+        isPlayer: Boolean,
     ): Boolean {
         // update coyote timer (time to allow jump even when not grounded)
         if (isGrounded) {
@@ -117,6 +118,11 @@ class AerialMoveSystem(
             jumpControl.jumpBufferTimer = 0f
             jumpControl.coyoteTimer = 0f
             jumpControl.isJumping = true
+
+            if (isPlayer) {
+                audioService.playSound("jump.wav")
+            }
+
             return true
         }
         return false
@@ -257,12 +263,6 @@ class AerialMoveSystem(
             transform.position.y
         )
 
-        world.entity {
-            it += Transform(dustPosition, dustSize, z = 10)
-            it += Graphic(landingDustAnimation.getKeyFrame(0f))
-            it += Animation(landingDustAnimation, gdxAnimations = emptyMap(), speed = 1f)
-            it += DelayRemoval(landingDustAnimation.animationDuration)
-            it += EntityTag.ACTIVE
-        }
+        world.sfx(dustPosition, dustSize, landingDustAnimation)
     }
 }

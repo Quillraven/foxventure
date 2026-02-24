@@ -5,16 +5,21 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntityBy
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
@@ -94,6 +99,22 @@ class RenderSystem(
             }
 
             currentLayers.add(layer)
+        }
+    }
+
+    companion object {
+        fun World.sfx(
+            position: Vector2,
+            size: Vector2,
+            gdxAnimation: GdxAnimation,
+            flip: Boolean = false,
+            speed: Float = 1f,
+        ) = this.entity {
+            it += Transform(position, size, z = 10)
+            it += Graphic(gdxAnimation.getKeyFrame(0f), flip)
+            it += Animation(gdxAnimation, gdxAnimations = emptyMap(), speed)
+            it += DelayRemoval(gdxAnimation.animationDuration)
+            it += EntityTag.ACTIVE
         }
     }
 }

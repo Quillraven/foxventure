@@ -18,12 +18,12 @@
                 {
                     "name": "acceleration",
                     "type": "float",
-                    "value": 30
+                    "value": 15
                 },
                 {
                     "name": "air_control",
                     "type": "float",
-                    "value": 0.65
+                    "value": 0.5
                 },
                 {
                     "name": "climb_speed",
@@ -33,7 +33,7 @@
                 {
                     "name": "deceleration",
                     "type": "float",
-                    "value": 20
+                    "value": 15
                 },
                 {
                     "name": "gravity",
@@ -53,7 +53,7 @@
                 {
                     "name": "max_speed",
                     "type": "float",
-                    "value": 7
+                    "value": 9
                 },
                 {
                     "name": "peak_gravity_multiplier",
@@ -68,7 +68,7 @@
                 {
                     "name": "skid_deceleration",
                     "type": "float",
-                    "value": 40
+                    "value": 35
                 }
             ],
             "name": "Physics",
