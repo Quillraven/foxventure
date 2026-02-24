@@ -9,15 +9,13 @@ import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntity
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
-import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
-import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
-import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 
 class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
@@ -89,12 +87,6 @@ class CollisionSystem(
         val offset = (scaledSize.x - transform.size.x) * 0.5f
         val centeredPosition = transform.position.cpy().sub(offset, offset)
 
-        world.entity {
-            it += Transform(centeredPosition, scaledSize, z = 10)
-            it += Graphic(pickupAnimation.getKeyFrame(0f))
-            it += Animation(pickupAnimation, gdxAnimations = emptyMap(), speed = 1.5f)
-            it += DelayRemoval(pickupAnimation.animationDuration)
-            it += EntityTag.ACTIVE
-        }
+        world.sfx(centeredPosition, scaledSize, pickupAnimation, speed = 1.5f)
     }
 }

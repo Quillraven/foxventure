@@ -1,27 +1,45 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.Asset.Companion.get
+import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
+import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.tiled.TiledService
+import ktx.math.vec2
 import kotlin.math.abs
 import kotlin.math.sign
 
 class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
+    assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
+    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
+    private val runDustAnimation: GdxAnimation
+
+    init {
+        val regions = objectsAtlas.findRegions("sfx/dust1/idle")
+        runDustAnimation = GdxAnimation(1 / 17f, regions, PlayMode.NORMAL)
+    }
+
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
             super.onTick()
@@ -36,8 +54,15 @@ class GroundMoveSystem(
         val controller = entity.getOrNull(Controller)
         val inputX = getInputX(controller)
 
+        val wasAtMaxSpeed = abs(velocity.x) >= physics.maxSpeed && collision.isGrounded
+
         updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
         applyHorizontalMovement(velocity, physics.position, collision.box)
+
+        val isAtMaxSpeed = abs(velocity.x) >= physics.maxSpeed && collision.isGrounded
+        if (!wasAtMaxSpeed && isAtMaxSpeed && entity.has(Player)) {
+            spawnRunDust(entity)
+        }
     }
 
     private fun getInputX(controller: Controller?): Float {
@@ -126,5 +151,25 @@ class GroundMoveSystem(
         val minX = -collisionBox.x
         val maxX = tiledService.mapWidth - collisionBox.x - collisionBox.width
         position.x = position.x.coerceIn(minX, maxX)
+    }
+
+    private fun spawnRunDust(entity: Entity) {
+        val transform = entity[Transform]
+        val collision = entity[Collision]
+        val velocity = entity[Velocity].current
+
+        val dustSize = vec2(1.5f, 1.5f)
+        val dustPosition = vec2(
+            if (velocity.x > 0f) {
+                // running right -> dust behind (left side)
+                transform.position.x + collision.box.x - dustSize.x * 0.75f
+            } else {
+                // running left -> dust behind (right side)
+                transform.position.x + collision.box.x + collision.box.width - dustSize.x * 0.75f
+            },
+            transform.position.y
+        )
+
+        world.sfx(dustPosition, dustSize, runDustAnimation, flip = velocity.x < 0f)
     }
 }

@@ -9,13 +9,10 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
-import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
-import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
-import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
@@ -23,6 +20,7 @@ import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
+import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.vec2
 import kotlin.math.abs
@@ -257,12 +255,6 @@ class AerialMoveSystem(
             transform.position.y
         )
 
-        world.entity {
-            it += Transform(dustPosition, dustSize, z = 10)
-            it += Graphic(landingDustAnimation.getKeyFrame(0f))
-            it += Animation(landingDustAnimation, gdxAnimations = emptyMap(), speed = 1f)
-            it += DelayRemoval(landingDustAnimation.animationDuration)
-            it += EntityTag.ACTIVE
-        }
+        world.sfx(dustPosition, dustSize, landingDustAnimation)
     }
 }
