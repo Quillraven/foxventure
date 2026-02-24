@@ -36,14 +36,18 @@ data object PlayerStateRun : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        val velocity = entity[Velocity].current
+        val velocity = entity[Velocity]
 
-        if (velocity.x == 0f) {
+        if (velocity.current.x == 0f) {
             entity[Fsm].state.changeState(PlayerStateIdle)
-        } else if (velocity.y > 0f) {
+        } else if (velocity.current.y > 0f) {
             entity[Fsm].state.changeState(PlayerStateJump)
-        } else if (velocity.y < 0f) {
+        } else if (velocity.current.y < 0f) {
             entity[Fsm].state.changeState(PlayerStateFall)
+        } else if (velocity.isSkidding) {
+            entity[Animation].let { animation ->
+                animation.stateTime = animation.active.frameDuration * 3
+            }
         }
     }
 }

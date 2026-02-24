@@ -47,21 +47,21 @@ class GroundMoveSystem(
     }
 
     override fun onTickEntity(entity: Entity) {
-        val velocity = entity[Velocity].current
+        val velocity = entity[Velocity]
         val collision = entity[Collision]
         val physics = entity[Physics]
 
         val controller = entity.getOrNull(Controller)
         val inputX = getInputX(controller)
 
-        val wasAtMaxSpeed = abs(velocity.x) >= physics.maxSpeed && collision.isGrounded
+        val wasAtMaxSpeed = abs(velocity.current.x) >= physics.maxSpeed && collision.isGrounded
 
-        updateHorizontalVelocity(velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
-        applyHorizontalMovement(velocity, physics.position, collision.box)
+        updateHorizontalVelocity(entity, velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
+        applyHorizontalMovement(velocity.current, physics.position, collision.box)
 
-        val isAtMaxSpeed = abs(velocity.x) >= physics.maxSpeed && collision.isGrounded
+        val isAtMaxSpeed = abs(velocity.current.x) >= physics.maxSpeed && collision.isGrounded
         if (!wasAtMaxSpeed && isAtMaxSpeed && entity.has(Player)) {
-            spawnRunDust(entity)
+            spawnRunDust(entity, 1.5f)
         }
     }
 
@@ -80,32 +80,40 @@ class GroundMoveSystem(
     }
 
     private fun updateHorizontalVelocity(
-        velocity: Vector2,
+        entity: Entity,
+        velocity: Velocity,
         physics: Physics,
         inputX: Float,
         isGrounded: Boolean,
         deltaTime: Float
     ) {
+        val speed = velocity.current
         when {
             inputX != 0f -> {
                 val acceleration = if (isGrounded) physics.acceleration else physics.acceleration * physics.airControl
-                val isSkidding = velocity.x != 0f && sign(inputX) != sign(velocity.x)
-                val rate = if (isSkidding) {
+                val wasSkidding = velocity.isSkidding
+                velocity.isSkidding = speed.x != 0f && sign(inputX) != sign(speed.x)
+                val rate = if (velocity.isSkidding) {
                     physics.skidDeceleration
                 } else {
-                    val speedPercent = abs(velocity.x) / physics.maxSpeed
+                    val speedPercent = abs(speed.x) / physics.maxSpeed
                     acceleration * sCurveAcceleration(speedPercent)
                 }
 
-                velocity.x = when {
-                    isSkidding -> adjustToZero(velocity.x, rate * deltaTime)
-                    else -> (velocity.x + inputX * rate * deltaTime).coerceIn(-physics.maxSpeed, physics.maxSpeed)
+                speed.x = when {
+                    velocity.isSkidding -> adjustToZero(speed.x, rate * deltaTime)
+                    else -> (speed.x + inputX * rate * deltaTime).coerceIn(-physics.maxSpeed, physics.maxSpeed)
+                }
+
+                if (!wasSkidding && velocity.isSkidding && entity has Player) {
+                    spawnRunDust(entity, 0.9f)
                 }
             }
 
             else -> {
                 val deceleration = if (isGrounded) physics.deceleration else physics.deceleration * physics.airControl
-                velocity.x = adjustToZero(velocity.x, deceleration * deltaTime)
+                speed.x = adjustToZero(speed.x, deceleration * deltaTime)
+                velocity.isSkidding = false
             }
         }
     }
@@ -153,12 +161,12 @@ class GroundMoveSystem(
         position.x = position.x.coerceIn(minX, maxX)
     }
 
-    private fun spawnRunDust(entity: Entity) {
+    private fun spawnRunDust(entity: Entity, size: Float) {
         val transform = entity[Transform]
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
 
-        val dustSize = vec2(1.5f, 1.5f)
+        val dustSize = vec2(size, size)
         val dustPosition = vec2(
             if (velocity.x > 0f) {
                 // running right -> dust behind (left side)

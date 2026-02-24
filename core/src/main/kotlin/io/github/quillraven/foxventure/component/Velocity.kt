@@ -7,6 +7,7 @@ import ktx.math.vec2
 
 data class Velocity(
     val current: Vector2 = vec2(),
+    var isSkidding: Boolean = false,
 ) : Component<Velocity> {
     override fun type() = Velocity
 
