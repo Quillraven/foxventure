@@ -1,201 +1,334 @@
 
 objects.png
-size: 256, 256
+size: 512, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 characters/fox/climb
   rotate: false
-  xy: 82, 189
+  xy: 82, 86
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/climb
   rotate: false
-  xy: 82, 155
+  xy: 132, 120
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/climb
   rotate: false
-  xy: 82, 121
+  xy: 182, 154
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/fall
   rotate: false
-  xy: 82, 87
+  xy: 232, 192
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/idle
   rotate: false
-  xy: 130, 219
+  xy: 117, 86
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/idle
   rotate: false
-  xy: 165, 219
+  xy: 167, 120
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/idle
   rotate: false
-  xy: 200, 219
+  xy: 280, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/idle
   rotate: false
-  xy: 117, 185
+  xy: 315, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
 characters/fox/jump
   rotate: false
-  xy: 117, 151
+  xy: 350, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/run
   rotate: false
-  xy: 152, 185
+  xy: 385, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
 characters/fox/run
   rotate: false
-  xy: 117, 117
+  xy: 420, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
 characters/fox/run
   rotate: false
-  xy: 152, 151
+  xy: 455, 222
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
 characters/fox/run
   rotate: false
-  xy: 187, 185
+  xy: 267, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 3
 characters/fox/run
   rotate: false
-  xy: 222, 185
+  xy: 302, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 4
 characters/fox/run
   rotate: false
-  xy: 152, 117
+  xy: 337, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 5
 props/bush
   rotate: false
-  xy: 82, 223
+  xy: 232, 226
   size: 46, 28
   orig: 46, 28
   offset: 0, 0
   index: -1
 props/palm
   rotate: false
-  xy: 1, 75
+  xy: 1, 78
   size: 79, 176
   orig: 79, 176
   offset: 0, 0
   index: -1
 props/rock2
   rotate: false
-  xy: 1, 16
+  xy: 1, 19
   size: 66, 57
   orig: 66, 57
   offset: 0, 0
   index: -1
 props/skulls
   rotate: false
-  xy: 82, 75
+  xy: 69, 2
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
-sfx/gem/idle
+sfx/dust1/idle
+  rotate: false
+  xy: 82, 222
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 0
+sfx/dust1/idle
+  rotate: false
+  xy: 82, 188
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 1
+sfx/dust1/idle
+  rotate: false
+  xy: 132, 222
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 2
+sfx/dust1/idle
+  rotate: false
+  xy: 82, 154
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 3
+sfx/dust1/idle
+  rotate: false
+  xy: 132, 188
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 4
+sfx/dust1/idle
+  rotate: false
+  xy: 182, 222
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 5
+sfx/dust1/idle
+  rotate: false
+  xy: 82, 120
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 6
+sfx/dust1/idle
+  rotate: false
+  xy: 132, 154
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 7
+sfx/dust1/idle
+  rotate: false
+  xy: 182, 188
+  size: 48, 32
+  orig: 48, 32
+  offset: 0, 0
+  index: 8
+sfx/dust2/idle
   rotate: false
   xy: 1, 1
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 0
+sfx/dust2/idle
+  rotate: false
+  xy: 35, 1
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 1
+sfx/dust2/idle
+  rotate: false
+  xy: 82, 68
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 2
+sfx/dust2/idle
+  rotate: false
+  xy: 116, 68
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 3
+sfx/dust2/idle
+  rotate: false
+  xy: 69, 50
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 4
+sfx/dust2/idle
+  rotate: false
+  xy: 69, 32
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 5
+sfx/dust2/idle
+  rotate: false
+  xy: 103, 50
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 6
+sfx/dust2/idle
+  rotate: false
+  xy: 69, 14
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 7
+sfx/dust2/idle
+  rotate: false
+  xy: 103, 32
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 8
+sfx/dust2/idle
+  rotate: false
+  xy: 103, 14
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 9
+sfx/gem/idle
+  rotate: false
+  xy: 490, 241
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 0
 sfx/gem/idle
   rotate: false
-  xy: 117, 102
+  xy: 490, 226
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 1
 sfx/gem/idle
   rotate: false
-  xy: 235, 238
+  xy: 217, 173
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 2
 sfx/gem/idle
   rotate: false
-  xy: 18, 1
+  xy: 217, 158
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 3
 sfx/gem/idle
   rotate: false
-  xy: 117, 87
+  xy: 137, 53
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 4
 sfx/item-feedback/idle
   rotate: false
-  xy: 187, 151
+  xy: 372, 188
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 sfx/item-feedback/idle
   rotate: false
-  xy: 187, 117
+  xy: 406, 188
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 sfx/item-feedback/idle
   rotate: false
-  xy: 221, 151
+  xy: 440, 188
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 sfx/item-feedback/idle
   rotate: false
-  xy: 221, 117
+  xy: 474, 188
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

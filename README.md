@@ -30,3 +30,9 @@ For `teavm` there are four different tasks to build and optionally run it on `ht
 
 This template can be configured
 using [Gdx-Quilly-Utils](https://quillraven.github.io/gdx-quilly-utils/gradle-kotlin-template).
+
+Credits:
+- https://pimen.itch.io/smoke-vfx-1
+- https://ansimuz.itch.io/sunny-land-pixel-game-art
+- https://sfxr.me/
+- 
