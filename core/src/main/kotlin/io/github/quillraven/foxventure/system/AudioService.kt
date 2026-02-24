@@ -2,23 +2,35 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.maps.tiled.TiledMap
-import com.github.quillraven.fleks.IntervalSystem
+import com.badlogic.gdx.utils.Disposable
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.assets.toInternalFile
 import ktx.tiled.property
 
-class AudioSystem : IntervalSystem(), MapChangeListener {
-
-    var musicVolume = 0f
+class AudioService : MapChangeListener, Disposable {
+    var musicVolume = 0.3f
         set(value) {
             field = value.coerceIn(0f, 1f)
             currentMusic?.volume = field
         }
 
-    private var currentMusic: Music? = null
+    var soundVolume = 1f
 
-    override fun onTick() = Unit
+    private var currentMusic: Music? = null
+    private val soundCache = mutableMapOf<String, Sound>()
+
+    fun playSound(name: String) {
+        if (soundCache.size > 100) {
+            clearSoundCache()
+        }
+
+        val sound = soundCache.getOrPut(name) {
+            Gdx.audio.newSound("sound/$name".toInternalFile())
+        }
+        sound.play(soundVolume)
+    }
 
     private fun playMusic(name: String) {
         // dispose of current music if there is any
@@ -43,7 +55,13 @@ class AudioSystem : IntervalSystem(), MapChangeListener {
         playMusic(musicPath)
     }
 
-    override fun onDispose() {
+    override fun dispose() {
         currentMusic?.dispose()
+        clearSoundCache()
+    }
+
+    private fun clearSoundCache() {
+        soundCache.values.forEach { it.dispose() }
+        soundCache.clear()
     }
 }

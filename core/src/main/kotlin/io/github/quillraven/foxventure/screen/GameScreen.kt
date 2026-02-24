@@ -12,12 +12,11 @@ import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
-import io.github.quillraven.foxventure.system.AudioSystem
+import io.github.quillraven.foxventure.system.AudioService
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.CollisionSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
-import io.github.quillraven.foxventure.system.DebugRenderSystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.PhysicsTimer
@@ -37,6 +36,7 @@ class GameScreen(
     private val gameViewport: Viewport = game.gameViewport,
     private val stage: Stage = game.stage,
     private val tiledService: TiledService = game.serviceLocator.tiledService,
+    private val audioService: AudioService = game.serviceLocator.audioService,
 ) : KtxScreen {
 
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
@@ -50,6 +50,7 @@ class GameScreen(
             add(assets)
             add(tiledService)
             add(physicsTimer)
+            add(audioService)
         }
 
         systems {
@@ -66,8 +67,7 @@ class GameScreen(
             add(AnimationSystem())
             add(PostInterpolationSystem()) // run it after all physics systems run
             add(RenderSystem())
-            add(DebugRenderSystem())
-            add(AudioSystem())
+//            add(DebugRenderSystem())
         }
     }
 
@@ -92,6 +92,7 @@ class GameScreen(
                 tiledService.addLoadTileObjectListener(system)
             }
         }
+        tiledService.addMapChangeListener(audioService)
     }
 
     override fun dispose() {

@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.component.Transform
 
 class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
+    private val audioService: AudioService = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Collision, EntityTag.ACTIVE) },
     comparator = compareEntity { e1, e2 -> e1.id.compareTo(e2.id) }
@@ -49,15 +50,15 @@ class CollisionSystem(
         }
     }
 
-    private fun onCollision(entity: Entity, other: Entity) {
-        // for now not needed
-    }
+    @Suppress("unused")
+    private fun onCollision(entity: Entity, other: Entity) = Unit
 
     private fun onPlayerCollision(player: Entity, other: Entity, otherType: String) {
         when (otherType) {
             "gem" -> {
                 player[Player].gems++
                 other.remove()
+                audioService.playSound("pickup.wav")
             }
         }
     }

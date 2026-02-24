@@ -37,7 +37,7 @@ class CameraSystem(
     }
 
     override fun onMapChanged(tiledMap: TiledMap) {
-        // Instantly move camera to focus entity when a map changes
+        // Instantly move the camera to focus entity when a map changes
         family.forEach { entity ->
             val (position, size) = entity[Transform]
             val camera = gameViewport.camera
