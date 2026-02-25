@@ -8,6 +8,8 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Follow
+import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Transform
 import ktx.graphics.use
 
@@ -34,6 +36,20 @@ class DebugRenderSystem(
             val (collX, collY, collW, collH) = collision.box
             shapeRenderer.color = Color.GREEN
             shapeRenderer.rect(position.x + collX, position.y + collY, collW, collH)
+        }
+
+        entity.getOrNull(ProximityDetector)?.let { proximity ->
+            val centerX = position.x + size.x * scale / 2
+            val centerY = position.y + size.y * scale / 2
+            shapeRenderer.color = Color.YELLOW
+            shapeRenderer.circle(centerX, centerY, proximity.range)
+        }
+
+        entity.getOrNull(Follow)?.let { follow ->
+            val centerX = position.x + size.x * scale / 2
+            val centerY = position.y + size.y * scale / 2
+            shapeRenderer.color = Color(0f, 0f, 0.5f, 1f)
+            shapeRenderer.circle(centerX, centerY, follow.proximity)
         }
     }
 
