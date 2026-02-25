@@ -7,13 +7,15 @@ import com.badlogic.gdx.maps.MapProperties
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
+import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.EntityCreateContext
 import com.github.quillraven.fleks.IntervalSystem
+import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
-import io.github.quillraven.foxventure.ai.FsmState
 import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
@@ -21,12 +23,14 @@ import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
@@ -139,14 +143,28 @@ class SpawnSystem(
                     it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
                 }
 
-                "enemy" -> it += Fsm(FleksStateMachine(world, it, getEnemyState(atlasKey)))
+                "enemy" -> configureEnemy(world, it, atlasKey)
             }
         }
     }
 
-    private fun getEnemyState(atlasKey: String): FsmState {
-        return when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
-            "mushroom" -> MushroomStateIdle
+    private fun EntityCreateContext.configureEnemy(
+        world: World,
+        entity: Entity,
+        atlasKey: String
+    ) {
+        when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
+            "mushroom" -> {
+                entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
+                entity += ProximityDetector(
+                    range = 5f,
+                    predicate = { target -> target.has(Player) },
+                    onDetect = { source, target -> source[Follow].target = target },
+                    onBreak = { source, _ -> source[Follow].target = Entity.NONE }
+                )
+                entity += Follow(proximity = 3f, breakDistance = 3.5f, stopAtCliff = true)
+            }
+
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }

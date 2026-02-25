@@ -18,13 +18,15 @@ class ProximityDetectionSystem : IteratingSystem(
 
     override fun onTickEntity(entity: Entity) {
         val detector = entity[ProximityDetector]
-        val (range, predicate, onDetect) = detector
+        val (range, predicate, onDetect, onBreak) = detector
         val (position) = entity[Transform]
         val (collBox) = entity[Collision]
         val centerX = position.x + collBox.x + (collBox.width * 0.5f)
 
         if (targetStillValid(centerX, detector.target, range)) {
             return
+        } else if (detector.target != Entity.NONE) {
+            onBreak(world, entity, detector.target)
         }
 
         // find the new closest valid target

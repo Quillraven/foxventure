@@ -9,6 +9,7 @@ data class ProximityDetector(
     var range: Float,
     var predicate: (World.(target: Entity) -> Boolean),
     var onDetect: (World.(source: Entity, target: Entity) -> Unit),
+    var onBreak: (World.(source: Entity, target: Entity) -> Unit),
     var target: Entity = Entity.NONE,
 ) : Component<ProximityDetector> {
     override fun type() = ProximityDetector
