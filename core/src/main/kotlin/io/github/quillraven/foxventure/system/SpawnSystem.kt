@@ -20,6 +20,7 @@ import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
+import io.github.quillraven.foxventure.component.AttackRange
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -163,6 +164,7 @@ class SpawnSystem(
                     onBreak = { source, _ -> source[Follow].target = Entity.NONE }
                 )
                 entity += Follow(proximity = 3f, breakDistance = 3.5f, stopAtCliff = true)
+                entity += AttackRange(range = 1.5f)
             }
 
             else -> gdxError("No enemy state for enemy $enemyType")

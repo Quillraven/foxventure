@@ -10,6 +10,7 @@ import com.github.quillraven.fleks.collection.compareEntity
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Damage
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Player
@@ -78,6 +79,16 @@ class CollisionSystem(
 
                 other.remove()
                 audioService.playSound("pickup.wav")
+            }
+
+            "damage" -> {
+                val damage = other[Damage]
+                player[Player].life -= damage.amount
+                other.remove()
+            }
+
+            "enemy" -> {
+                // TODO: Handle player-enemy collision (damage, knockback, etc.)
             }
         }
     }

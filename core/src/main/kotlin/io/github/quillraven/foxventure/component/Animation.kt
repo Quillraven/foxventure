@@ -34,6 +34,8 @@ class Animation(
         stateTime = 0f
     }
 
+    fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
+
     override fun type() = Animation
 
     companion object : ComponentType<Animation>()
