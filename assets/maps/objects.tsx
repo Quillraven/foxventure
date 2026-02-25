@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="33" tileheight="32" tilecount="3" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="41" tileheight="32" tilecount="3" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -28,9 +28,9 @@
     </properties>
    </property>
   </properties>
-  <image source="../graphics/sprites/characters/mushroom/idle_0.png" width="23" height="25"/>
+  <image source="../graphics/sprites/characters/mushroom/idle_0.png" width="41" height="30"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="2" y="0" width="20" height="24"/>
+   <object id="2" x="10" y="5" width="20" height="24"/>
   </objectgroup>
  </tile>
 </tileset>
