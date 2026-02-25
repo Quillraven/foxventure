@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="33" tileheight="32" tilecount="2" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="33" tileheight="32" tilecount="3" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -17,6 +17,20 @@
   <image source="../graphics/sprites/sfx/gem/idle_0.png" width="15" height="13"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="2" y="2" width="11" height="9"/>
+  </objectgroup>
+ </tile>
+ <tile id="2" type="enemy">
+  <properties>
+   <property name="physics" type="class" propertytype="Physics">
+    <properties>
+     <property name="jump_impulse" type="float" value="0"/>
+     <property name="max_speed" type="float" value="1.5"/>
+    </properties>
+   </property>
+  </properties>
+  <image source="../graphics/sprites/characters/mushroom/idle_0.png" width="23" height="25"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2" y="0" width="20" height="24"/>
   </objectgroup>
  </tile>
 </tileset>

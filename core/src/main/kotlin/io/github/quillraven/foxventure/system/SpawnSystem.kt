@@ -13,6 +13,8 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
+import io.github.quillraven.foxventure.ai.FsmState
+import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
@@ -71,8 +73,8 @@ class SpawnSystem(
 
             // graphic, animation
             val regions = objectsAtlas.findRegions(atlasKey)
-            it += Graphic(regions.first())
-            if (regions.size > 1) {
+            it += Graphic(regions.firstOrNull() ?: gdxError("No regions for atlas key $atlasKey"))
+            if (regions.size > 1 || atlasKey.endsWith("idle")) {
                 // multiple texture regions -> add Animation component
                 val objectKey = atlasKey.substringBeforeLast("/")
                 val gdxAnimations = animationCache.getOrPut(objectKey) {
@@ -129,12 +131,23 @@ class SpawnSystem(
                 it += Collision(Rect.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
             }
 
-            if ("player" == tiledType) {
-                it += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                it += Player()
-                it += Controller()
-                it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
+            when (tiledType) {
+                "player" -> {
+                    it += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
+                    it += Player()
+                    it += Controller()
+                    it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
+                }
+
+                "enemy" -> it += Fsm(FleksStateMachine(world, it, getEnemyState(atlasKey)))
             }
+        }
+    }
+
+    private fun getEnemyState(atlasKey: String): FsmState {
+        return when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
+            "mushroom" -> MushroomStateIdle
+            else -> gdxError("No enemy state for enemy $enemyType")
         }
     }
 
