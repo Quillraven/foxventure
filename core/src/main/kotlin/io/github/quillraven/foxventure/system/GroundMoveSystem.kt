@@ -31,7 +31,7 @@ class GroundMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     assets: AssetManager = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING, EntityTag.ROOT) },
 ) {
     private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val runDustAnimation: GdxAnimation

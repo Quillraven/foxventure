@@ -74,24 +74,38 @@ data object MushroomStateRun : FsmState {
 }
 
 data object MushroomStateAttack : FsmState {
+    private var idleWidth = 0f
+    private var idleHeight = 0f
+    private var attackWidth = 0f
+    private var attackHeight = 0f
+    private var widthDiff = 0f
+
+    private fun initAnimationDimensions(animation: Animation) {
+        if (idleWidth != 0f) return
+
+        idleWidth = animation.idle.getKeyFrame(0f).regionWidth.toWorldUnits()
+        idleHeight = animation.idle.getKeyFrame(0f).regionHeight.toWorldUnits()
+        val attackAnim = animation.get(AnimationType.ATTACK)
+        attackWidth = attackAnim.getKeyFrame(0f).regionWidth.toWorldUnits()
+        attackHeight = attackAnim.getKeyFrame(0f).regionHeight.toWorldUnits()
+        widthDiff = attackWidth - idleWidth
+    }
+
     override fun World.onEnter(entity: Entity) {
         val animation = entity[Animation]
-        val idleWidth = animation.idle.getKeyFrame(0f).regionWidth.toWorldUnits()
-        val attackAnim = animation.get(AnimationType.ATTACK)
-        val attackWidth = attackAnim.getKeyFrame(0f).regionWidth.toWorldUnits()
-        val attackHeight = attackAnim.getKeyFrame(0f).regionHeight.toWorldUnits()
-
+        initAnimationDimensions(animation)
         animation.changeTo(AnimationType.ATTACK)
-        val velocity = entity[Velocity].current
+
+        // adjust Transform/Graphic because attack frame has different dimensions than the idle/run frames
         val transform = entity[Transform]
-        val widthDiff = attackWidth - idleWidth
         transform.size.set(attackWidth, attackHeight)
         val graphic = entity[Graphic]
         graphic.offset.x = if (graphic.flip) -widthDiff else 0f
 
-        velocity.x = 0f
-        entity[Follow].moveDirection = 0f
+        // stop the entity from moving
+        entity.configure { it += EntityTag.ROOT }
 
+        // spawn damage entity
         val collBox = entity[Collision].box
         val damageX = transform.position.x + collBox.x + (collBox.width * 0.5f)
         val damageY = transform.position.y + collBox.y
@@ -100,9 +114,6 @@ data object MushroomStateAttack : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        entity[Velocity].current.x = 0f
-        entity[Follow].moveDirection = 0f
-
         if (entity[Animation].isFinished()) {
             entity[AttackRange].cooldown = 2f
             entity[Fsm].state.changeState(MushroomStateIdle)
@@ -110,13 +121,10 @@ data object MushroomStateAttack : FsmState {
     }
 
     override fun World.onExit(entity: Entity) {
-        val animation = entity[Animation]
-        val idleWidth = animation.idle.getKeyFrame(0f).regionWidth.toWorldUnits()
-        val idleHeight = animation.idle.getKeyFrame(0f).regionHeight.toWorldUnits()
-
         val transform = entity[Transform]
         transform.size.set(idleWidth, idleHeight)
         entity[Graphic].offset.x = 0f
+        entity.configure { it -= EntityTag.ROOT }
     }
 
     private fun World.spawnDamageEntity(x: Float, y: Float, offsetX: Float) {

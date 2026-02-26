@@ -7,4 +7,5 @@ enum class EntityTag : EntityTags by entityTagOf() {
     ACTIVE,
     CAMERA_FOCUS,
     CLIMBING,
+    ROOT,
 }

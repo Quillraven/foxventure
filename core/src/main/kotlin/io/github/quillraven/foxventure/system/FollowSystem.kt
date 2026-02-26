@@ -19,7 +19,7 @@ class FollowSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Transform, Follow, Collision, Velocity, EntityTag.ACTIVE) }
+    family = family { all(Transform, Follow, Collision, Velocity, EntityTag.ACTIVE).none(EntityTag.ROOT) }
 ) {
 
     override fun onTick() {
