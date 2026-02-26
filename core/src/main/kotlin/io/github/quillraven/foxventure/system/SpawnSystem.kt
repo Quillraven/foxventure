@@ -34,6 +34,7 @@ import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.app.gdxError
@@ -73,7 +74,8 @@ class SpawnSystem(
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             val tiledType = tile.property("type", "")
-            it += Tiled(id = mapObject.id, type = tiledType)
+            it += Tiled(id = mapObject.id)
+            it += Type(tiledType)
 
             // collision
             if (mapObject.tile.objects.isNotEmpty()) {

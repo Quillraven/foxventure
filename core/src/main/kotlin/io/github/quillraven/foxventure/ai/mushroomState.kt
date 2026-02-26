@@ -14,8 +14,8 @@ import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Rect
-import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import ktx.math.vec2
 import kotlin.math.abs
@@ -134,7 +134,7 @@ data object MushroomStateAttack : FsmState {
             it += Collision(box = Rect(0f, 0f, size.x, size.y))
             it += Damage(amount = 1)
             it += DelayRemoval(timer = 2f)
-            it += Tiled(id = -1, type = "damage")
+            it += Type("damage")
             it += EntityTag.ACTIVE
         }
     }
