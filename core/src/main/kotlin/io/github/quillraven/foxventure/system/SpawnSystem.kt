@@ -61,7 +61,8 @@ class SpawnSystem(
     ) {
         val w = mapObject.width.toWorldUnits()
         val h = mapObject.height.toWorldUnits()
-        val z = mapObject.property("z", 0)
+        val tiledType = tile.property("type", "")
+        val z = mapObject.property("z", Transform.zByTiledType(tiledType))
         val data = tile.textureRegion.texture.textureData as FileTextureData
         // Tiled references graphics in the "collection of images" tilesets as a relative path.
         // This path is the input path for the TexturePacker tool that creates a TextureAtlas out of those single images.
@@ -73,7 +74,6 @@ class SpawnSystem(
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
-            val tiledType = tile.property("type", "")
             it += Tiled(id = mapObject.id)
             it += Type(tiledType)
 
@@ -84,9 +84,9 @@ class SpawnSystem(
 
             graphicEntityCfg(atlasKey, it, tile)
             physicsEntityCfg(tile, it, x, y)
-            typeSpecificEntityCfg(tiledType, it, atlasKey)
             attackEntityCfg(tile, it)
             proximityAndFollowCfg(tile, it)
+            typeSpecificEntityCfg(tiledType, it, atlasKey)
         }
     }
 
@@ -168,7 +168,7 @@ class SpawnSystem(
                 gdxError("No idle animation for object $atlasKey")
             }
             val animationSpeed = tile.property("animation_speed", 1f)
-            entity += Animation(idle = idleAnimation, gdxAnimations = gdxAnimations, speed = animationSpeed)
+            entity += Animation(objectKey, idleAnimation, gdxAnimations, animationSpeed)
         }
     }
 

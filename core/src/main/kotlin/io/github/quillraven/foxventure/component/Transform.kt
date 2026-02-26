@@ -19,7 +19,7 @@ data class Transform(
     val size: Vector2,
     val rotationDegrees: Float = 0f,
     val scale: Float = 1f,
-    val z: Int = 0,
+    var z: Int = 0,
 ) : Component<Transform>, Comparable<Transform> {
     override fun type() = Transform
 
@@ -31,5 +31,14 @@ data class Transform(
         return this.position.x.compareTo(other.position.x)
     }
 
-    companion object : ComponentType<Transform>()
+    companion object : ComponentType<Transform>() {
+        fun zByTiledType(tiledType: String) = when (tiledType) {
+            "player" -> Z_PLAYER
+            "enemy" -> Z_ENEMY
+            else -> 0
+        }
+
+        const val Z_PLAYER = 20
+        const val Z_ENEMY = 10
+    }
 }

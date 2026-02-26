@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="22">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="23">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
@@ -22,7 +22,7 @@
  <objectgroup id="4" name="objects">
   <object id="1" gid="576" x="288" y="147" width="46" height="28">
    <properties>
-    <property name="z" type="int" value="1"/>
+    <property name="z" type="int" value="100"/>
    </properties>
   </object>
   <object id="2" gid="577" x="48" y="115" width="51" height="113.62"/>

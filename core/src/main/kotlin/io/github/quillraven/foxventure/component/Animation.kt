@@ -20,6 +20,7 @@ enum class AnimationType {
 }
 
 class Animation(
+    val objectKey: String, // used inside the AnimationSystem to cache dimension updates
     val idle: GdxAnimation,
     val gdxAnimations: Map<AnimationType, GdxAnimation>,
     var speed: Float,
@@ -29,14 +30,25 @@ class Animation(
     var active: GdxAnimation = idle
         private set
 
+    var activeType: AnimationType = AnimationType.IDLE
+        private set
+
+    private var updateDimensions: Boolean = false
+
     fun changeTo(type: AnimationType) {
-        active = gdxAnimations[type] ?: idle
+        val newAnimation = gdxAnimations[type]
+        if (newAnimation == null) {
+            active = idle
+            activeType = AnimationType.IDLE
+        } else {
+            active = newAnimation
+            activeType = type
+        }
+        updateDimensions = true
         stateTime = 0f
     }
 
-    fun get(type: AnimationType): GdxAnimation {
-        return gdxAnimations[type] ?: gdxError("No animation found for type $type")
-    }
+    fun getAndClearUpdateDimensionsFlag() = updateDimensions.also { updateDimensions = false }
 
     fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
 
