@@ -78,7 +78,7 @@ class GroundMoveSystem(
     }
 
     private fun sCurveAcceleration(speedPercent: Float): Float {
-        val t = speedPercent.coerceIn(0.25f, 1f)
+        val t = speedPercent.coerceIn(0.4f, 1f)
         val smoothed = t * t * (3f - 2f * t)
         return 0.5f + smoothed * 0.5f
     }
