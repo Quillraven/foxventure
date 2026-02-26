@@ -36,20 +36,18 @@ class DebugRenderSystem(
             val (collX, collY, collW, collH) = collision.box
             shapeRenderer.color = Color.GREEN
             shapeRenderer.rect(position.x + collX, position.y + collY, collW, collH)
-        }
 
-        entity.getOrNull(ProximityDetector)?.let { proximity ->
-            val centerX = position.x + size.x * scale / 2
-            val centerY = position.y + size.y * scale / 2
-            shapeRenderer.color = Color.YELLOW
-            shapeRenderer.circle(centerX, centerY, proximity.range)
-        }
+            val centerX = position.x + collX + collW / 2
+            val centerY = position.y + collY + collH / 2
+            entity.getOrNull(ProximityDetector)?.let { proximity ->
+                shapeRenderer.color = Color.YELLOW
+                shapeRenderer.circle(centerX, centerY, proximity.range)
+            }
 
-        entity.getOrNull(Follow)?.let { follow ->
-            val centerX = position.x + size.x * scale / 2
-            val centerY = position.y + size.y * scale / 2
-            shapeRenderer.color = Color(0f, 0f, 0.5f, 1f)
-            shapeRenderer.circle(centerX, centerY, follow.proximity)
+            entity.getOrNull(Follow)?.let { follow ->
+                shapeRenderer.color = Color(0f, 0f, 0.5f, 1f)
+                shapeRenderer.circle(centerX, centerY, follow.proximity)
+            }
         }
     }
 

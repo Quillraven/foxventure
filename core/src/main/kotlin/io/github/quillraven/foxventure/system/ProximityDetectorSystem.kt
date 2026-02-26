@@ -10,7 +10,7 @@ import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Transform
 import kotlin.math.abs
 
-class ProximityDetectionSystem : IteratingSystem(
+class ProximityDetectorSystem : IteratingSystem(
     family = family { all(Transform, Collision, ProximityDetector, EntityTag.ACTIVE) },
     interval = Fixed(1 / 20f),
 ) {
