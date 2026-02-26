@@ -12,7 +12,7 @@ import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
-import io.github.quillraven.foxventure.system.AttackCooldownSystem
+import io.github.quillraven.foxventure.system.AttackRangeSystem
 import io.github.quillraven.foxventure.system.AudioService
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ClimbSystem
@@ -65,7 +65,7 @@ class GameScreen(
             add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
             add(ProximityDetectionSystem())
             add(FollowSystem())
-            add(AttackCooldownSystem())
+            add(AttackRangeSystem())
             add(ClimbSystem())
             add(AerialMoveSystem())
             add(GroundMoveSystem())

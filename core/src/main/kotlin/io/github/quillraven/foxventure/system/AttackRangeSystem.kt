@@ -6,13 +6,13 @@ import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.AttackRange
 import io.github.quillraven.foxventure.component.EntityTag
 
-class AttackCooldownSystem : IteratingSystem(
+class AttackRangeSystem : IteratingSystem(
     family = family { all(AttackRange, EntityTag.ACTIVE) }
 ) {
     override fun onTickEntity(entity: Entity) {
         val attackRange = entity[AttackRange]
-        if (attackRange.cooldown > 0f) {
-            attackRange.cooldown -= deltaTime
+        if (attackRange.time > 0f) {
+            attackRange.time -= deltaTime
         }
     }
 }

@@ -24,7 +24,7 @@ private fun World.checkAttack(entity: Entity): Boolean {
     val attackRange = entity[AttackRange]
     val follow = entity[Follow]
 
-    if (attackRange.cooldown <= 0f && follow.target != Entity.NONE) {
+    if (attackRange.time <= 0f && follow.target != Entity.NONE) {
         val (position) = entity[Transform]
         val collBox = entity[Collision].box
         val centerX = position.x + collBox.x + (collBox.width * 0.5f)
@@ -115,7 +115,7 @@ data object MushroomStateAttack : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         if (entity[Animation].isFinished()) {
-            entity[AttackRange].cooldown = 2f
+            entity[AttackRange].resetCooldown()
             entity[Fsm].state.changeState(MushroomStateIdle)
         }
     }

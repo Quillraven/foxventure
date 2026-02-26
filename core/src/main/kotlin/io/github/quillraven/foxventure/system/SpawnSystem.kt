@@ -186,7 +186,7 @@ class SpawnSystem(
                     onBreak = { source, _ -> source[Follow].target = Entity.NONE }
                 )
                 entity += Follow(proximity = 3f, breakDistance = 3.5f, stopAtCliff = true)
-                entity += AttackRange(range = 1.5f)
+                entity += AttackRange(range = 1.5f, cooldown = 2.5f)
             }
 
             else -> gdxError("No enemy state for enemy $enemyType")
