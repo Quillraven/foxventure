@@ -20,6 +20,7 @@ import ktx.tiled.property
 import ktx.tiled.width
 import ktx.tiled.x
 import ktx.tiled.y
+import kotlin.math.abs
 
 interface MapChangeListener {
     fun onMapChanged(tiledMap: TiledMap)
@@ -238,5 +239,32 @@ class TiledService(
         if (listener in loadTileObjectListeners) gdxError("LoadTileObjectListener $listener is already registered")
 
         loadTileObjectListeners.add(listener)
+    }
+
+    // Bresenham's algorithm
+    fun hasObstacle(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+        val dx = abs(x2 - x1)
+        val dy = abs(y2 - y1)
+        val sx = if (x1 < x2) 1 else -1
+        val sy = if (y1 < y2) 1 else -1
+        var err = dx - dy
+        var x = x1
+        var y = y1
+
+        while (x != x2 || y != y2) {
+            if (getCollisionRect(x, y, includeSemiSolid = false) != null) {
+                return true
+            }
+            val e2 = 2 * err
+            if (e2 > -dy) {
+                err -= dy
+                x += sx
+            }
+            if (e2 < dx) {
+                err += dx
+                y += sy
+            }
+        }
+        return false
     }
 }

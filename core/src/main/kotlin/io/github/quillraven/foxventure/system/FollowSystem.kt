@@ -62,7 +62,7 @@ class FollowSystem(
         }
 
         // check line of sight - ensure no solid tiles block the path
-        if (hasObstacle(centerX.toInt(), centerY.toInt(), targetCenterX.toInt(), targetCenterY.toInt())) {
+        if (tiledService.hasObstacle(centerX.toInt(), centerY.toInt(), targetCenterX.toInt(), targetCenterY.toInt())) {
             follow.moveDirection = 0f
             return
         }
@@ -96,32 +96,5 @@ class FollowSystem(
         }
 
         follow.moveDirection = direction
-    }
-
-    // Bresenham's algorithm
-    private fun hasObstacle(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-        val dx = abs(x2 - x1)
-        val dy = abs(y2 - y1)
-        val sx = if (x1 < x2) 1 else -1
-        val sy = if (y1 < y2) 1 else -1
-        var err = dx - dy
-        var x = x1
-        var y = y1
-
-        while (x != x2 || y != y2) {
-            if (tiledService.getCollisionRect(x, y, includeSemiSolid = false) != null) {
-                return true
-            }
-            val e2 = 2 * err
-            if (e2 > -dy) {
-                err -= dy
-                x += sx
-            }
-            if (e2 < dx) {
-                err += dx
-                y += sy
-            }
-        }
-        return false
     }
 }
