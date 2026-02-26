@@ -13,6 +13,35 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "cooldown",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "damage",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "range",
+                    "type": "float",
+                    "value": 0
+                }
+            ],
+            "name": "Attack",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 1,
             "members": [
                 {
@@ -72,6 +101,40 @@
                 }
             ],
             "name": "Physics",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+                {
+                    "name": "detector_range",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "follow_break_range",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "follow_range",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "stop_at_cliff",
+                    "type": "bool",
+                    "value": true
+                }
+            ],
+            "name": "Proximity",
             "type": "class",
             "useAs": [
                 "property",
