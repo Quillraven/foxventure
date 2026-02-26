@@ -19,7 +19,7 @@ import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
-import io.github.quillraven.foxventure.component.AttackRange
+import io.github.quillraven.foxventure.component.Attack
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -61,7 +61,8 @@ class SpawnSystem(
     ) {
         val w = mapObject.width.toWorldUnits()
         val h = mapObject.height.toWorldUnits()
-        val z = mapObject.property("z", 0)
+        val tiledType = tile.property("type", "")
+        val z = mapObject.property("z", Transform.zByTiledType(tiledType))
         val data = tile.textureRegion.texture.textureData as FileTextureData
         // Tiled references graphics in the "collection of images" tilesets as a relative path.
         // This path is the input path for the TexturePacker tool that creates a TextureAtlas out of those single images.
@@ -73,7 +74,6 @@ class SpawnSystem(
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
-            val tiledType = tile.property("type", "")
             it += Tiled(id = mapObject.id)
             it += Type(tiledType)
 
@@ -84,9 +84,44 @@ class SpawnSystem(
 
             graphicEntityCfg(atlasKey, it, tile)
             physicsEntityCfg(tile, it, x, y)
+            attackEntityCfg(tile, it)
+            proximityAndFollowCfg(tile, it)
             typeSpecificEntityCfg(tiledType, it, atlasKey)
         }
     }
+
+    private fun EntityCreateContext.proximityAndFollowCfg(
+        tile: TiledMapTile,
+        entity: Entity,
+    ) {
+        (tile.properties.get("proximity") as? MapProperties)?.let { proximityProps ->
+            entity += ProximityDetector(
+                range = proximityProps["detector_range"] as Float,
+                predicate = { target -> target.has(Player) },
+                onDetect = { source, target -> source[Follow].target = target },
+                onBreak = { source, _ -> source[Follow].target = Entity.NONE }
+            )
+            entity += Follow(
+                proximity = proximityProps["follow_range"] as Float,
+                breakDistance = proximityProps["follow_break_range"] as Float,
+                stopAtCliff = proximityProps["stop_at_cliff"] as Boolean,
+            )
+        }
+    }
+
+    private fun EntityCreateContext.attackEntityCfg(
+        tile: TiledMapTile,
+        entity: Entity,
+    ) {
+        (tile.properties.get("attack") as? MapProperties)?.let { attackProps ->
+            entity += Attack(
+                range = attackProps["range"] as Float,
+                cooldown = attackProps["cooldown"] as Float,
+                damage = attackProps["damage"] as Int
+            )
+        }
+    }
+
 
     private fun EntityCreateContext.typeSpecificEntityCfg(
         tiledType: String,
@@ -133,7 +168,7 @@ class SpawnSystem(
                 gdxError("No idle animation for object $atlasKey")
             }
             val animationSpeed = tile.property("animation_speed", 1f)
-            entity += Animation(idle = idleAnimation, gdxAnimations = gdxAnimations, speed = animationSpeed)
+            entity += Animation(objectKey, idleAnimation, gdxAnimations, animationSpeed)
         }
     }
 
@@ -151,8 +186,8 @@ class SpawnSystem(
                 gravity = physicsProps["gravity"] as Float,
                 maxFallSpeed = physicsProps["max_fall_speed"] as Float,
                 jumpImpulse = jumpImpulse,
-                coyoteThreshold = 0.08f,
-                jumpBufferThreshold = 0.08f,
+                coyoteThreshold = 0.16f,
+                jumpBufferThreshold = 0.16f,
                 maxSpeed = maxSpeed,
                 acceleration = physicsProps["acceleration"] as Float,
                 deceleration = physicsProps["deceleration"] as Float,
@@ -177,18 +212,7 @@ class SpawnSystem(
         atlasKey: String
     ) {
         when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
-            "mushroom" -> {
-                entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
-                entity += ProximityDetector(
-                    range = 5f,
-                    predicate = { target -> target.has(Player) },
-                    onDetect = { source, target -> source[Follow].target = target },
-                    onBreak = { source, _ -> source[Follow].target = Entity.NONE }
-                )
-                entity += Follow(proximity = 3f, breakDistance = 3.5f, stopAtCliff = true)
-                entity += AttackRange(range = 1.5f, cooldown = 2.5f)
-            }
-
+            "mushroom" -> entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }

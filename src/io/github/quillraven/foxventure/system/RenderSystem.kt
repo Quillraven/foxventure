@@ -114,7 +114,7 @@ class RenderSystem(
         ) = this.entity {
             it += Transform(position, size, z = 10)
             it += Graphic(gdxAnimation.getKeyFrame(0f), flip)
-            it += Animation(gdxAnimation, gdxAnimations = emptyMap(), speed)
+            it += Animation(objectKey = "", gdxAnimation, gdxAnimations = emptyMap(), speed)
             it += DelayRemoval(gdxAnimation.animationDuration)
             it += EntityTag.ACTIVE
         }

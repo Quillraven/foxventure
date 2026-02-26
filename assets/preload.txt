@@ -73,11 +73,11 @@ i:b:/graphics/sprites/characters/mushroom/run_7.png:814:1
 i:b:/sound/jump.wav:15114:1
 i:b:/sound/pickup.wav:31592:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
-i:b:/maps/foxventure.tiled-project:2210:1
-i:b:/maps/objects.tsx:1395:1
+i:b:/maps/foxventure.tiled-project:3886:1
+i:b:/maps/objects.tsx:1980:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/props.tsx:635:1
-i:b:/maps/tutorial.tmx:2179:1
+i:b:/maps/tutorial.tmx:2181:1
 c:b:/com/badlogic/gdx/utils/lsans-15.png:10270:1
 c:b:/com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:9096:1
 c:b:/com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:820:1
