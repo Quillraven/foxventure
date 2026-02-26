@@ -34,6 +34,10 @@ class Animation(
         stateTime = 0f
     }
 
+    fun get(type: AnimationType): GdxAnimation {
+        return gdxAnimations[type] ?: gdxError("No animation found for type $type")
+    }
+
     fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
 
     override fun type() = Animation

@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.EntityCreateContext
 import com.github.quillraven.fleks.IntervalSystem
-import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
@@ -76,81 +75,102 @@ class SpawnSystem(
             val tiledType = tile.property("type", "")
             it += Tiled(id = mapObject.id, type = tiledType)
 
-            // graphic, animation
-            val regions = objectsAtlas.findRegions(atlasKey)
-            it += Graphic(regions.firstOrNull() ?: gdxError("No regions for atlas key $atlasKey"))
-            if (regions.size > 1 || atlasKey.endsWith("idle")) {
-                // multiple texture regions -> add Animation component
-                val objectKey = atlasKey.substringBeforeLast("/")
-                val gdxAnimations = animationCache.getOrPut(objectKey) {
-                    if (animationCache.size >= 100) {
-                        animationCache.clear()
-                    }
-                    objectsAtlas.regions
-                        // get all regions of the object via its key
-                        .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
-                        // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
-                        .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
-                        // map AnimationType to real GdxAnimation
-                        .associateWith { animationType -> getAnimation(objectKey, animationType) }
-                }
-
-                val idleAnimation = gdxAnimations.getOrElse(AnimationType.IDLE) {
-                    gdxError("No idle animation for object $atlasKey")
-                }
-                val animationSpeed = tile.property("animation_speed", 1f)
-                it += Animation(idle = idleAnimation, gdxAnimations = gdxAnimations, speed = animationSpeed)
-            }
-
-            // physics, velocity and jump control
-            (tile.properties.get("physics") as? MapProperties)?.let { physicsProps ->
-                val maxSpeed = physicsProps["max_speed"] as Float
-                val jumpImpulse = physicsProps["jump_impulse"] as Float
-
-                it += Physics(
-                    gravity = physicsProps["gravity"] as Float,
-                    maxFallSpeed = physicsProps["max_fall_speed"] as Float,
-                    jumpImpulse = jumpImpulse,
-                    coyoteThreshold = 0.08f,
-                    jumpBufferThreshold = 0.08f,
-                    maxSpeed = maxSpeed,
-                    acceleration = physicsProps["acceleration"] as Float,
-                    deceleration = physicsProps["deceleration"] as Float,
-                    skidDeceleration = physicsProps["skid_deceleration"] as Float,
-                    airControl = physicsProps["air_control"] as Float,
-                    peakGravityMultiplier = physicsProps["peak_gravity_multiplier"] as Float,
-                    peakVelocityThreshold = physicsProps["peak_velocity_threshold"] as Float,
-                    climbSpeed = physicsProps["climb_speed"] as Float,
-                    position = vec2(x, y),
-                )
-                if (maxSpeed > 0f) {
-                    it += Velocity()
-                }
-                if (jumpImpulse > 0f) {
-                    it += JumpControl()
-                }
-            }
-
             // collision
             if (mapObject.tile.objects.isNotEmpty()) {
-                it += Collision(Rect.ofRect((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
+                it += Collision(Rect.ofRectangle((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
             }
 
-            when (tiledType) {
-                "player" -> {
-                    it += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                    it += Player()
-                    it += Controller()
-                    it += Fsm(FleksStateMachine(world, it, PlayerStateIdle))
-                }
+            graphicEntityCfg(atlasKey, it, tile)
+            physicsEntityCfg(tile, it, x, y)
+            typeSpecificEntityCfg(tiledType, it, atlasKey)
+        }
+    }
 
-                "enemy" -> configureEnemy(world, it, atlasKey)
+    private fun EntityCreateContext.typeSpecificEntityCfg(
+        tiledType: String,
+        entity: Entity,
+        atlasKey: String
+    ) {
+        when (tiledType) {
+            "player" -> {
+                entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
+                entity += Player()
+                entity += Controller()
+                entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
+            }
+
+            "enemy" -> configureEnemy(entity, atlasKey)
+        }
+    }
+
+    private fun EntityCreateContext.graphicEntityCfg(
+        atlasKey: String,
+        entity: Entity,
+        tile: TiledMapTile
+    ) {
+        // graphic, animation
+        val regions = objectsAtlas.findRegions(atlasKey)
+        entity += Graphic(regions.firstOrNull() ?: gdxError("No regions for atlas key $atlasKey"))
+        if (regions.size > 1 || atlasKey.endsWith("idle")) {
+            // multiple texture regions -> add Animation component
+            val objectKey = atlasKey.substringBeforeLast("/")
+            val gdxAnimations = animationCache.getOrPut(objectKey) {
+                if (animationCache.size >= 100) {
+                    animationCache.clear()
+                }
+                objectsAtlas.regions
+                    // get all regions of the object via its key
+                    .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
+                    // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
+                    .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
+                    // map AnimationType to real GdxAnimation
+                    .associateWith { animationType -> getAnimation(objectKey, animationType) }
+            }
+
+            val idleAnimation = gdxAnimations.getOrElse(AnimationType.IDLE) {
+                gdxError("No idle animation for object $atlasKey")
+            }
+            val animationSpeed = tile.property("animation_speed", 1f)
+            entity += Animation(idle = idleAnimation, gdxAnimations = gdxAnimations, speed = animationSpeed)
+        }
+    }
+
+    private fun EntityCreateContext.physicsEntityCfg(
+        tile: TiledMapTile,
+        entity: Entity,
+        x: Float,
+        y: Float
+    ) {
+        (tile.properties.get("physics") as? MapProperties)?.let { physicsProps ->
+            val maxSpeed = physicsProps["max_speed"] as Float
+            val jumpImpulse = physicsProps["jump_impulse"] as Float
+
+            entity += Physics(
+                gravity = physicsProps["gravity"] as Float,
+                maxFallSpeed = physicsProps["max_fall_speed"] as Float,
+                jumpImpulse = jumpImpulse,
+                coyoteThreshold = 0.08f,
+                jumpBufferThreshold = 0.08f,
+                maxSpeed = maxSpeed,
+                acceleration = physicsProps["acceleration"] as Float,
+                deceleration = physicsProps["deceleration"] as Float,
+                skidDeceleration = physicsProps["skid_deceleration"] as Float,
+                airControl = physicsProps["air_control"] as Float,
+                peakGravityMultiplier = physicsProps["peak_gravity_multiplier"] as Float,
+                peakVelocityThreshold = physicsProps["peak_velocity_threshold"] as Float,
+                climbSpeed = physicsProps["climb_speed"] as Float,
+                position = vec2(x, y),
+            )
+            if (maxSpeed > 0f) {
+                entity += Velocity()
+            }
+            if (jumpImpulse > 0f) {
+                entity += JumpControl()
             }
         }
     }
 
     private fun EntityCreateContext.configureEnemy(
-        world: World,
         entity: Entity,
         atlasKey: String
     ) {

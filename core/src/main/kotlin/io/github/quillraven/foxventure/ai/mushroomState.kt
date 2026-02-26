@@ -2,6 +2,7 @@ package io.github.quillraven.foxventure.ai
 
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
+import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.AttackRange
@@ -11,6 +12,7 @@ import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.Fsm
+import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
@@ -73,16 +75,28 @@ data object MushroomStateRun : FsmState {
 
 data object MushroomStateAttack : FsmState {
     override fun World.onEnter(entity: Entity) {
-        entity[Animation].changeTo(AnimationType.ATTACK)
-        entity[Velocity].current.x = 0f
+        val animation = entity[Animation]
+        val idleWidth = animation.idle.getKeyFrame(0f).regionWidth.toWorldUnits()
+        val attackAnim = animation.get(AnimationType.ATTACK)
+        val attackWidth = attackAnim.getKeyFrame(0f).regionWidth.toWorldUnits()
+        val attackHeight = attackAnim.getKeyFrame(0f).regionHeight.toWorldUnits()
+
+        animation.changeTo(AnimationType.ATTACK)
+        val velocity = entity[Velocity].current
+        val transform = entity[Transform]
+        val widthDiff = attackWidth - idleWidth
+        transform.size.set(attackWidth, attackHeight)
+        val graphic = entity[Graphic]
+        graphic.offset.x = if (graphic.flip) -widthDiff else 0f
+
+        velocity.x = 0f
         entity[Follow].moveDirection = 0f
 
-        val (position) = entity[Transform]
         val collBox = entity[Collision].box
-        val centerX = position.x + collBox.x + (collBox.width * 0.5f)
-        val centerY = position.y + collBox.y + (collBox.height * 0.5f)
-
-        spawnDamageEntity(centerX, centerY)
+        val damageX = transform.position.x + collBox.x + (collBox.width * 0.5f)
+        val damageY = transform.position.y + collBox.y
+        val damageOffsetX = if (graphic.flip) -widthDiff - collBox.x else 0f
+        spawnDamageEntity(damageX, damageY, damageOffsetX)
     }
 
     override fun World.onUpdate(entity: Entity) {
@@ -95,12 +109,23 @@ data object MushroomStateAttack : FsmState {
         }
     }
 
-    private fun World.spawnDamageEntity(x: Float, y: Float) {
+    override fun World.onExit(entity: Entity) {
+        val animation = entity[Animation]
+        val idleWidth = animation.idle.getKeyFrame(0f).regionWidth.toWorldUnits()
+        val idleHeight = animation.idle.getKeyFrame(0f).regionHeight.toWorldUnits()
+
+        val transform = entity[Transform]
+        transform.size.set(idleWidth, idleHeight)
+        entity[Graphic].offset.x = 0f
+    }
+
+    private fun World.spawnDamageEntity(x: Float, y: Float, offsetX: Float) {
         entity {
-            it += Transform(position = vec2(x - 0.5f, y - 0.5f), size = vec2(1f, 1f))
-            it += Collision(box = Rect(0f, 0f, 1f, 1f))
+            val size = vec2(1.9f, 1.5f)
+            it += Transform(position = vec2(x + offsetX, y), size = size)
+            it += Collision(box = Rect(0f, 0f, size.x, size.y))
             it += Damage(amount = 1)
-            it += DelayRemoval(timer = 0.3f)
+            it += DelayRemoval(timer = 2f)
             it += Tiled(id = -1, type = "damage")
             it += EntityTag.ACTIVE
         }

@@ -55,7 +55,8 @@ class FollowSystem(
         // Hysteresis: use breakDistance when following, proximity when not
         val isFollowing = velocity.x != 0f
         val threshold = if (isFollowing) follow.breakDistance else follow.proximity
-        if (distance > threshold) {
+        val closestRange = 1.5f
+        if (distance !in closestRange..threshold) {
             follow.moveDirection = 0f
             return
         }

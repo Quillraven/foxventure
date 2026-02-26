@@ -24,6 +24,7 @@ import ktx.math.vec2
 class Graphic(
     region: TextureRegion,
     var flip: Boolean = false,
+    var offset: Vector2 = vec2(0f, 0f),
 ) : Component<Graphic> {
 
     val regionSize: Vector2 = vec2(region.regionWidth.toWorldUnits(), region.regionHeight.toWorldUnits())
