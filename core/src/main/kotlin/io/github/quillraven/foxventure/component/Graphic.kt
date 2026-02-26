@@ -20,6 +20,7 @@ import ktx.math.vec2
  * @property regionSize The size of the texture region in world units. This value is automatically
  * updated based on the [region].
  * @property flip Boolean property that indicates whether the texture is horizontally flipped.
+ * @property offset The offset of the render position in world units.
  */
 class Graphic(
     region: TextureRegion,
