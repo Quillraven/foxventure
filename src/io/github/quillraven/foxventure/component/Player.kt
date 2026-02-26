@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.ComponentType
 
 data class Player(
     var gems: Int = 0,
+    var life: Int = 3,
 ) : Component<Player> {
     override fun type() = Player
 

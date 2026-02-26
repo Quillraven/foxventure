@@ -75,7 +75,7 @@ class RenderSystem(
 
         batch.draw(
             region,
-            position.x, position.y,
+            position.x + graphic.offset.x, position.y + graphic.offset.y,
             realSize.x / 2f, realSize.y / 2f,
             realSize.x, realSize.y,
             if (graphic.flip) -1f else 1f, 1f,

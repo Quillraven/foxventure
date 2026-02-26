@@ -10,11 +10,12 @@ import com.github.quillraven.fleks.collection.compareEntity
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Damage
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Player
-import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 
 class CollisionSystem(
@@ -42,7 +43,7 @@ class CollisionSystem(
     override fun onTickEntity(entity: Entity) {
         val (position) = entity[Transform]
         val collBox = entity[Collision].box
-        val type = entity.getOrNull(Tiled)?.type ?: ""
+        val type = entity.getOrNull(Type)?.type ?: ""
 
         family.forEach { other ->
             if (entity.id >= other.id) {
@@ -53,7 +54,7 @@ class CollisionSystem(
 
             val (otherPosition) = other[Transform]
             val otherCollBox = other[Collision].box
-            val otherType = other.getOrNull(Tiled)?.type ?: ""
+            val otherType = other.getOrNull(Type)?.type ?: ""
 
             if (collBox.overlaps(position, otherPosition, otherCollBox)) {
                 when {
@@ -78,6 +79,16 @@ class CollisionSystem(
 
                 other.remove()
                 audioService.playSound("pickup.wav")
+            }
+
+            "damage" -> {
+                val damage = other[Damage]
+                player[Player].life -= damage.amount
+                other.remove()
+            }
+
+            "enemy" -> {
+                // TODO: Handle player-enemy collision (damage, knockback, etc.)
             }
         }
     }

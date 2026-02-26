@@ -38,12 +38,12 @@
                 {
                     "name": "gravity",
                     "type": "float",
-                    "value": 35
+                    "value": 40
                 },
                 {
                     "name": "jump_impulse",
                     "type": "float",
-                    "value": 15
+                    "value": 16
                 },
                 {
                     "name": "max_fall_speed",

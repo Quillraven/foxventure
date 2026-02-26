@@ -21,7 +21,7 @@ data class Rect(val x: Float, val y: Float, val width: Float, val height: Float)
     }
 
     companion object {
-        fun ofRect(rect: Rectangle) = Rect(
+        fun ofRectangle(rect: Rectangle) = Rect(
             rect.x.toWorldUnits(), rect.y.toWorldUnits(),
             rect.width.toWorldUnits(), rect.height.toWorldUnits()
         )

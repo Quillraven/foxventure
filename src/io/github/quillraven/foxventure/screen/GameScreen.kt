@@ -12,17 +12,20 @@ import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
+import io.github.quillraven.foxventure.system.AttackRangeSystem
 import io.github.quillraven.foxventure.system.AudioService
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.CollisionSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
+import io.github.quillraven.foxventure.system.FollowSystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.PhysicsTimer
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PreInterpolationSystem
+import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -59,6 +62,9 @@ class GameScreen(
             add(SpawnSystem())
             add(ActivationSystem())
             add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
+            add(ProximityDetectorSystem())
+            add(FollowSystem())
+            add(AttackRangeSystem())
             add(ClimbSystem())
             add(AerialMoveSystem())
             add(GroundMoveSystem())

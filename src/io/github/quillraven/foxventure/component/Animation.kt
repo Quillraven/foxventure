@@ -8,7 +8,7 @@ import ktx.app.gdxError
 typealias GdxAnimation = com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>
 
 enum class AnimationType {
-    IDLE, RUN, JUMP, FALL, CLIMB;
+    IDLE, RUN, JUMP, FALL, CLIMB, ATTACK;
 
     val atlasKey: String = name.lowercase()
 
@@ -33,6 +33,12 @@ class Animation(
         active = gdxAnimations[type] ?: idle
         stateTime = 0f
     }
+
+    fun get(type: AnimationType): GdxAnimation {
+        return gdxAnimations[type] ?: gdxError("No animation found for type $type")
+    }
+
+    fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
 
     override fun type() = Animation
 

@@ -20,10 +20,12 @@ import ktx.math.vec2
  * @property regionSize The size of the texture region in world units. This value is automatically
  * updated based on the [region].
  * @property flip Boolean property that indicates whether the texture is horizontally flipped.
+ * @property offset The offset of the render position in world units.
  */
 class Graphic(
     region: TextureRegion,
     var flip: Boolean = false,
+    var offset: Vector2 = vec2(0f, 0f),
 ) : Component<Graphic> {
 
     val regionSize: Vector2 = vec2(region.regionWidth.toWorldUnits(), region.regionHeight.toWorldUnits())

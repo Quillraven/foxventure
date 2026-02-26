@@ -12,6 +12,7 @@ import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
@@ -30,7 +31,7 @@ class GroundMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     assets: AssetManager = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
+    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING, EntityTag.ROOT) },
 ) {
     private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val runDustAnimation: GdxAnimation
@@ -51,8 +52,7 @@ class GroundMoveSystem(
         val collision = entity[Collision]
         val physics = entity[Physics]
 
-        val controller = entity.getOrNull(Controller)
-        val inputX = getInputX(controller)
+        val inputX = getInputX(entity)
 
         val wasAtMaxSpeed = abs(velocity.current.x) >= physics.maxSpeed && collision.isGrounded
 
@@ -65,12 +65,16 @@ class GroundMoveSystem(
         }
     }
 
-    private fun getInputX(controller: Controller?): Float {
-        if (controller == null) return 0f
-        var input = 0f
-        if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
-        if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
-        return input
+    private fun getInputX(entity: Entity): Float {
+        val controller = entity.getOrNull(Controller)
+        if (controller != null) {
+            var input = 0f
+            if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
+            if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
+            return input
+        }
+
+        return entity.getOrNull(Follow)?.moveDirection ?: 0f
     }
 
     private fun sCurveAcceleration(speedPercent: Float): Float {
