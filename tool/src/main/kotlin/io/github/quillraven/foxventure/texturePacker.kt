@@ -12,7 +12,6 @@ fun main() {
     val packageFileName = "objects"
     val settings = defaultSettings()
 
-    TexturePacker.process(inputFolder, outputFolder, packageFileName)
     TexturePacker.process(settings, inputFolder, outputFolder, packageFileName)
 }
 
