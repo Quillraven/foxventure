@@ -123,11 +123,10 @@ class CollisionSystem(
 
             "enemy" -> {
                 val playerBottom = playerTransform.position.y + playerCollBox.y
-                val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height
-                val tolerance = 0.25f
+                val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
                 val playerVelocity = player[Velocity].current
 
-                if (playerBottom + tolerance > enemyTop && playerVelocity.y < 0f && other hasNo Damaged) {
+                if (playerBottom > enemyTop && other hasNo Damaged) {
                     // player stomps on an enemy from above
                     val jumpPressed = player[Controller].hasCommand(Command.JUMP)
                     val physics = player[Physics]
