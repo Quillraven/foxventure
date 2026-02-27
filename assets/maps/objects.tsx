@@ -22,7 +22,7 @@
  </tile>
  <tile id="2" type="enemy">
   <properties>
-   <property name="animation_speed" type="float" value="0.8"/>
+   <property name="animation_speed" type="float" value="0.75"/>
    <property name="attack" type="class" propertytype="Attack">
     <properties>
      <property name="cooldown" type="float" value="2.5"/>
@@ -34,14 +34,19 @@
    <property name="physics" type="class" propertytype="Physics">
     <properties>
      <property name="jump_impulse" type="float" value="0"/>
-     <property name="max_speed" type="float" value="1.5"/>
+     <property name="max_speed" type="float" value="1"/>
     </properties>
    </property>
    <property name="proximity" type="class" propertytype="Proximity">
     <properties>
-     <property name="detector_range" type="float" value="7"/>
-     <property name="follow_break_range" type="float" value="6"/>
-     <property name="follow_range" type="float" value="5"/>
+     <property name="detector_range" type="float" value="4.5"/>
+     <property name="follow_break_range" type="float" value="5"/>
+     <property name="follow_range" type="float" value="4"/>
+    </properties>
+   </property>
+   <property name="wander" type="class" propertytype="Wander">
+    <properties>
+     <property name="distance" type="float" value="3"/>
     </properties>
    </property>
   </properties>
