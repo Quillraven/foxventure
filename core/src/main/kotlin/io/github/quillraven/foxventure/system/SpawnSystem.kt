@@ -44,6 +44,7 @@ import ktx.tiled.height
 import ktx.tiled.id
 import ktx.tiled.isNotEmpty
 import ktx.tiled.property
+import ktx.tiled.propertyOrNull
 import ktx.tiled.width
 
 class SpawnSystem(
@@ -77,10 +78,11 @@ class SpawnSystem(
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Tiled(id = mapObject.id)
             it += Type(tiledType)
+            tile.propertyOrNull<Int>("life")?.let { amount -> it += Life(amount) }
 
             // collision
-            if (mapObject.tile.objects.isNotEmpty()) {
-                it += Collision(Rect.ofRectangle((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
+            if (tile.objects.isNotEmpty()) {
+                it += Collision(Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle))
             }
 
             graphicEntityCfg(atlasKey, it, tile)
@@ -133,7 +135,6 @@ class SpawnSystem(
             "player" -> {
                 entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
                 entity += Player()
-                entity += Life(3)
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
             }

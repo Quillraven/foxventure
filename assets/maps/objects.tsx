@@ -3,6 +3,7 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
+   <property name="life" type="int" value="3"/>
    <property name="physics" type="class" propertytype="Physics"/>
   </properties>
   <image source="../graphics/sprites/characters/fox/idle_0.png" width="33" height="32"/>
@@ -21,6 +22,7 @@
  </tile>
  <tile id="2" type="enemy">
   <properties>
+   <property name="animation_speed" type="float" value="0.8"/>
    <property name="attack" type="class" propertytype="Attack">
     <properties>
      <property name="cooldown" type="float" value="2.5"/>
@@ -28,6 +30,7 @@
      <property name="range" type="float" value="1.5"/>
     </properties>
    </property>
+   <property name="life" type="int" value="1"/>
    <property name="physics" type="class" propertytype="Physics">
     <properties>
      <property name="jump_impulse" type="float" value="0"/>
