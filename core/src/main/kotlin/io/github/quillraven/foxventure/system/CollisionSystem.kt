@@ -11,6 +11,7 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Damage
+import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Player
@@ -82,8 +83,8 @@ class CollisionSystem(
             }
 
             "damage" -> {
-                val damage = other[Damage]
-                player[Player].life -= damage.amount
+                val (source, damageAmount) = other[Damage]
+                player.configure { it += Damaged(source, invulnerableTime = 1f, damageAmount) }
                 other.remove()
             }
 

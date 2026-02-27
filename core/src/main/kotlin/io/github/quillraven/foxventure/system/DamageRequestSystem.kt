@@ -18,7 +18,7 @@ class DamageRequestSystem : IteratingSystem(
 ) {
     override fun onTickEntity(entity: Entity) {
         val (source, damage, position, size, lifeSpan) = entity[DamageRequest]
-        if (source !in world) {
+        if (source.wasRemoved()) {
             entity.remove()
             return
         }
@@ -28,7 +28,7 @@ class DamageRequestSystem : IteratingSystem(
             val damageOffsetX = if (flip) -size.x else 0f
             it += Transform(position.add(damageOffsetX, 0f), size)
             it += Collision(box = Rect(0f, 0f, size.x, size.y))
-            it += Damage(amount = damage)
+            it += Damage(source = source, amount = damage)
             it += DelayRemoval(timer = lifeSpan)
             it += Type("damage")
             it += EntityTag.ACTIVE

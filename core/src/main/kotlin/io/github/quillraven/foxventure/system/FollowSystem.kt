@@ -33,7 +33,7 @@ class FollowSystem(
         if (follow.target == Entity.NONE) {
             follow.moveDirection = 0f
             return
-        } else if (follow.target !in world) {
+        } else if (follow.target.wasRemoved()) {
             follow.moveDirection = 0f
             follow.target = Entity.NONE
             return

@@ -11,6 +11,7 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.JumpControl
@@ -57,12 +58,14 @@ class AerialMoveSystem(
 
         val landingDustThresholdSpeed = -7f
         val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
+        val isPlayer = entity has Player
+        val isDamaged = entity has Damaged
 
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, entity has Player)
+        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, isPlayer, isDamaged)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
 
-        if (wasFalling && collision.isGrounded && entity.has(Player)) {
+        if (wasFalling && collision.isGrounded && isPlayer) {
             spawnLandingDust(entity)
         }
     }
@@ -74,8 +77,9 @@ class AerialMoveSystem(
         jumpPressed: Boolean,
         isGrounded: Boolean,
         isPlayer: Boolean,
+        isGettingDamaged: Boolean,
     ) {
-        if (jumpControl == null) return
+        if (jumpControl == null || isGettingDamaged) return
 
         if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded, isPlayer)) {
             return

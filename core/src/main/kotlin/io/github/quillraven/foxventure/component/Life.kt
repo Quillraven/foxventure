@@ -3,8 +3,10 @@ package io.github.quillraven.foxventure.component
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
-data class Player(var gems: Int = 0) : Component<Player> {
-    override fun type() = Player
+data class Life(
+    var amount: Int,
+) : Component<Life> {
+    override fun type() = Life
 
-    companion object : ComponentType<Player>()
+    companion object : ComponentType<Life>()
 }

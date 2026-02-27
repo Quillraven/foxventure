@@ -52,7 +52,7 @@ class ProximityDetectorSystem : IteratingSystem(
     }
 
     private fun targetStillValid(centerX: Float, target: Entity, range: Float): Boolean {
-        if (target == Entity.NONE || target !in world) {
+        if (target == Entity.NONE || target.wasRemoved()) {
             return false
         }
 

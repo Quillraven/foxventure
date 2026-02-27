@@ -8,7 +8,7 @@ import ktx.app.gdxError
 typealias GdxAnimation = com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>
 
 enum class AnimationType {
-    IDLE, RUN, JUMP, FALL, CLIMB, ATTACK;
+    IDLE, RUN, JUMP, FALL, CLIMB, ATTACK, HURT;
 
     val atlasKey: String = name.lowercase()
 
