@@ -19,6 +19,7 @@ import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.CollisionSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.DamageRequestSystem
+import io.github.quillraven.foxventure.system.DamagedSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
 import io.github.quillraven.foxventure.system.FollowSystem
 import io.github.quillraven.foxventure.system.FsmSystem
@@ -70,6 +71,7 @@ class GameScreen(
             add(AerialMoveSystem())
             add(GroundMoveSystem())
             add(CollisionSystem())
+            add(DamagedSystem())
             add(FsmSystem())
             add(DamageRequestSystem())
             add(CameraSystem())

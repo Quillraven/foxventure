@@ -32,79 +32,93 @@ characters/fox/fall
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/idle
+characters/fox/hurt
   rotate: false
   xy: 202, 72
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
+characters/fox/hurt
+  rotate: false
+  xy: 204, 38
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 1
 characters/fox/idle
   rotate: false
   xy: 232, 111
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 1
+  index: 0
 characters/fox/idle
   rotate: false
-  xy: 238, 43
+  xy: 239, 43
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 2
+  index: 1
 characters/fox/idle
   rotate: false
   xy: 262, 145
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 3
-characters/fox/jump
+  index: 2
+characters/fox/idle
   rotate: false
   xy: 271, 77
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 0
-characters/fox/run
-  rotate: false
-  xy: 273, 43
-  size: 33, 32
-  orig: 33, 32
-  offset: 0, 0
-  index: 0
-characters/fox/run
+  index: 3
+characters/fox/jump
   rotate: false
   xy: 275, 9
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 1
+  index: 0
 characters/fox/run
   rotate: false
   xy: 297, 150
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 2
+  index: 0
 characters/fox/run
   rotate: false
   xy: 301, 116
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 3
+  index: 1
 characters/fox/run
   rotate: false
   xy: 306, 82
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 4
+  index: 2
 characters/fox/run
   rotate: false
   xy: 308, 48
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 3
+characters/fox/run
+  rotate: false
+  xy: 310, 14
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: 4
+characters/fox/run
+  rotate: false
+  xy: 327, 184
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
@@ -209,56 +223,56 @@ characters/mushroom/run
   index: 2
 characters/mushroom/run
   rotate: false
-  xy: 310, 16
+  xy: 410, 191
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 3
 characters/mushroom/run
   rotate: false
-  xy: 390, 191
+  xy: 453, 191
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 4
 characters/mushroom/run
   rotate: false
-  xy: 433, 191
+  xy: 332, 152
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 5
 characters/mushroom/run
   rotate: false
-  xy: 332, 161
+  xy: 336, 120
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 6
 characters/mushroom/run
   rotate: false
-  xy: 336, 129
+  xy: 341, 88
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 7
 characters/mushroom/run
   rotate: false
-  xy: 341, 97
+  xy: 343, 56
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 8
 characters/mushroom/run
   rotate: false
-  xy: 343, 65
+  xy: 345, 24
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 9
 props/bush
   rotate: false
-  xy: 342, 193
+  xy: 362, 193
   size: 46, 28
   orig: 46, 28
   offset: 0, 0
@@ -279,7 +293,7 @@ props/rock2
   index: -1
 props/skulls
   rotate: false
-  xy: 386, 71
+  xy: 492, 230
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
@@ -363,119 +377,119 @@ sfx/dust2/idle
   index: 1
 sfx/dust2/idle
   rotate: false
-  xy: 375, 173
+  xy: 345, 6
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 2
+sfx/dust2/idle
+  rotate: false
+  xy: 375, 175
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 3
+sfx/dust2/idle
+  rotate: false
+  xy: 375, 157
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: 4
 sfx/dust2/idle
   rotate: false
   xy: 409, 173
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
-  index: 3
+  index: 5
 sfx/dust2/idle
   rotate: false
   xy: 443, 173
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
-  index: 4
-sfx/dust2/idle
-  rotate: false
-  xy: 379, 155
-  size: 32, 16
-  orig: 32, 16
-  offset: 0, 0
-  index: 5
-sfx/dust2/idle
-  rotate: false
-  xy: 379, 137
-  size: 32, 16
-  orig: 32, 16
-  offset: 0, 0
   index: 6
 sfx/dust2/idle
   rotate: false
-  xy: 384, 119
+  xy: 379, 139
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 7
 sfx/dust2/idle
   rotate: false
-  xy: 384, 101
+  xy: 379, 121
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 8
 sfx/dust2/idle
   rotate: false
-  xy: 386, 83
+  xy: 384, 103
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 9
 sfx/gem/idle
   rotate: false
-  xy: 310, 1
+  xy: 384, 88
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 0
-sfx/gem/idle
-  rotate: false
-  xy: 327, 1
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 1
-sfx/gem/idle
-  rotate: false
-  xy: 344, 1
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 2
 sfx/gem/idle
   rotate: false
   xy: 492, 242
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
+  index: 1
+sfx/gem/idle
+  rotate: false
+  xy: 477, 176
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 2
+sfx/gem/idle
+  rotate: false
+  xy: 401, 88
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
   index: 3
 sfx/gem/idle
   rotate: false
-  xy: 343, 50
+  xy: 386, 73
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 4
 sfx/item-feedback/idle
   rotate: false
-  xy: 204, 38
+  xy: 237, 77
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 sfx/item-feedback/idle
   rotate: false
-  xy: 237, 77
+  xy: 241, 9
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 sfx/item-feedback/idle
   rotate: false
-  xy: 241, 9
+  xy: 267, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 sfx/item-feedback/idle
   rotate: false
-  xy: 267, 111
+  xy: 274, 43
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

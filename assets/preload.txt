@@ -1,7 +1,7 @@
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
-i:b:/graphics/objects.atlas:7268:1
-i:b:/graphics/objects.png:32162:1
+i:b:/graphics/objects.atlas:7485:1
+i:b:/graphics/objects.png:33308:1
 i:b:/graphics/sprites/sfx/dust1/idle_1.png:422:1
 i:b:/graphics/sprites/sfx/dust1/idle_0.png:347:1
 i:b:/graphics/sprites/sfx/dust1/idle_4.png:367:1
@@ -38,7 +38,9 @@ i:b:/graphics/sprites/characters/fox/idle_1.png:1297:1
 i:b:/graphics/sprites/characters/fox/run_4.png:1231:1
 i:b:/graphics/sprites/characters/fox/idle_0.png:1312:1
 i:b:/graphics/sprites/characters/fox/climb_1.png:1239:1
+i:b:/graphics/sprites/characters/fox/hurt_1.png:1325:1
 i:b:/graphics/sprites/characters/fox/fall_0.png:1276:1
+i:b:/graphics/sprites/characters/fox/hurt_0.png:1332:1
 i:b:/graphics/sprites/characters/fox/jump_0.png:1266:1
 i:b:/graphics/sprites/characters/fox/run_2.png:1298:1
 i:b:/graphics/sprites/characters/fox/climb_0.png:1211:1
@@ -74,7 +76,7 @@ i:b:/sound/jump.wav:15114:1
 i:b:/sound/pickup.wav:31592:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
 i:b:/maps/foxventure.tiled-project:3886:1
-i:b:/maps/objects.tsx:1980:1
+i:b:/maps/objects.tsx:2139:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/props.tsx:635:1
 i:b:/maps/tutorial.tmx:2181:1

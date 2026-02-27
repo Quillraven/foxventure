@@ -17,6 +17,7 @@ import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntityBy
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
@@ -65,11 +66,13 @@ class RenderSystem(
         val realSize = Scaling.fill.apply(regionSize.x, regionSize.y, targetW, targetH)
 
         // flip graphic if moving left or when skidding
-        entity.getOrNull(Velocity)?.let { velocity ->
-            if (velocity.isSkidding) {
-                graphic.flip = velocity.current.x > 0f
-            } else if (velocity.current.x != 0f) {
-                graphic.flip = velocity.current.x < 0f
+        if (entity hasNo Damaged) {
+            entity.getOrNull(Velocity)?.let { velocity ->
+                if (velocity.isSkidding) {
+                    graphic.flip = velocity.current.x > 0f
+                } else if (velocity.current.x != 0f) {
+                    graphic.flip = velocity.current.x < 0f
+                }
             }
         }
 

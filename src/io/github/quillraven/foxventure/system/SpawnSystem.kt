@@ -28,6 +28,7 @@ import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
+import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.ProximityDetector
@@ -43,6 +44,7 @@ import ktx.tiled.height
 import ktx.tiled.id
 import ktx.tiled.isNotEmpty
 import ktx.tiled.property
+import ktx.tiled.propertyOrNull
 import ktx.tiled.width
 
 class SpawnSystem(
@@ -76,10 +78,11 @@ class SpawnSystem(
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Tiled(id = mapObject.id)
             it += Type(tiledType)
+            tile.propertyOrNull<Int>("life")?.let { amount -> it += Life(amount) }
 
             // collision
-            if (mapObject.tile.objects.isNotEmpty()) {
-                it += Collision(Rect.ofRectangle((mapObject.tile.objects.single() as RectangleMapObject).rectangle))
+            if (tile.objects.isNotEmpty()) {
+                it += Collision(Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle))
             }
 
             graphicEntityCfg(atlasKey, it, tile)

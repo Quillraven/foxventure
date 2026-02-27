@@ -241,13 +241,33 @@ class TiledService(
         loadTileObjectListeners.add(listener)
     }
 
-    // Bresenham's algorithm
-    fun hasObstacle(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+    /**
+     * Checks if there is a line of sight (i.e., no blocking obstacles) between two points on the map.
+     *
+     * The method uses Bresenham's line algorithm to determine whether there is a direct, unobstructed path
+     * between the starting point (`fromX`, `fromY`) and the destination point (`toX`, `toY`).
+     * If a collision rectangle is detected at any point along the path, the method returns `true` for a blocked line of sight.
+     *
+     * @param fromX The X-coordinate of the starting point.
+     * @param fromY The Y-coordinate of the starting point.
+     * @param toX The X-coordinate of the destination point.
+     * @param toY The Y-coordinate of the destination point.
+     * @return `true` if the line of sight is obstructed by a collision rectangle, `false` otherwise.
+     */
+    fun checkLineOfSight(
+        fromX: Float, fromY: Float,
+        toX: Float, toY: Float,
+    ): Boolean {
+        val x1 = fromX.toInt()
+        val y1 = fromY.toInt()
+        val x2 = toX.toInt()
+        val y2 = toY.toInt()
+
         val dx = abs(x2 - x1)
         val dy = abs(y2 - y1)
         val sx = if (x1 < x2) 1 else -1
         val sy = if (y1 < y2) 1 else -1
-        var err = dx - dy
+        var err = dx - dy // error: how much has the path deviated from the true mathematical line
         var x = x1
         var y = y1
 
@@ -255,6 +275,8 @@ class TiledService(
             if (getCollisionRect(x, y, includeSemiSolid = false) != null) {
                 return true
             }
+
+            // next step: go horizontal, vertical or diagonal?
             val e2 = 2 * err
             if (e2 > -dy) {
                 err -= dy

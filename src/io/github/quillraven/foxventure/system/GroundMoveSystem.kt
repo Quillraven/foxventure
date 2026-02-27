@@ -11,6 +11,7 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.GdxAnimation
@@ -67,7 +68,8 @@ class GroundMoveSystem(
 
     private fun getInputX(entity: Entity): Float {
         val controller = entity.getOrNull(Controller)
-        if (controller != null) {
+        val damaged = entity.getOrNull(Damaged)
+        if (controller != null && damaged == null) {
             var input = 0f
             if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
             if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
