@@ -62,7 +62,7 @@ class FollowSystem(
         }
 
         // check line of sight - ensure no solid tiles block the path
-        if (tiledService.hasObstacle(centerX.toInt(), centerY.toInt(), targetCenterX.toInt(), targetCenterY.toInt())) {
+        if (tiledService.checkLineOfSight(centerX, centerY, targetCenterX, targetCenterY)) {
             follow.moveDirection = 0f
             return
         }

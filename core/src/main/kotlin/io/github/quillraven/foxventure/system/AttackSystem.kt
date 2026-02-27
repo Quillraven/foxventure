@@ -45,8 +45,7 @@ class AttackSystem(
         val targetCenterY = targetPosition.y + targetCollBox.y + (targetCollBox.height * 0.5f)
 
         val inRange = abs(targetCenterX - centerX) <= attack.range
-        val hasLineOfSight =
-            !tiledService.hasObstacle(centerX.toInt(), centerY.toInt(), targetCenterX.toInt(), targetCenterY.toInt())
+        val hasLineOfSight = !tiledService.checkLineOfSight(centerX, centerY, targetCenterX, targetCenterY)
         attack.readyToAttack = inRange && hasLineOfSight
     }
 }
