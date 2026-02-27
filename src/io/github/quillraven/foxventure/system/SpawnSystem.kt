@@ -37,6 +37,7 @@ import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.component.Wander
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import ktx.app.gdxError
 import ktx.math.vec2
@@ -89,7 +90,19 @@ class SpawnSystem(
             physicsEntityCfg(tile, it, x, y)
             attackEntityCfg(tile, it)
             proximityAndFollowCfg(tile, it)
+            wanderCfg(tile, it)
             typeSpecificEntityCfg(tiledType, it, atlasKey)
+        }
+    }
+
+    private fun EntityCreateContext.wanderCfg(
+        tile: TiledMapTile,
+        entity: Entity,
+    ) {
+        (tile.properties.get("wander") as? MapProperties)?.let { wanderProps ->
+            val distance = wanderProps["distance"] as Float
+            val (position, size) = entity[Transform]
+            entity += Wander(distance, position.x + size.x * 0.5f, stopAtCliff = true)
         }
     }
 
@@ -98,15 +111,18 @@ class SpawnSystem(
         entity: Entity,
     ) {
         (tile.properties.get("proximity") as? MapProperties)?.let { proximityProps ->
+            val proximityRange = proximityProps["detector_range"] as Float
             entity += ProximityDetector(
-                range = proximityProps["detector_range"] as Float,
+                squaredRange = proximityRange * proximityRange,
                 predicate = { target -> target.has(Player) },
                 onDetect = { source, target -> source[Follow].target = target },
                 onBreak = { source, _ -> source[Follow].target = Entity.NONE }
             )
+            val breakDistance = proximityProps["follow_break_range"] as Float
+            val followRange = proximityProps["follow_range"] as Float
             entity += Follow(
-                proximity = proximityProps["follow_range"] as Float,
-                breakDistance = proximityProps["follow_break_range"] as Float,
+                squaredDistance = followRange * followRange,
+                squaredBreakDistance = breakDistance * breakDistance,
                 stopAtCliff = proximityProps["stop_at_cliff"] as Boolean,
             )
         }
@@ -216,6 +232,7 @@ class SpawnSystem(
     ) {
         when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
             "mushroom" -> entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
+
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }

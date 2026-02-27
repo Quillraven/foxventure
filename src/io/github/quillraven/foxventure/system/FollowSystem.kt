@@ -1,25 +1,23 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
+import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.TiledService
-import kotlin.math.abs
 import kotlin.math.sign
 
 class FollowSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Transform, Follow, Collision, Velocity, EntityTag.ACTIVE).none(EntityTag.ROOT) }
+    family = family { all(Transform, Follow, Collision, Velocity, EntityTag.ACTIVE).none(Damaged, EntityTag.ROOT) }
 ) {
 
     override fun onTick() {
@@ -51,11 +49,13 @@ class FollowSystem(
         val centerY = position.y + collisionBox.y + (collisionBox.height * 0.5f)
         val targetCenterX = targetPosition.x + targetCollisionBox.x + (targetCollisionBox.width * 0.5f)
         val targetCenterY = targetPosition.y + targetCollisionBox.y + (targetCollisionBox.height * 0.5f)
-        val distance = abs(targetCenterX - centerX)
+        val dx = centerX - targetCenterX
+        val dy = centerY - targetCenterY
+        val distance = dx * dx + dy * dy
         // Hysteresis: use breakDistance when following, proximity when not
         val isFollowing = velocity.x != 0f
-        val threshold = if (isFollowing) follow.breakDistance else follow.proximity
-        val closestRange = 1.5f
+        val threshold = if (isFollowing) follow.squaredBreakDistance else follow.squaredDistance
+        val closestRange = 2.25f
         if (distance !in closestRange..threshold) {
             follow.moveDirection = 0f
             return
@@ -69,32 +69,11 @@ class FollowSystem(
 
         // target in range -> set the move direction
         val direction = sign(targetCenterX - centerX)
-        if (!follow.stopAtCliff) {
+        if (!follow.stopAtCliff || tiledService.isGroundAhead(position, collisionBox, direction)) {
             follow.moveDirection = direction
             return
         }
 
-        cliffDetection(position, collisionBox, direction, follow)
-    }
-
-    private fun cliffDetection(
-        position: Vector2,
-        collisionBox: Rect,
-        direction: Float,
-        follow: Follow
-    ) {
-        // Cliff detection - check closer to edge
-        val checkTolerance = 0.1f // 1/10th of a world unit
-        val checkDistance = if (direction > 0) collisionBox.width else 0f
-        val checkX = (position.x + collisionBox.x + checkDistance + (direction * checkTolerance)).toInt()
-        val checkY = (position.y + collisionBox.y - checkTolerance).toInt()
-
-        val hasGroundAhead = tiledService.getCollisionRect(checkX, checkY, includeSemiSolid = true) != null
-        if (!hasGroundAhead) {
-            follow.moveDirection = 0f
-            return
-        }
-
-        follow.moveDirection = direction
+        follow.moveDirection = 0f
     }
 }

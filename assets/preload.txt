@@ -75,8 +75,8 @@ i:b:/graphics/sprites/characters/mushroom/run_7.png:814:1
 i:b:/sound/jump.wav:15114:1
 i:b:/sound/pickup.wav:31592:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
-i:b:/maps/foxventure.tiled-project:3886:1
-i:b:/maps/objects.tsx:2139:1
+i:b:/maps/foxventure.tiled-project:4527:1
+i:b:/maps/objects.tsx:2309:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/props.tsx:635:1
 i:b:/maps/tutorial.tmx:2181:1

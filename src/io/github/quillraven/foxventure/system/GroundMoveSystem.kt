@@ -20,6 +20,7 @@ import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.component.Wander
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -76,7 +77,10 @@ class GroundMoveSystem(
             return input
         }
 
-        return entity.getOrNull(Follow)?.moveDirection ?: 0f
+        val follow = entity.getOrNull(Follow)
+        if (follow != null && follow.target != Entity.NONE) return follow.moveDirection
+
+        return entity.getOrNull(Wander)?.moveDirection ?: 0f
     }
 
     private fun sCurveAcceleration(speedPercent: Float): Float {

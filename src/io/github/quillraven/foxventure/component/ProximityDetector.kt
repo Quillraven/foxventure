@@ -6,7 +6,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 
 data class ProximityDetector(
-    var range: Float,
+    var squaredRange: Float,
     var predicate: (World.(target: Entity) -> Boolean),
     var onDetect: (World.(source: Entity, target: Entity) -> Unit),
     var onBreak: (World.(source: Entity, target: Entity) -> Unit),

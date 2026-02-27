@@ -5,8 +5,8 @@ import com.github.quillraven.fleks.ComponentType
 import com.github.quillraven.fleks.Entity
 
 data class Follow(
-    var proximity: Float,
-    var breakDistance: Float,
+    var squaredDistance: Float,
+    var squaredBreakDistance: Float,
     val stopAtCliff: Boolean,
     var target: Entity = Entity.NONE,
     var moveDirection: Float = 0f,

@@ -289,4 +289,13 @@ class TiledService(
         }
         return false
     }
+
+    fun isGroundAhead(position: Vector2, collisionBox: Rect, directionX: Float): Boolean {
+        val checkTolerance = 0.1f // 1/10th of a world unit
+        val checkDistance = if (directionX > 0) collisionBox.width else 0f
+        val checkX = (position.x + collisionBox.x + checkDistance + (directionX * checkTolerance)).toInt()
+        val checkY = (position.y + collisionBox.y - checkTolerance).toInt()
+
+        return getCollisionRect(checkX, checkY, includeSemiSolid = true) != null
+    }
 }
