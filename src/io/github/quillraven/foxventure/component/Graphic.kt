@@ -1,5 +1,6 @@
 package io.github.quillraven.foxventure.component
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Component
@@ -26,6 +27,7 @@ class Graphic(
     region: TextureRegion,
     var flip: Boolean = false,
     var offset: Vector2 = vec2(0f, 0f),
+    val color: Color = Color.WHITE.cpy(),
 ) : Component<Graphic> {
 
     val regionSize: Vector2 = vec2(region.regionWidth.toWorldUnits(), region.regionHeight.toWorldUnits())
