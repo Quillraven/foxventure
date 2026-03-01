@@ -53,10 +53,16 @@ class DamagedSystem : IteratingSystem(
     }
 
     companion object {
-        fun World.damageEntity(source: Entity, target: Entity, damage: Int, invulnerableTime: Float) {
-            if (target.has(Damaged)) return // target invulnerable -> ignore damage
+        fun World.damageEntity(
+            source: Entity,
+            target: Entity,
+            damage: Int,
+            invulnerableTime: Float
+        ): Boolean {
+            if (target.has(Damaged)) return false // target invulnerable -> ignore damage
 
             target.configure { it += Damaged(source, invulnerableTime = invulnerableTime, damage = damage) }
+            return true
         }
     }
 }

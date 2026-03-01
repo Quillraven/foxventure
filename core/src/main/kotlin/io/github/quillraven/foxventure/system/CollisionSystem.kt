@@ -117,7 +117,9 @@ class CollisionSystem(
 
             "damage" -> {
                 val (source, damageAmount) = other[Damage]
-                world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f)
+                if (world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f)) {
+                    other.remove()
+                }
             }
 
             "enemy" -> {
