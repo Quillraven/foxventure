@@ -27,6 +27,8 @@ class Animation(
     var stateTime: Float = 0f,
 ) : Component<Animation> {
 
+    private val defaultSpeed: Float = speed
+
     var active: GdxAnimation = idle
         private set
 
@@ -51,6 +53,10 @@ class Animation(
     fun getAndClearUpdateDimensionsFlag() = updateDimensions.also { updateDimensions = false }
 
     fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
+
+    fun resetSpeed() {
+        speed = defaultSpeed
+    }
 
     override fun type() = Animation
 

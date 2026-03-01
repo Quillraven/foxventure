@@ -10,6 +10,6 @@ class FsmSystem : IteratingSystem(
     family = family { all(Fsm, EntityTag.ACTIVE) }
 ) {
     override fun onTickEntity(entity: Entity) {
-        entity[Fsm].state.update()
+        entity[Fsm].state.update(deltaTime)
     }
 }
