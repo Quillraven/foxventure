@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Velocity
@@ -21,7 +22,13 @@ class DamagedSystem : IteratingSystem(
 
         if (damaged.timer == 0f) {
             damaged.timer = 0.001f
-            entity[Life].amount -= damaged.damage
+            val life = entity[Life]
+            life.amount -= damaged.damage
+
+            // flash if still alive
+            if (life.amount > 0) {
+                entity.configure { it += Flash(damaged.invulnerableTime) }
+            }
 
             // detach from ladder
             if (entity has EntityTag.CLIMBING) {
