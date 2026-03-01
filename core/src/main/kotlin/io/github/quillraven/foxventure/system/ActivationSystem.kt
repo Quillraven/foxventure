@@ -21,6 +21,7 @@ import ktx.tiled.height
 import ktx.tiled.width
 
 private class Chunk {
+    var active = false
     val entities = gdxArrayOf<Entity>()
     val bounds = Rectangle()
 
@@ -37,10 +38,36 @@ private class Chunk {
     }
 
     override fun toString(): String {
-        return "Chunk@${hashCode()}(bounds=$bounds)"
+        return "Chunk@${hashCode()}(bounds=$bounds, active=$active)"
     }
 }
 
+/**
+ * The `ActivationSystem` manages the activation and deactivation of entities in the game world
+ * based on the current viewport visibility. It divides the game world into chunks and toggles
+ * entities' active state depending on their presence within the camera's visible area.
+ *
+ * Entities in chunks outside the visible area are deactivated to optimize performance,
+ * while entities inside the visible area are activated.
+ *
+ * Implements the `MapChangeListener` interface to update chunks when the game map changes.
+ *
+ * ### Functionality:
+ * - Tracks entity chunks based on their positions and the chunk dimensions defined by `CHUNK_WIDTH` and `CHUNK_HEIGHT`.
+ * - Updates entities between chunks when their position changes.
+ * - Deactivates entities not within the visible camera bounds.
+ * - Reactivates entities entering the visible camera bounds.
+ * - Handles the removal of entities to clean up associated chunk data.
+ *
+ * ### Map Integration:
+ * It integrates with the game map through the `onMapChanged` method, which recalculates
+ * chunks based on the updated map size and reassigns entities to appropriate chunks.
+ *
+ * ### Internals:
+ * - `updateActivation` determines active chunks and toggles entity states.
+ * - `getChunkAt` calculates and retrieves the appropriate chunk for a given position.
+ * - `BUFFER` provides an additional boundary around the camera for preloading entities.
+ */
 class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
     family = family { all(Transform, EntityTag.ACTIVE).none(Player, DelayRemoval) },
     interval = Fixed(1 / 20f),
@@ -86,11 +113,14 @@ class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
             if (chunk.entities.isEmpty) return@forEach
 
             val isVisible = visibleRect.overlaps(chunk.bounds)
-            chunk.entities.forEach { entity ->
-                if (isVisible) {
-                    entity.configure { it += EntityTag.ACTIVE }
-                } else {
-                    entity.configure { it -= EntityTag.ACTIVE }
+            if (isVisible != chunk.active) {
+                chunk.active = isVisible
+                chunk.entities.forEach { entity ->
+                    if (isVisible) {
+                        entity.configure { it += EntityTag.ACTIVE }
+                    } else {
+                        entity.configure { it -= EntityTag.ACTIVE }
+                    }
                 }
             }
         }
