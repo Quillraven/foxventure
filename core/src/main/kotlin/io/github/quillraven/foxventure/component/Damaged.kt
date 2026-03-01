@@ -8,8 +8,9 @@ data class Damaged(
     val source: Entity,
     val invulnerableTime: Float, // how long do you remain invulnerable until the next damage can be applied?
     val damage: Int,
-    var timer: Float = 0f,
 ) : Component<Damaged> {
+    var timer: Float = 0f
+
     override fun type() = Damaged
 
     companion object : ComponentType<Damaged>()

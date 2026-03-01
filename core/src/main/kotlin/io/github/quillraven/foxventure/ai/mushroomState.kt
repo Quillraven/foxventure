@@ -46,8 +46,6 @@ data object MushroomStateRun : FsmState {
 }
 
 data object MushroomStatePrepareAttack : FsmState {
-
-
     override fun World.onEnter(entity: Entity) {
         val animation = entity[Animation]
         animation.changeTo(AnimationType.ATTACK)
@@ -76,6 +74,9 @@ data object MushroomStatePrepareAttack : FsmState {
 
 data object MushroomStateAttack : FsmState {
     override fun World.onEnter(entity: Entity) {
+        val animation = entity[Animation]
+        animation.changeTo(AnimationType.ATTACK)
+
         entity.configure { it += EntityTag.ROOT }
 
         // move mushroom in front of player to render gas attack in front of player
@@ -92,7 +93,7 @@ data object MushroomStateAttack : FsmState {
                 damage = entity[Attack].damage,
                 position = vec2(damageX, damageY),
                 size = vec2(1.9f, 1.5f),
-                lifeSpan = 2f
+                lifeSpan = animation.active.animationDuration
             )
         }
     }
