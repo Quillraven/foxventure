@@ -12,7 +12,6 @@ import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
-import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Physics
@@ -22,6 +21,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
+import io.github.quillraven.foxventure.system.DamagedSystem.Companion.damageEntity
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 
 class CollisionSystem(
@@ -115,10 +115,11 @@ class CollisionSystem(
                 audioService.playSound("pickup.wav")
             }
 
-            "damage" if (player hasNo Damaged) -> {
+            "damage" -> {
                 val (source, damageAmount) = other[Damage]
-                player.configure { it += Damaged(source, invulnerableTime = 1f, damageAmount) }
-                other.remove()
+                if (world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f)) {
+                    other.remove()
+                }
             }
 
             "enemy" -> {
@@ -126,17 +127,19 @@ class CollisionSystem(
                 val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
                 val playerVelocity = player[Velocity].current
 
-                if (playerBottom > enemyTop && other hasNo Damaged) {
-                    // player stomps on an enemy from above
+                if (playerBottom > enemyTop) {
+                    // player stomps on an enemy from above -> apply upwards impulse
                     val jumpPressed = player[Controller].hasCommand(Command.JUMP)
                     val physics = player[Physics]
                     playerVelocity.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
 
-                    other.configure { it += Damaged(player, invulnerableTime = 0.5f, damage = 1) }
-                } else if (player hasNo Damaged) {
-                    // the player collides from the side or below - the player gets damaged
-                    player.configure { it += Damaged(other, invulnerableTime = 1f, damage = 1) }
+                    // damage enemy
+                    world.damageEntity(source = player, target = other, damage = 1, invulnerableTime = 0.5f)
+                    return
                 }
+
+                // the player collides from the side or below - the player gets damaged
+                world.damageEntity(source = other, target = player, damage = 1, invulnerableTime = 1f)
             }
         }
     }

@@ -1,7 +1,7 @@
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
-i:b:/graphics/objects.atlas:7485:1
-i:b:/graphics/objects.png:33308:1
+i:b:/graphics/objects.atlas:7916:1
+i:b:/graphics/objects.png:35121:1
 i:b:/graphics/sprites/sfx/dust1/idle_1.png:422:1
 i:b:/graphics/sprites/sfx/dust1/idle_0.png:347:1
 i:b:/graphics/sprites/sfx/dust1/idle_4.png:367:1
@@ -11,6 +11,10 @@ i:b:/graphics/sprites/sfx/dust1/idle_8.png:85:1
 i:b:/graphics/sprites/sfx/dust1/idle_7.png:101:1
 i:b:/graphics/sprites/sfx/dust1/idle_2.png:391:1
 i:b:/graphics/sprites/sfx/dust1/idle_3.png:389:1
+i:b:/graphics/sprites/sfx/enemy-death/idle_1.png:1263:1
+i:b:/graphics/sprites/sfx/enemy-death/idle_0.png:1303:1
+i:b:/graphics/sprites/sfx/enemy-death/idle_2.png:1193:1
+i:b:/graphics/sprites/sfx/enemy-death/idle_3.png:1092:1
 i:b:/graphics/sprites/sfx/gem/idle_1.png:1089:1
 i:b:/graphics/sprites/sfx/gem/idle_0.png:1091:1
 i:b:/graphics/sprites/sfx/gem/idle_4.png:1092:1

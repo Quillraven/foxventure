@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
@@ -50,7 +51,7 @@ class GameScreen(
 ) : KtxScreen {
 
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
-    private val world = ecsWorld()
+    private val world: World = ecsWorld()
 
     private fun ecsWorld() = configureWorld {
         injectables {
@@ -96,6 +97,7 @@ class GameScreen(
         Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
 
         registerTiledListeners()
+        world.removeAll(clearRecycled = true)
         tiledService.setMap(MapAsset.TUTORIAL)
     }
 
@@ -105,6 +107,7 @@ class GameScreen(
     }
 
     private fun registerTiledListeners() {
+        tiledService.clearAllListener()
         world.systems.forEach { system ->
             if (system is MapChangeListener) {
                 tiledService.addMapChangeListener(system)

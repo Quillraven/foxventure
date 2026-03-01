@@ -2,6 +2,7 @@ package io.github.quillraven.foxventure.system
 
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
@@ -49,5 +50,19 @@ class DamagedSystem : IteratingSystem(
         }
 
         damaged.timer += deltaTime
+    }
+
+    companion object {
+        fun World.damageEntity(
+            source: Entity,
+            target: Entity,
+            damage: Int,
+            invulnerableTime: Float
+        ): Boolean {
+            if (target.has(Damaged)) return false // target invulnerable -> ignore damage
+
+            target.configure { it += Damaged(source, invulnerableTime = invulnerableTime, damage = damage) }
+            return true
+        }
     }
 }

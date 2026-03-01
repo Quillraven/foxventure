@@ -38,6 +38,7 @@ data class Transform(
             else -> 0
         }
 
+        const val Z_SFX = 30
         const val Z_PLAYER = 20
         const val Z_ENEMY = 10
     }
