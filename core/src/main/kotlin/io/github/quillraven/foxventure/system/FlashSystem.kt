@@ -7,7 +7,6 @@ import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
-import kotlin.math.ceil
 
 class FlashSystem : IteratingSystem(
     family = family { all(Flash, Graphic, EntityTag.ACTIVE) }
@@ -20,9 +19,8 @@ class FlashSystem : IteratingSystem(
             entity[Graphic].color.a = 1f
             entity.configure { it -= Flash }
         } else {
-            val numFlashes = 5f * ceil(flash.duration).toInt()
-            val progress = (flash.timer / flash.duration) * numFlashes
-            entity[Graphic].color.a = Interpolation.sine.apply(0.3f, 1f, (progress % 1f))
+            val progress = (flash.timer * 5f) % 1f // 5 flashes per second
+            entity[Graphic].color.a = Interpolation.pow2Out.apply(1f, 0.3f, progress)
         }
     }
 }
