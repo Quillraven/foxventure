@@ -117,7 +117,7 @@ class CollisionSystem(
 
             "damage" -> {
                 val (source, damageAmount) = other[Damage]
-                if (world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f)) {
+                if (world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f, "hurt2.wav")) {
                     other.remove()
                 }
             }
@@ -133,14 +133,24 @@ class CollisionSystem(
                     player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
 
                     // damage enemy
-                    if (world.damageEntity(source = player, target = other, damage = 1, invulnerableTime = 0.5f)) {
-                        audioService.playSound("hurt1.wav")
-                    }
+                    world.damageEntity(
+                        source = player,
+                        target = other,
+                        damage = 1,
+                        invulnerableTime = 0.5f,
+                        soundName = "hurt1.wav"
+                    )
                     return
                 }
 
                 // the player collides from the side or below - the player gets damaged
-                world.damageEntity(source = other, target = player, damage = 1, invulnerableTime = 1f)
+                world.damageEntity(
+                    source = other,
+                    target = player,
+                    damage = 1,
+                    invulnerableTime = 1f,
+                    soundName = "hurt2.wav"
+                )
             }
         }
     }

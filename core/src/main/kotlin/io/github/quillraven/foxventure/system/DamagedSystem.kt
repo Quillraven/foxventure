@@ -4,6 +4,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.family
+import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
@@ -11,7 +12,9 @@ import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Velocity
 
-class DamagedSystem : IteratingSystem(
+class DamagedSystem(
+    private val audioService: AudioService = inject(),
+) : IteratingSystem(
     family = family { all(Damaged, Life) }
 ) {
     override fun onTickEntity(entity: Entity) {
@@ -46,6 +49,9 @@ class DamagedSystem : IteratingSystem(
                 velocity.current.x = 6f * direction
             }
 
+            // play sound
+            audioService.playSound(damaged.soundName)
+
             return
         }
 
@@ -57,11 +63,12 @@ class DamagedSystem : IteratingSystem(
             source: Entity,
             target: Entity,
             damage: Int,
-            invulnerableTime: Float
+            invulnerableTime: Float,
+            soundName: String,
         ): Boolean {
             if (target.has(Damaged)) return false // target invulnerable -> ignore damage
 
-            target.configure { it += Damaged(source, invulnerableTime = invulnerableTime, damage = damage) }
+            target.configure { it += Damaged(source, invulnerableTime = invulnerableTime, damage, soundName) }
             return true
         }
     }

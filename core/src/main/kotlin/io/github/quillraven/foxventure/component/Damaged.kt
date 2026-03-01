@@ -8,6 +8,7 @@ data class Damaged(
     val source: Entity,
     val invulnerableTime: Float, // how long do you remain invulnerable until the next damage can be applied?
     val damage: Int,
+    val soundName: String,
 ) : Component<Damaged> {
     var timer: Float = 0f
 
