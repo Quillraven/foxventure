@@ -23,6 +23,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.collections.gdxArrayOf
@@ -118,7 +119,7 @@ class RenderSystem(
             flip: Boolean = false,
             speed: Float = 1f,
         ) = this.entity {
-            it += Transform(position, size, z = 10)
+            it += Transform(position, size, z = Z_SFX)
             it += Graphic(gdxAnimation.getKeyFrame(0f), flip)
             it += Animation(objectKey = "", gdxAnimation, gdxAnimations = emptyMap(), speed)
             it += DelayRemoval(gdxAnimation.animationDuration)
