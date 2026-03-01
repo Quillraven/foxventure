@@ -125,16 +125,17 @@ class CollisionSystem(
             "enemy" -> {
                 val playerBottom = playerTransform.position.y + playerCollBox.y
                 val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
-                val playerVelocity = player[Velocity].current
 
-                if (playerBottom > enemyTop) {
+                if (playerBottom >= enemyTop) {
                     // player stomps on an enemy from above -> apply upwards impulse
                     val jumpPressed = player[Controller].hasCommand(Command.JUMP)
                     val physics = player[Physics]
-                    playerVelocity.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
+                    player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
 
                     // damage enemy
-                    world.damageEntity(source = player, target = other, damage = 1, invulnerableTime = 0.5f)
+                    if (world.damageEntity(source = player, target = other, damage = 1, invulnerableTime = 0.5f)) {
+                        audioService.playSound("hurt1.wav")
+                    }
                     return
                 }
 
