@@ -229,18 +229,6 @@ class TiledService(
         return groundTile
     }
 
-    fun addMapChangeListener(listener: MapChangeListener) {
-        if (listener in mapChangeListeners) gdxError("MapChangeListener $listener is already registered")
-
-        mapChangeListeners.add(listener)
-    }
-
-    fun addLoadTileObjectListener(listener: LoadTileObjectListener) {
-        if (listener in loadTileObjectListeners) gdxError("LoadTileObjectListener $listener is already registered")
-
-        loadTileObjectListeners.add(listener)
-    }
-
     /**
      * Checks if there is a line of sight (i.e., no blocking obstacles) between two points on the map.
      *
@@ -297,5 +285,22 @@ class TiledService(
         val checkY = (position.y + collisionBox.y - checkTolerance).toInt()
 
         return getCollisionRect(checkX, checkY, includeSemiSolid = true) != null
+    }
+
+    fun addMapChangeListener(listener: MapChangeListener) {
+        if (listener in mapChangeListeners) gdxError("MapChangeListener $listener is already registered")
+
+        mapChangeListeners.add(listener)
+    }
+
+    fun addLoadTileObjectListener(listener: LoadTileObjectListener) {
+        if (listener in loadTileObjectListeners) gdxError("LoadTileObjectListener $listener is already registered")
+
+        loadTileObjectListeners.add(listener)
+    }
+
+    fun clearAllListener() {
+        loadTileObjectListeners.clear()
+        mapChangeListeners.clear()
     }
 }
