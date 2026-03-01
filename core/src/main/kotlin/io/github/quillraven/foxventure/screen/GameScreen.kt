@@ -20,6 +20,7 @@ import io.github.quillraven.foxventure.system.CollisionSystem
 import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.DamageRequestSystem
 import io.github.quillraven.foxventure.system.DamagedSystem
+import io.github.quillraven.foxventure.system.DebugRenderSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
 import io.github.quillraven.foxventure.system.FollowSystem
 import io.github.quillraven.foxventure.system.FsmSystem
@@ -83,7 +84,9 @@ class GameScreen(
             add(PostInterpolationSystem()) // run it after all physics systems run
             add(RenderSystem())
             add(DelayRemovalSystem())
-//            add(DebugRenderSystem())
+            if (System.getenv("debug") == "true") {
+                add(DebugRenderSystem())
+            }
         }
     }
 
