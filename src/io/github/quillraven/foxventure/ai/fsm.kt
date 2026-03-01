@@ -71,6 +71,11 @@ class FleksStateMachine(
     var globalState: FsmState = initialGlobalState
         private set
 
+    /**
+     * Time spent in the [current][currentState] state.
+     */
+    var stateTime: Float = 0f
+
     init {
         changeState(initialState)
         initialGlobalState.run { world.onEnter(entity) }
@@ -81,7 +86,9 @@ class FleksStateMachine(
      * and afterward its [current][currentState] state. This is done by calling [onUpdate][FsmState.onUpdate]
      * for both states.
      */
-    fun update() {
+    fun update(deltaTime: Float) {
+        stateTime += deltaTime
+
         // Execute the global state (if any)
         globalState.run { world.onUpdate(entity) }
 
@@ -103,6 +110,7 @@ class FleksStateMachine(
 
         // Change state to the new state
         currentState = newState
+        stateTime = 0f
 
         // Call the entry method of the new state
         currentState.run { world.onEnter(entity) }

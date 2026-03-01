@@ -22,7 +22,7 @@ data object MushroomStateIdle : FsmState {
         val velocity = entity[Velocity]
 
         if (entity[Attack].readyToAttack) {
-            entity[Fsm].state.changeState(MushroomStateAttack)
+            entity[Fsm].state.changeState(MushroomStatePrepareAttack)
         } else if (velocity.current.x != 0f) {
             entity[Fsm].state.changeState(MushroomStateRun)
         }
@@ -38,19 +38,44 @@ data object MushroomStateRun : FsmState {
         val velocity = entity[Velocity]
 
         if (entity[Attack].readyToAttack) {
-            entity[Fsm].state.changeState(MushroomStateAttack)
+            entity[Fsm].state.changeState(MushroomStatePrepareAttack)
         } else if (velocity.current.x == 0f) {
             entity[Fsm].state.changeState(MushroomStateIdle)
         }
     }
 }
 
-data object MushroomStateAttack : FsmState {
+data object MushroomStatePrepareAttack : FsmState {
+
+
     override fun World.onEnter(entity: Entity) {
         val animation = entity[Animation]
         animation.changeTo(AnimationType.ATTACK)
+        animation.speed = 0f
+        animation.stateTime = animation.active.frameDuration
 
-        // stop the entity from moving
+        entity.configure { it += EntityTag.ROOT }
+    }
+
+    override fun World.onUpdate(entity: Entity) {
+        val fsm = entity[Fsm].state
+        if (fsm.stateTime >= 0.5f) {
+            if (entity[Attack].readyToAttack) {
+                fsm.changeState(MushroomStateAttack)
+            } else {
+                fsm.changeState(MushroomStateIdle)
+            }
+        }
+    }
+
+    override fun World.onExit(entity: Entity) {
+        entity[Animation].resetSpeed()
+        entity.configure { it -= EntityTag.ROOT }
+    }
+}
+
+data object MushroomStateAttack : FsmState {
+    override fun World.onEnter(entity: Entity) {
         entity.configure { it += EntityTag.ROOT }
 
         // move mushroom in front of player to render gas attack in front of player
