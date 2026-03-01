@@ -4,11 +4,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
-import com.github.quillraven.fleks.FamilyOnRemove
 import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
-import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.DelayRemoval
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Player
@@ -43,12 +41,10 @@ private class Chunk {
     }
 }
 
-class ActivationSystem(
-    private val gameViewport: Viewport = inject(),
-) : IteratingSystem(
+class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
     family = family { all(Transform, EntityTag.ACTIVE).none(Player, DelayRemoval) },
     interval = Fixed(1 / 20f),
-), MapChangeListener, FamilyOnRemove {
+), MapChangeListener {
     private val chunks = gdxArrayOf<Chunk>()
     private val entityToChunk = gdxMapOf<Int, Chunk>()
     private val visibleRect = Rectangle()
@@ -73,9 +69,8 @@ class ActivationSystem(
         }
     }
 
-    override fun onRemoveEntity(entity: Entity) {
-        val currentChunk = entityToChunk.remove(entity.id) ?: gdxError("Entity $entity is not part of any chunk")
-        currentChunk.entities.removeValue(entity, true)
+    fun onRemoveEntity(entity: Entity) {
+        entityToChunk.remove(entity.id)?.entities?.removeValue(entity, true)
     }
 
     private fun updateActivation() {

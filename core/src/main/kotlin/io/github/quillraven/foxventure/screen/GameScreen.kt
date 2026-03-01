@@ -64,10 +64,11 @@ class GameScreen(
             add(audioService)
         }
 
+        val activationSystem = ActivationSystem(gameViewport)
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
-            add(ActivationSystem())
+            add(activationSystem)
             add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
             add(ProximityDetectorSystem())
             add(FollowSystem())
@@ -90,6 +91,10 @@ class GameScreen(
             if (System.getenv("debug") == "true") {
                 add(DebugRenderSystem())
             }
+        }
+
+        onRemoveEntity { entity ->
+            activationSystem.onRemoveEntity(entity)
         }
     }
 
