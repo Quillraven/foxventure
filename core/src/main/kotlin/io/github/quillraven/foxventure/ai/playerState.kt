@@ -130,3 +130,9 @@ data object PlayerStateHurt : FsmState {
         }
     }
 }
+
+data object PlayerStateDeath : FsmState {
+    override fun World.onEnter(entity: Entity) {
+        entity[Animation].changeTo(AnimationType.HURT)
+    }
+}

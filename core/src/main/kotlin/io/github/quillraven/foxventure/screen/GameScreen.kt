@@ -29,6 +29,7 @@ import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.PhysicsTimer
+import io.github.quillraven.foxventure.system.PlayerDeathSystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
@@ -41,7 +42,7 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.app.KtxScreen
 
 class GameScreen(
-    game: GdxGame,
+    private val game: GdxGame,
     private val batch: Batch = game.serviceLocator.batch,
     private val assets: AssetManager = game.serviceLocator.assets,
     private val gameViewport: Viewport = game.gameViewport,
@@ -62,6 +63,7 @@ class GameScreen(
             add(tiledService)
             add(physicsTimer)
             add(audioService)
+            add(game)
         }
 
         val activationSystem = ActivationSystem(gameViewport)
@@ -80,6 +82,7 @@ class GameScreen(
             add(CollisionSystem())
             add(DamagedSystem())
             add(LifeSystem())
+            add(PlayerDeathSystem())
             add(FsmSystem())
             add(DamageRequestSystem())
             add(CameraSystem())

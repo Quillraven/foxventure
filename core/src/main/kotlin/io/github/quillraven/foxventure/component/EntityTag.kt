@@ -8,4 +8,5 @@ enum class EntityTag : EntityTags by entityTagOf() {
     CAMERA_FOCUS,
     CLIMBING,
     ROOT,
+    PLAYER_DEATH,
 }

@@ -44,8 +44,9 @@ class LifeSystem(
             )
 
             world.sfx(centeredPosition, scaledSize, deathAnimation)
+            entity.remove()
+        } else {
+            entity.configure { it += EntityTag.PLAYER_DEATH }
         }
-
-        entity.remove()
     }
 }
