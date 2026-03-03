@@ -35,6 +35,7 @@ import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
+import io.github.quillraven.foxventure.system.UiRenderSystem
 import io.github.quillraven.foxventure.system.WanderSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
@@ -90,6 +91,7 @@ class GameScreen(
             add(FlashSystem())
             add(PostInterpolationSystem()) // run it after all physics systems run
             add(RenderSystem())
+            add(UiRenderSystem())
             add(DelayRemovalSystem())
             if (System.getenv("debug") == "true") {
                 add(DebugRenderSystem())

@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
@@ -31,7 +30,6 @@ import ktx.tiled.use
 
 class RenderSystem(
     private val batch: Batch = inject(),
-    private val stage: Stage = inject(),
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Graphic, EntityTag.ACTIVE) },
@@ -50,10 +48,6 @@ class RenderSystem(
             super.onTick() // render entities
             fgdLayers.forEach(it::renderMapLayer)
         }
-
-        stage.viewport.apply()
-        stage.act(deltaTime)
-        stage.draw()
     }
 
     override fun onTickEntity(entity: Entity) {
@@ -109,6 +103,10 @@ class RenderSystem(
 
             currentLayers.add(layer)
         }
+    }
+
+    override fun onDispose() {
+        mapRenderer.dispose()
     }
 
     companion object {
