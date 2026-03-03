@@ -51,6 +51,15 @@ class PlayerDeathSystem(
             world.system<ProximityDetectorSystem>().enabled = false
             world.system<WanderSystem>().enabled = false
             deathTime = 0.01f
+
+            world.entity {
+                it += Transition(type = TransitionType.PIXELIZE_GRAYSCALE_OUT, duration = 2f, actionDelay = 2f) {
+                    game.getScreen<GameScreen>().dispose()
+                    game.removeScreen<GameScreen>()
+                    game.addScreen(GameScreen(game))
+                    game.setScreen<GameScreen>()
+                }
+            }
             return
         }
 
@@ -67,15 +76,7 @@ class PlayerDeathSystem(
         if (position.y + 4f < cameraBottom) {
             deathTime = 0f
             velocityY = 0f
-            world.entity {
-                it += Transition(type = TransitionType.PIXELIZE_OUT, duration = 2f) {
-                    game.getScreen<GameScreen>().dispose()
-                    game.removeScreen<GameScreen>()
-                    game.addScreen(GameScreen(game))
-                    game.setScreen<GameScreen>()
-                }
-            }
-            entity.remove()
+            entity.configure { it -= EntityTag.PLAYER_DEATH }
         }
     }
 

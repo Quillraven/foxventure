@@ -116,7 +116,7 @@ class GameScreen(
 
         world.system<ControllerSystem>().enabled = false
         world.entity {
-            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.5f) {
+            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.25f) {
                 world.system<ControllerSystem>().enabled = true
             }
         }
