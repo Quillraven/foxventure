@@ -19,7 +19,7 @@ class GdxGame : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator() }
     val gameViewport: Viewport = ExtendViewport(16f, 9f)
     val uiViewport: Viewport = ScreenViewport()
-    val stage: Stage by lazy { Stage(uiViewport, serviceLocator.batch) }
+    val stage: Stage by lazy { Stage(uiViewport, serviceLocator.renderContext.batch) }
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
@@ -34,6 +34,7 @@ class GdxGame : KtxGame<KtxScreen>() {
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width, height, false)
         uiViewport.update(width, height, true)
+        serviceLocator.renderContext.resize(width, height)
         super.resize(width, height)
     }
 

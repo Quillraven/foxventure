@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
@@ -15,6 +16,7 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntityBy
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.DelayRemoval
@@ -26,10 +28,12 @@ import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.collections.gdxArrayOf
+import ktx.graphics.use
 import ktx.tiled.use
 
 class RenderSystem(
-    private val batch: Batch = inject(),
+    private val renderContext: RenderContext = inject(),
+    private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Graphic, EntityTag.ACTIVE) },
@@ -42,11 +46,15 @@ class RenderSystem(
     private val fgdLayers = gdxArrayOf<MapLayer>()
 
     override fun onTick() {
-        gameViewport.apply()
-        mapRenderer.use(camera) {
-            bgdLayers.forEach(it::renderMapLayer)
-            super.onTick() // render entities
-            fgdLayers.forEach(it::renderMapLayer)
+        renderContext.fbo.use {
+            ScreenUtils.clear(0f, 0f, 0f, 0f, true)
+
+            gameViewport.apply()
+            mapRenderer.use(camera) {
+                bgdLayers.forEach(it::renderMapLayer)
+                super.onTick() // render entities
+                fgdLayers.forEach(it::renderMapLayer)
+            }
         }
     }
 

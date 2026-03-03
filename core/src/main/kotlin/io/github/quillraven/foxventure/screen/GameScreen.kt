@@ -3,13 +3,13 @@ package io.github.quillraven.foxventure.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
@@ -31,6 +31,7 @@ import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.PhysicsTimer
 import io.github.quillraven.foxventure.system.PlayerDeathSystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
+import io.github.quillraven.foxventure.system.PostRenderSystem
 import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
@@ -44,7 +45,7 @@ import ktx.app.KtxScreen
 
 class GameScreen(
     private val game: GdxGame,
-    private val batch: Batch = game.serviceLocator.batch,
+    private val renderContext: RenderContext = game.serviceLocator.renderContext,
     private val assets: AssetManager = game.serviceLocator.assets,
     private val gameViewport: Viewport = game.gameViewport,
     private val stage: Stage = game.stage,
@@ -57,7 +58,7 @@ class GameScreen(
 
     private fun ecsWorld() = configureWorld {
         injectables {
-            add(batch)
+            add(renderContext)
             add(gameViewport)
             add(stage)
             add(assets)
@@ -91,6 +92,7 @@ class GameScreen(
             add(FlashSystem())
             add(PostInterpolationSystem()) // run it after all physics systems run
             add(RenderSystem())
+            add(PostRenderSystem())
             add(UiRenderSystem())
             add(DelayRemovalSystem())
             if (System.getenv("debug") == "true") {
