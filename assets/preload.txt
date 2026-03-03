@@ -1,3 +1,5 @@
+i:b:/shader/default.vert:315:1
+i:b:/shader/pixelize.frag:593:1
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
 i:b:/graphics/objects.atlas:7916:1
