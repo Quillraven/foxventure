@@ -10,6 +10,7 @@ import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.RenderContext
+import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
@@ -36,6 +37,7 @@ import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
+import io.github.quillraven.foxventure.system.TransitionType
 import io.github.quillraven.foxventure.system.UiRenderSystem
 import io.github.quillraven.foxventure.system.WanderSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -111,6 +113,13 @@ class GameScreen(
         registerTiledListeners()
         world.removeAll(clearRecycled = true)
         tiledService.setMap(MapAsset.TUTORIAL)
+
+        world.system<ControllerSystem>().enabled = false
+        world.entity {
+            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.5f) {
+                world.system<ControllerSystem>().enabled = true
+            }
+        }
     }
 
     override fun render(delta: Float) {

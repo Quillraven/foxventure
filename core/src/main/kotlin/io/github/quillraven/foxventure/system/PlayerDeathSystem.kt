@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.screen.GameScreen
 
 class PlayerDeathSystem(
@@ -66,10 +67,14 @@ class PlayerDeathSystem(
         if (position.y + 4f < cameraBottom) {
             deathTime = 0f
             velocityY = 0f
-            game.getScreen<GameScreen>().dispose()
-            game.removeScreen<GameScreen>()
-            game.addScreen(GameScreen(game))
-            game.setScreen<GameScreen>()
+            world.entity {
+                it += Transition(type = TransitionType.PIXELIZE_OUT, duration = 2f) {
+                    game.getScreen<GameScreen>().dispose()
+                    game.removeScreen<GameScreen>()
+                    game.addScreen(GameScreen(game))
+                    game.setScreen<GameScreen>()
+                }
+            }
             entity.remove()
         }
     }
