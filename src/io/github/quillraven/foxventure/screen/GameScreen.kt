@@ -9,10 +9,11 @@ import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
-import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
+import io.github.quillraven.foxventure.graphic.RenderContext
+import io.github.quillraven.foxventure.graphic.ShaderService
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
@@ -57,6 +58,7 @@ class GameScreen(
     private val stage: Stage = game.stage,
     private val tiledService: TiledService = game.serviceLocator.tiledService,
     private val audioService: AudioService = game.serviceLocator.audioService,
+    private val shaderService: ShaderService = game.serviceLocator.shaderService,
 ) : KtxScreen {
 
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
@@ -72,6 +74,7 @@ class GameScreen(
             add(physicsTimer)
             add(audioService)
             add(game)
+            add(shaderService)
         }
 
         val activationSystem = ActivationSystem(gameViewport)

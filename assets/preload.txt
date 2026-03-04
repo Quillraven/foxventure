@@ -83,6 +83,7 @@ i:b:/sound/hurt2.wav:13856:1
 i:b:/sound/jump.wav:15114:1
 i:b:/sound/hurt1.wav:6800:1
 i:b:/sound/pickup.wav:31592:1
+i:b:/music/game_over.mp3:73920:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
 i:b:/maps/foxventure.tiled-project:4527:1
 i:b:/maps/objects.tsx:2309:1

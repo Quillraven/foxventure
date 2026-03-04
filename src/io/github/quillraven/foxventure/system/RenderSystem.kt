@@ -16,7 +16,6 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntityBy
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
-import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.DelayRemoval
@@ -26,6 +25,7 @@ import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.collections.gdxArrayOf
 import ktx.graphics.use

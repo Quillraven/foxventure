@@ -32,7 +32,7 @@ class AudioService : MapChangeListener, Disposable {
         sound.play(soundVolume)
     }
 
-    private fun playMusic(name: String) {
+    fun playMusic(name: String) {
         // dispose of current music if there is any
         currentMusic?.let { music ->
             music.stop()
