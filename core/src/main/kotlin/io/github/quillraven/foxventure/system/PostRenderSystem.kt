@@ -29,7 +29,7 @@ class PostRenderSystem(
     private val pixelUlSteps = pixelShader.getUniformLocation("u_steps")
 
     private val grayScaleShader = shader(fragmentName = "grayscale.frag")
-    private val grayScaleUniformDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
+    private val grayScaleUlDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
 
     private fun shader(vertexName: String = "default.vert", fragmentName: String) =
         ShaderProgram(
@@ -40,6 +40,7 @@ class PostRenderSystem(
     override fun onTick() {
         if (family.isEmpty) {
             // no transition effects -> render primary FBO
+            batch.shader = null
             batch.use(batch.projectionMatrix.idt()) {
                 batch.draw(renderContext.fbo1.colorBufferTexture, -1f, 1f, 2f, -2f)
             }
@@ -60,21 +61,14 @@ class PostRenderSystem(
         if (transition.effects.size == 1) {
             // render directly to screen for a single effect
             renderContext.activeFbo = renderContext.fbo1
-            if (applyEffect(transition.effects.first())) {
-                // transition done
-                entity.remove()
-            }
+            applyShader(transition.effects.first())
             return
         }
 
         // multiple effects -> render to different FBOs via Ping-Pong approach
-        var allEffectsDone = true
         transition.effects.forEach { effect ->
-            if (!applyEffect(effect)) {
-                allEffectsDone = false
-            }
-
             // render to active FBO
+            applyShader(effect)
             val prevActiveFbo = renderContext.activeFbo
             renderContext.swapActiveFbo()
             renderContext.activeFbo.use {
@@ -83,39 +77,44 @@ class PostRenderSystem(
                 }
             }
         }
-        if (allEffectsDone) {
-            entity.remove()
-        }
     }
 
-    private fun applyEffect(effect: TransitionEffect): Boolean {
+    private fun applyShader(effect: TransitionEffect) {
         if (effect.delay > 0f) {
             effect.delay -= deltaTime
-            return false
+            batch.shader = null
+            return
         }
 
         val normalizedTime = (effect.timer / effect.duration).coerceIn(0f, 1f)
         val easedProgress = normalizedTime * normalizedTime * (3f - 2f * normalizedTime) // smoothstep easing
 
         // set shader and uniforms
-        batch.shader = when (effect.type) {
-            TransitionType.PIXELIZE -> pixelShader.also {
-                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
-                it.setUniformf(pixelUlProgress, progress)
-                it.setUniformf(pixelUlRatio, gameViewport.worldWidth / gameViewport.worldHeight)
-                it.setUniformf(pixelUlSquaresMin, gameViewport.worldWidth * 6, gameViewport.worldHeight * 6)
-                it.setUniformi(pixelUlSteps, 50)
+        when (effect.type) {
+            TransitionType.PIXELIZE -> {
+                batch.shader = pixelShader
+                pixelShader.use {
+                    val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                    pixelShader.setUniformf(pixelUlProgress, progress)
+                    pixelShader.setUniformf(pixelUlRatio, gameViewport.worldWidth / gameViewport.worldHeight)
+                    val minSquaresX = gameViewport.worldWidth * 6f
+                    val minSquaresY = gameViewport.worldHeight * 6f
+                    pixelShader.setUniformf(pixelUlSquaresMin, minSquaresX, minSquaresY)
+                    pixelShader.setUniformi(pixelUlSteps, 50)
+                }
             }
 
-            TransitionType.GRAYSCALE -> grayScaleShader.also {
-                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
-                it.setUniformf(grayScaleUniformDesaturation, progress)
+            TransitionType.GRAYSCALE -> {
+                batch.shader = grayScaleShader
+                grayScaleShader.use {
+                    val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                    grayScaleShader.setUniformf(grayScaleUlDesaturation, progress)
+                }
             }
         }
 
         // update timer
         effect.timer += deltaTime
-        return effect.timer >= effect.duration
     }
 
     override fun onDispose() {

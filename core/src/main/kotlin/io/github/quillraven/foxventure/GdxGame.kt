@@ -2,6 +2,7 @@ package io.github.quillraven.foxventure
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
@@ -42,6 +43,10 @@ class GdxGame : KtxGame<KtxScreen>() {
         ScreenUtils.clear(0f, 0f, 0f, 1f, true)
         val deltaTime = Gdx.graphics.deltaTime.coerceIn(0f, 1 / 30f)
         currentScreen.render(deltaTime)
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit()
+        }
     }
 
     override fun dispose() {

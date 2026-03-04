@@ -80,21 +80,22 @@ class PlayerDeathSystem(
         world.system<WanderSystem>().enabled = false
         deathTime = max(0.01f, deltaTime)
 
-        world.entity {
-            it += DelayAction(delay = 4f) {
-                game.getScreen<GameScreen>().dispose()
-                game.removeScreen<GameScreen>()
-                game.addScreen(GameScreen(game))
-                game.setScreen<GameScreen>()
-            }
-        }
-        world.entity {
+        val transitionEntity = world.entity {
             it += Transition(
                 effects = gdxArrayOf(
                     TransitionEffect(TransitionType.GRAYSCALE, duration = 1f, reversed = false, delay = 0f),
                     TransitionEffect(TransitionType.PIXELIZE, duration = 2f, reversed = false, delay = 1f),
                 )
             )
+        }
+        world.entity {
+            it += DelayAction(delay = 4f) {
+                transitionEntity.remove()
+                game.getScreen<GameScreen>().dispose()
+                game.removeScreen<GameScreen>()
+                game.addScreen(GameScreen(game))
+                game.setScreen<GameScreen>()
+            }
         }
     }
 

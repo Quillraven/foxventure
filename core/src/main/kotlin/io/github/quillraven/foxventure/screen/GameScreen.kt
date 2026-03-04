@@ -119,16 +119,16 @@ class GameScreen(
         tiledService.setMap(MapAsset.TUTORIAL)
 
         world.system<ControllerSystem>().enabled = false
-        world.entity {
-            it += DelayAction(delay = 1.5f) {
-                world.system<ControllerSystem>().enabled = true
-                renderContext.batch.shader = null
-            }
-        }
-        world.entity {
+        val transitionEntity = world.entity {
             it += Transition(
                 effects = gdxArrayOf(TransitionEffect(TransitionType.PIXELIZE, duration = 1.25f, reversed = true))
             )
+        }
+        world.entity {
+            it += DelayAction(delay = 1.5f) {
+                world.system<ControllerSystem>().enabled = true
+                transitionEntity.remove()
+            }
         }
     }
 
