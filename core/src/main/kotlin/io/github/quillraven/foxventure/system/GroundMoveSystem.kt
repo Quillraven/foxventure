@@ -115,7 +115,7 @@ class GroundMoveSystem(
                     else -> (speed.x + inputX * rate * deltaTime).coerceIn(-physics.maxSpeed, physics.maxSpeed)
                 }
 
-                if (!wasSkidding && velocity.isSkidding && entity has Player) {
+                if (!wasSkidding && velocity.isSkidding && isGrounded && entity has Player) {
                     spawnRunDust(entity, 0.9f)
                 }
             }
