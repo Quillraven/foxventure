@@ -22,8 +22,10 @@ class PostRenderSystem(
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(family { all(Transition) }) {
     private val pixelShader = shader(fragmentName = "pixelize.frag")
-    private val pixelUniformAmount = pixelShader.getUniformLocation("u_amount")
-    private val pixelUniformProgress = pixelShader.getUniformLocation("u_progress")
+    private val pixelUlProgress = pixelShader.getUniformLocation("u_progress")
+    private val pixelUlRatio = pixelShader.getUniformLocation("u_ratio")
+    private val pixelUlSquaresMin = pixelShader.getUniformLocation("u_squares_min")
+    private val pixelUlSteps = pixelShader.getUniformLocation("u_steps")
 
 
     private val grayScaleShader = shader(fragmentName = "grayscale.frag")
@@ -62,15 +64,13 @@ class PostRenderSystem(
         // set shader and uniforms
         val shader = when (transition.type) {
             TransitionType.NONE -> null
-            TransitionType.PIXELIZE_OUT -> pixelShader.also {
-                it.setUniformf(pixelUniformAmount, gameViewport.worldWidth * 7, gameViewport.worldHeight * 7)
-                it.setUniformf(pixelUniformProgress, easedProgress)
-            }
-
-            TransitionType.PIXELIZE_IN -> pixelShader.also {
-                val inverseProgress = 1f - easedProgress
-                it.setUniformf(pixelUniformAmount, gameViewport.worldWidth * 7, gameViewport.worldHeight * 7)
-                it.setUniformf(pixelUniformProgress, inverseProgress)
+            TransitionType.PIXELIZE_OUT, TransitionType.PIXELIZE_IN -> pixelShader.also {
+                val isInTransition = transition.type == TransitionType.PIXELIZE_IN // use reversed progress
+                val progress = if (isInTransition) (1f - easedProgress) else easedProgress
+                it.setUniformf(pixelUlProgress, progress)
+                it.setUniformf(pixelUlRatio, gameViewport.worldWidth / gameViewport.worldHeight)
+                it.setUniformf(pixelUlSquaresMin, gameViewport.worldWidth * 6, gameViewport.worldHeight * 6)
+                it.setUniformi(pixelUlSteps, 50)
             }
 
             TransitionType.GRAYSCALE_OUT -> grayScaleShader.also {

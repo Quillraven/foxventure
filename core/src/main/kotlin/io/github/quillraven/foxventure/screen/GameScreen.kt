@@ -120,6 +120,7 @@ class GameScreen(
         world.entity {
             it += DelayAction(delay = 1.5f, removeAfterAction = true) {
                 world.system<ControllerSystem>().enabled = true
+                renderContext.batch.shader = null
             }
             it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.25f, removeAfterTransition = false)
         }
