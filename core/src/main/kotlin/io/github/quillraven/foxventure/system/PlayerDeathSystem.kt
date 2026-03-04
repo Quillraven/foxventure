@@ -9,12 +9,14 @@ import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.ai.PlayerStateDeath
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
+import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.screen.GameScreen
+import kotlin.math.max
 
 class PlayerDeathSystem(
     private val gameViewport: Viewport = inject(),
@@ -27,56 +29,63 @@ class PlayerDeathSystem(
 
     override fun onTickEntity(entity: Entity) {
         if (deathTime == 0f) {
-            entity.configure {
-                it -= Collision
-                it -= Physics
-                it -= Controller
-            }
-            entity[Fsm].state.changeState(PlayerStateDeath)
-            velocityY = 8f
-
-            world.system<ActivationSystem>().enabled = false
-            world.system<AerialMoveSystem>().enabled = false
-            world.system<AttackSystem>().enabled = false
-            world.system<CameraSystem>().enabled = false
-            world.system<ClimbSystem>().enabled = false
-            world.system<CollisionSystem>().enabled = false
-            world.system<DamagedSystem>().enabled = false
-            world.system<DamageRequestSystem>().enabled = false
-            world.system<DelayRemovalSystem>().enabled = false
-            world.system<FlashSystem>().enabled = false
-            world.system<FollowSystem>().enabled = false
-            world.system<GroundMoveSystem>().enabled = false
-            world.system<LifeSystem>().enabled = false
-            world.system<ProximityDetectorSystem>().enabled = false
-            world.system<WanderSystem>().enabled = false
-            deathTime = 0.01f
-
-            world.entity {
-                it += Transition(type = TransitionType.PIXELIZE_GRAYSCALE_OUT, duration = 2f, actionDelay = 2f) {
-                    game.getScreen<GameScreen>().dispose()
-                    game.removeScreen<GameScreen>()
-                    game.addScreen(GameScreen(game))
-                    game.setScreen<GameScreen>()
-                }
-            }
+            onPlayerDeath(entity)
             return
         }
 
         deathTime += deltaTime
         if (deathTime < MOVE_DELAY) {
+            // keep the player in position for a short period
             return
         }
 
         velocityY -= 20f * deltaTime
-        val position = entity[Transform].position
+        val (position, size) = entity[Transform]
         position.y += velocityY * deltaTime
 
         val cameraBottom = gameViewport.camera.position.y - gameViewport.worldHeight / 2
-        if (position.y + 4f < cameraBottom) {
+        val playerTop = position.y + size.y
+        if (playerTop < cameraBottom) {
             deathTime = 0f
             velocityY = 0f
             entity.configure { it -= EntityTag.PLAYER_DEATH }
+        }
+    }
+
+    private fun onPlayerDeath(entity: Entity) {
+        entity.configure {
+            it -= Collision
+            it -= Physics
+            it -= Controller
+        }
+        entity[Fsm].state.changeState(PlayerStateDeath)
+        velocityY = 8f
+
+        world.system<ActivationSystem>().enabled = false
+        world.system<AerialMoveSystem>().enabled = false
+        world.system<AttackSystem>().enabled = false
+        world.system<CameraSystem>().enabled = false
+        world.system<ClimbSystem>().enabled = false
+        world.system<CollisionSystem>().enabled = false
+        world.system<DamagedSystem>().enabled = false
+        world.system<DamageRequestSystem>().enabled = false
+        world.system<DelayRemovalSystem>().enabled = false
+        world.system<FlashSystem>().enabled = false
+        world.system<FollowSystem>().enabled = false
+        world.system<GroundMoveSystem>().enabled = false
+        world.system<LifeSystem>().enabled = false
+        world.system<ProximityDetectorSystem>().enabled = false
+        world.system<WanderSystem>().enabled = false
+        deathTime = max(0.01f, deltaTime)
+
+        world.entity {
+            it += DelayAction(delay = 4f, removeAfterAction = true) {
+                game.getScreen<GameScreen>().dispose()
+                game.removeScreen<GameScreen>()
+                game.addScreen(GameScreen(game))
+                game.setScreen<GameScreen>()
+            }
+            it += Transition(type = TransitionType.PIXELIZE_OUT, duration = 2f, removeAfterTransition = false)
         }
     }
 

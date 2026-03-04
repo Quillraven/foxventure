@@ -10,6 +10,7 @@ import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.RenderContext
+import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
@@ -23,6 +24,7 @@ import io.github.quillraven.foxventure.system.ControllerSystem
 import io.github.quillraven.foxventure.system.DamageRequestSystem
 import io.github.quillraven.foxventure.system.DamagedSystem
 import io.github.quillraven.foxventure.system.DebugRenderSystem
+import io.github.quillraven.foxventure.system.DelayActionSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
 import io.github.quillraven.foxventure.system.FlashSystem
 import io.github.quillraven.foxventure.system.FollowSystem
@@ -96,6 +98,7 @@ class GameScreen(
             add(RenderSystem())
             add(PostRenderSystem())
             add(UiRenderSystem())
+            add(DelayActionSystem())
             add(DelayRemovalSystem())
             if (System.getenv("debug") == "true") {
                 add(DebugRenderSystem())
@@ -111,15 +114,20 @@ class GameScreen(
         Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
 
         registerTiledListeners()
-        world.removeAll(clearRecycled = true)
         tiledService.setMap(MapAsset.TUTORIAL)
 
         world.system<ControllerSystem>().enabled = false
         world.entity {
-            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.25f) {
+            it += DelayAction(delay = 1.5f, removeAfterAction = true) {
                 world.system<ControllerSystem>().enabled = true
             }
+            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.25f, removeAfterTransition = false)
         }
+    }
+
+    override fun hide() {
+        tiledService.clearAllListener()
+        world.removeAll(clearRecycled = true)
     }
 
     override fun render(delta: Float) {
@@ -128,7 +136,6 @@ class GameScreen(
     }
 
     private fun registerTiledListeners() {
-        tiledService.clearAllListener()
         world.systems.forEach { system ->
             if (system is MapChangeListener) {
                 tiledService.addMapChangeListener(system)

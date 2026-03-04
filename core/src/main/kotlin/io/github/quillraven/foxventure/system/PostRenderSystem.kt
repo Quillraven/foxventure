@@ -2,7 +2,6 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
-import com.badlogic.gdx.utils.Timer
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
@@ -14,7 +13,7 @@ import ktx.assets.toInternalFile
 import ktx.graphics.use
 
 enum class TransitionType {
-    NONE, PIXELIZE_GRAYSCALE_OUT, PIXELIZE_IN
+    NONE, PIXELIZE_OUT, PIXELIZE_IN, GRAYSCALE_OUT
 }
 
 class PostRenderSystem(
@@ -25,7 +24,10 @@ class PostRenderSystem(
     private val pixelShader = shader(fragmentName = "pixelize.frag")
     private val pixelUniformAmount = pixelShader.getUniformLocation("u_amount")
     private val pixelUniformProgress = pixelShader.getUniformLocation("u_progress")
-    private val pixelUniformDesaturation = pixelShader.getUniformLocation("u_desaturation")
+
+
+    private val grayScaleShader = shader(fragmentName = "grayscale.frag")
+    private val grayScaleUniformDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
 
     private fun shader(vertexName: String = "default.vert", fragmentName: String) =
         ShaderProgram(
@@ -43,10 +45,14 @@ class PostRenderSystem(
 
     override fun onTickEntity(entity: Entity) {
         val transition = entity[Transition]
+
         if (transition.timer >= transition.duration) {
             // transition done
-            Timer.schedule(transition.task, transition.actionDelay)
-            entity.remove()
+            if (transition.removeAfterTransition) {
+                entity.remove()
+            } else {
+                entity.configure { it -= Transition }
+            }
             return
         }
 
@@ -56,17 +62,19 @@ class PostRenderSystem(
         // set shader and uniforms
         val shader = when (transition.type) {
             TransitionType.NONE -> null
-            TransitionType.PIXELIZE_GRAYSCALE_OUT -> pixelShader.also {
+            TransitionType.PIXELIZE_OUT -> pixelShader.also {
                 it.setUniformf(pixelUniformAmount, gameViewport.worldWidth * 7, gameViewport.worldHeight * 7)
                 it.setUniformf(pixelUniformProgress, easedProgress)
-                it.setUniformf(pixelUniformDesaturation, easedProgress)
             }
 
             TransitionType.PIXELIZE_IN -> pixelShader.also {
                 val inverseProgress = 1f - easedProgress
                 it.setUniformf(pixelUniformAmount, gameViewport.worldWidth * 7, gameViewport.worldHeight * 7)
                 it.setUniformf(pixelUniformProgress, inverseProgress)
-                it.setUniformf(pixelUniformDesaturation, 0f)
+            }
+
+            TransitionType.GRAYSCALE_OUT -> grayScaleShader.also {
+                it.setUniformf(grayScaleUniformDesaturation, easedProgress)
             }
         }
         if (batch.shader != shader) {
@@ -79,5 +87,6 @@ class PostRenderSystem(
 
     override fun onDispose() {
         pixelShader.dispose()
+        grayScaleShader.dispose()
     }
 }
