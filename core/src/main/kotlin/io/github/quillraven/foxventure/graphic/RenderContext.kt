@@ -1,8 +1,8 @@
-package io.github.quillraven.foxventure
+package io.github.quillraven.foxventure.graphic
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture.TextureFilter
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
@@ -40,7 +40,7 @@ data class RenderContext(
     companion object {
         private fun frameBuffer(width: Int, height: Int) =
             FrameBuffer(Pixmap.Format.RGBA8888, width, height, false).apply {
-                colorBufferTexture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest)
+                colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
             }
     }
 }

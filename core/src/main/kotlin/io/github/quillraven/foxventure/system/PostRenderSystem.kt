@@ -1,16 +1,15 @@
 package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
-import ktx.assets.toInternalFile
+import io.github.quillraven.foxventure.graphic.RenderContext
+import io.github.quillraven.foxventure.graphic.ShaderService
 import ktx.graphics.use
 
 enum class TransitionType {
@@ -21,22 +20,8 @@ class PostRenderSystem(
     private val renderContext: RenderContext = inject(),
     private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize
     private val gameViewport: Viewport = inject(),
+    private val shaderService: ShaderService = inject(),
 ) : IteratingSystem(family { all(Transition) }) {
-    private val pixelShader = shader(fragmentName = "pixelize.frag")
-    private val pixelUlProgress = pixelShader.getUniformLocation("u_progress")
-    private val pixelUlRatio = pixelShader.getUniformLocation("u_ratio")
-    private val pixelUlSquaresMin = pixelShader.getUniformLocation("u_squares_min")
-    private val pixelUlSteps = pixelShader.getUniformLocation("u_steps")
-
-    private val grayScaleShader = shader(fragmentName = "grayscale.frag")
-    private val grayScaleUlDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
-
-    private fun shader(vertexName: String = "default.vert", fragmentName: String) =
-        ShaderProgram(
-            "shader/$vertexName".toInternalFile(),
-            "shader/$fragmentName".toInternalFile()
-        )
-
     override fun onTick() {
         if (family.isEmpty) {
             // no transition effects -> render primary FBO
@@ -92,33 +77,20 @@ class PostRenderSystem(
         // set shader and uniforms
         when (effect.type) {
             TransitionType.PIXELIZE -> {
-                batch.shader = pixelShader
-                pixelShader.use {
-                    val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
-                    pixelShader.setUniformf(pixelUlProgress, progress)
-                    pixelShader.setUniformf(pixelUlRatio, gameViewport.worldWidth / gameViewport.worldHeight)
-                    val minSquaresX = gameViewport.worldWidth * 6f
-                    val minSquaresY = gameViewport.worldHeight * 6f
-                    pixelShader.setUniformf(pixelUlSquaresMin, minSquaresX, minSquaresY)
-                    pixelShader.setUniformi(pixelUlSteps, 50)
-                }
+                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                val aspectRatio = gameViewport.worldWidth / gameViewport.worldHeight
+                val minSquaresX = gameViewport.worldWidth * 6f
+                val minSquaresY = gameViewport.worldHeight * 6f
+                shaderService.applyPixelShader(batch, progress, aspectRatio, minSquaresX, minSquaresY)
             }
 
             TransitionType.GRAYSCALE -> {
-                batch.shader = grayScaleShader
-                grayScaleShader.use {
-                    val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
-                    grayScaleShader.setUniformf(grayScaleUlDesaturation, progress)
-                }
+                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                shaderService.applyGrayScaleShader(batch, progress)
             }
         }
 
         // update timer
         effect.timer += deltaTime
-    }
-
-    override fun onDispose() {
-        pixelShader.dispose()
-        grayScaleShader.dispose()
     }
 }
