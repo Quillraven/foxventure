@@ -23,6 +23,7 @@ import kotlin.math.max
 class PlayerDeathSystem(
     private val gameViewport: Viewport = inject(),
     private val game: GdxGame = inject(),
+    private val audioService: AudioService = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, EntityTag.PLAYER_DEATH) }
 ) {
@@ -62,6 +63,7 @@ class PlayerDeathSystem(
         }
         entity[Fsm].state.changeState(PlayerStateDeath)
         velocityY = 8f
+        audioService.playMusic("game_over.mp3")
 
         world.system<ActivationSystem>().enabled = false
         world.system<AerialMoveSystem>().enabled = false
