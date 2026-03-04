@@ -14,10 +14,6 @@ class DelayActionSystem : IteratingSystem(
         if (action.delay > 0f) return
 
         action.action()
-        if (action.removeAfterAction) {
-            entity.remove()
-        } else {
-            entity.configure { it -= DelayAction }
-        }
+        entity.remove()
     }
 }

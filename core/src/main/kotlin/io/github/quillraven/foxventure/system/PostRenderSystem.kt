@@ -9,11 +9,12 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.Transition
+import io.github.quillraven.foxventure.component.TransitionEffect
 import ktx.assets.toInternalFile
 import ktx.graphics.use
 
 enum class TransitionType {
-    NONE, PIXELIZE_OUT, PIXELIZE_IN, GRAYSCALE_OUT
+    PIXELIZE, GRAYSCALE
 }
 
 class PostRenderSystem(
@@ -27,7 +28,6 @@ class PostRenderSystem(
     private val pixelUlSquaresMin = pixelShader.getUniformLocation("u_squares_min")
     private val pixelUlSteps = pixelShader.getUniformLocation("u_steps")
 
-
     private val grayScaleShader = shader(fragmentName = "grayscale.frag")
     private val grayScaleUniformDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
 
@@ -38,51 +38,84 @@ class PostRenderSystem(
         )
 
     override fun onTick() {
-        super.onTick()
-
-        batch.use(batch.projectionMatrix.idt()) {
-            batch.draw(renderContext.fbo.colorBufferTexture, -1f, 1f, 2f, -2f)
+        if (family.isEmpty) {
+            // no transition effects -> render primary FBO
+            batch.use(batch.projectionMatrix.idt()) {
+                batch.draw(renderContext.fbo1.colorBufferTexture, -1f, 1f, 2f, -2f)
+            }
+            return
         }
+
+        // transition entity -> render with active FBO (Ping-Pong approach for effect post-processing)
+        super.onTick()
+        batch.use(batch.projectionMatrix.idt()) {
+            batch.draw(renderContext.activeFbo.colorBufferTexture, -1f, 1f, 2f, -2f)
+        }
+        renderContext.activeFbo = renderContext.fbo1
     }
 
     override fun onTickEntity(entity: Entity) {
         val transition = entity[Transition]
 
-        if (transition.timer >= transition.duration) {
-            // transition done
-            if (transition.removeAfterTransition) {
+        if (transition.effects.size == 1) {
+            // render directly to screen for a single effect
+            renderContext.activeFbo = renderContext.fbo1
+            if (applyEffect(transition.effects.first())) {
+                // transition done
                 entity.remove()
-            } else {
-                entity.configure { it -= Transition }
             }
             return
         }
 
-        val normalizedTime = (transition.timer / transition.duration).coerceIn(0f, 1f)
+        // multiple effects -> render to different FBOs via Ping-Pong approach
+        var allEffectsDone = true
+        transition.effects.forEach { effect ->
+            if (!applyEffect(effect)) {
+                allEffectsDone = false
+            }
+
+            // render to active FBO
+            val prevActiveFbo = renderContext.activeFbo
+            renderContext.swapActiveFbo()
+            renderContext.activeFbo.use {
+                batch.use(batch.projectionMatrix.idt()) {
+                    batch.draw(prevActiveFbo.colorBufferTexture, -1f, 1f, 2f, -2f)
+                }
+            }
+        }
+        if (allEffectsDone) {
+            entity.remove()
+        }
+    }
+
+    private fun applyEffect(effect: TransitionEffect): Boolean {
+        if (effect.delay > 0f) {
+            effect.delay -= deltaTime
+            return false
+        }
+
+        val normalizedTime = (effect.timer / effect.duration).coerceIn(0f, 1f)
         val easedProgress = normalizedTime * normalizedTime * (3f - 2f * normalizedTime) // smoothstep easing
 
         // set shader and uniforms
-        val shader = when (transition.type) {
-            TransitionType.NONE -> null
-            TransitionType.PIXELIZE_OUT, TransitionType.PIXELIZE_IN -> pixelShader.also {
-                val isInTransition = transition.type == TransitionType.PIXELIZE_IN // use reversed progress
-                val progress = if (isInTransition) (1f - easedProgress) else easedProgress
+        batch.shader = when (effect.type) {
+            TransitionType.PIXELIZE -> pixelShader.also {
+                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
                 it.setUniformf(pixelUlProgress, progress)
                 it.setUniformf(pixelUlRatio, gameViewport.worldWidth / gameViewport.worldHeight)
                 it.setUniformf(pixelUlSquaresMin, gameViewport.worldWidth * 6, gameViewport.worldHeight * 6)
                 it.setUniformi(pixelUlSteps, 50)
             }
 
-            TransitionType.GRAYSCALE_OUT -> grayScaleShader.also {
-                it.setUniformf(grayScaleUniformDesaturation, easedProgress)
+            TransitionType.GRAYSCALE -> grayScaleShader.also {
+                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                it.setUniformf(grayScaleUniformDesaturation, progress)
             }
-        }
-        if (batch.shader != shader) {
-            batch.shader = shader
         }
 
         // update timer
-        transition.timer += deltaTime
+        effect.timer += deltaTime
+        return effect.timer >= effect.duration
     }
 
     override fun onDispose() {

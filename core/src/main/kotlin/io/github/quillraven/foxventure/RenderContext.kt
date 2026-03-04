@@ -10,18 +10,31 @@ import com.badlogic.gdx.utils.Disposable
 
 data class RenderContext(
     val batch: Batch = SpriteBatch(),
-    var fbo: FrameBuffer = frameBuffer(Gdx.graphics.width, Gdx.graphics.height)
+    var fbo1: FrameBuffer = frameBuffer(Gdx.graphics.width, Gdx.graphics.height),
+    var fbo2: FrameBuffer = frameBuffer(Gdx.graphics.width, Gdx.graphics.height),
 ) : Disposable {
+    var activeFbo: FrameBuffer = fbo1
+
     fun resize(width: Int, height: Int) {
-        if (width > 0 && height > 0 && (width != fbo.width || height != fbo.height)) {
-            fbo.dispose()
-            fbo = frameBuffer(width, height)
+        if (width > 0 && height > 0 && (width != fbo1.width || height != fbo1.height)) {
+            fbo1.dispose()
+            fbo1 = frameBuffer(width, height)
+            fbo2.dispose()
+            fbo2 = frameBuffer(width, height)
         }
     }
 
     override fun dispose() {
         batch.dispose()
-        fbo.dispose()
+        fbo1.dispose()
+        fbo2.dispose()
+    }
+
+    fun swapActiveFbo() {
+        activeFbo = when (activeFbo) {
+            fbo1 -> fbo2
+            else -> fbo1
+        }
     }
 
     companion object {

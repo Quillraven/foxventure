@@ -46,7 +46,7 @@ class RenderSystem(
     private val fgdLayers = gdxArrayOf<MapLayer>()
 
     override fun onTick() {
-        renderContext.fbo.use {
+        renderContext.fbo1.use {
             ScreenUtils.clear(0f, 0f, 0f, 0f, true)
 
             gameViewport.apply()

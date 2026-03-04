@@ -15,7 +15,9 @@ import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
+import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.screen.GameScreen
+import ktx.collections.gdxArrayOf
 import kotlin.math.max
 
 class PlayerDeathSystem(
@@ -79,13 +81,20 @@ class PlayerDeathSystem(
         deathTime = max(0.01f, deltaTime)
 
         world.entity {
-            it += DelayAction(delay = 4f, removeAfterAction = true) {
+            it += DelayAction(delay = 4f) {
                 game.getScreen<GameScreen>().dispose()
                 game.removeScreen<GameScreen>()
                 game.addScreen(GameScreen(game))
                 game.setScreen<GameScreen>()
             }
-            it += Transition(type = TransitionType.PIXELIZE_OUT, duration = 2f, removeAfterTransition = false)
+        }
+        world.entity {
+            it += Transition(
+                effects = gdxArrayOf(
+                    TransitionEffect(TransitionType.GRAYSCALE, duration = 1f, reversed = false, delay = 0f),
+                    TransitionEffect(TransitionType.PIXELIZE, duration = 2f, reversed = false, delay = 1f),
+                )
+            )
         }
     }
 

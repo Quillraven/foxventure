@@ -12,6 +12,7 @@ import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.RenderContext
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
+import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
@@ -46,6 +47,7 @@ import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.app.KtxScreen
+import ktx.collections.gdxArrayOf
 
 class GameScreen(
     private val game: GdxGame,
@@ -118,11 +120,15 @@ class GameScreen(
 
         world.system<ControllerSystem>().enabled = false
         world.entity {
-            it += DelayAction(delay = 1.5f, removeAfterAction = true) {
+            it += DelayAction(delay = 1.5f) {
                 world.system<ControllerSystem>().enabled = true
                 renderContext.batch.shader = null
             }
-            it += Transition(type = TransitionType.PIXELIZE_IN, duration = 1.25f, removeAfterTransition = false)
+        }
+        world.entity {
+            it += Transition(
+                effects = gdxArrayOf(TransitionEffect(TransitionType.PIXELIZE, duration = 1.25f, reversed = true))
+            )
         }
     }
 
