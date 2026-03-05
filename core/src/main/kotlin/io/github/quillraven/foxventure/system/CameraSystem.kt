@@ -7,10 +7,13 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.component.CameraShake
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.tiled.TiledService
+import ktx.math.component1
+import ktx.math.component2
 
 class CameraSystem(
     private val gameViewport: Viewport = inject(),
@@ -25,8 +28,21 @@ class CameraSystem(
         val camera = gameViewport.camera
 
         // Target position (center of entity)
-        val targetX = position.x + size.x * 0.5f
-        val targetY = position.y + size.y * 0.5f
+        var targetX = position.x + size.x * 0.5f
+        var targetY = position.y + size.y * 0.5f
+
+        entity.getOrNull(CameraShake)?.let { shake ->
+            val completion = shake.currentDuration / shake.duration
+            val inverseCompletion = 1f - completion
+            val power = shake.max * inverseCompletion * inverseCompletion
+            shake.currentDuration += deltaTime
+            if (shake.currentDuration >= shake.duration) {
+                entity.configure { it -= CameraShake }
+            } else {
+                targetX += MathUtils.random(-1f, 1f) * power
+                targetY += MathUtils.random(-1f, 1f) * power
+            }
+        }
 
         // Lerp camera position
         camera.position.x = MathUtils.lerp(camera.position.x, targetX, lerpSpeed * deltaTime)
@@ -52,10 +68,11 @@ class CameraSystem(
 
     private fun clampCamera() {
         val camera = gameViewport.camera
-        val halfViewWidth = gameViewport.worldWidth * 0.5f
-        val halfViewHeight = gameViewport.worldHeight * 0.5f
+        val halfW = gameViewport.worldWidth * 0.5f
+        val halfH = gameViewport.worldHeight * 0.5f
+        val (camX, camY) = camera.position
 
-        camera.position.x = camera.position.x.coerceIn(halfViewWidth, maxOf(halfViewWidth, tiledService.mapWidth - halfViewWidth))
-        camera.position.y = camera.position.y.coerceIn(halfViewHeight, maxOf(halfViewHeight, tiledService.mapHeight - halfViewHeight))
+        camera.position.x = camX.coerceIn(halfW, maxOf(halfW, tiledService.mapWidth - halfW))
+        camera.position.y = camY.coerceIn(halfH, maxOf(halfH, tiledService.mapHeight - halfH))
     }
 }

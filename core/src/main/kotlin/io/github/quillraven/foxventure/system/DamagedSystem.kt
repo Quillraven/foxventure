@@ -5,11 +5,13 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.component.CameraShake
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Life
+import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Velocity
 import kotlin.math.max
 
@@ -52,6 +54,11 @@ class DamagedSystem(
 
             // play sound
             audioService.playSound(damaged.soundName)
+
+            // add a camera shake if the player is taking damage
+            if (entity has Player) {
+                entity.configure { it += CameraShake(max = 4f, duration = 1.25f) }
+            }
 
             return
         }
