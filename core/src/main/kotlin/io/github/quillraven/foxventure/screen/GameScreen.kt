@@ -148,9 +148,14 @@ class GameScreen(
     }
 
     private fun setupUI() {
-        val generator = FreeTypeFontGenerator("ui/PlainPixel-Regular.ttf".toInternalFile())
+        val generator = FreeTypeFontGenerator("ui/PressStart2P-Regular.ttf".toInternalFile())
         val parameter = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
-            size = 15 // recommended default size of PlainPixel-Regular according to ReadMe
+            size = 8
+            borderWidth = 1f
+            borderGamma = 0.1f
+            gamma = 0.1f
+            mono = true
+            spaceX = 1
             minFilter = Texture.TextureFilter.Nearest
             magFilter = Texture.TextureFilter.Nearest
         }

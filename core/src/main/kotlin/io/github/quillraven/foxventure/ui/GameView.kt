@@ -25,8 +25,8 @@ class GameView(
         val gemImage = Image(TextureRegionDrawable(uiAtlas.findRegion("gem")), Scaling.fit)
         add(gemImage).padLeft(2f).size(lifeDrawables[0].minWidth, lifeDrawables[0].minHeight)
 
-        gemLabel = Label("x0", Label.LabelStyle(font, Color.GRAY))
-        add(gemLabel).padLeft(2f).fillX()
+        gemLabel = Label("x0", Label.LabelStyle(font, Color.WHITE))
+        add(gemLabel).padLeft(2f).fillX().bottom().padBottom(2f)
 
         lifeGroup = Table().also { it.top() }
         add(lifeGroup).padLeft(10f)
