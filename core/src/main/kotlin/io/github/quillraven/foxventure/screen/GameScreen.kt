@@ -3,16 +3,15 @@ package io.github.quillraven.foxventure.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.SkinAsset
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
@@ -54,7 +53,6 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import io.github.quillraven.foxventure.ui.GameView
 import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.KtxScreen
-import ktx.assets.toInternalFile
 import ktx.collections.gdxArrayOf
 
 class GameScreen(
@@ -67,10 +65,10 @@ class GameScreen(
     private val audioService: AudioService = game.serviceLocator.audioService,
     private val shaderService: ShaderService = game.serviceLocator.shaderService,
 ) : KtxScreen {
-
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
     private val gameViewModel = GameViewModel()
     private val world: World = ecsWorld()
+    private val skin: Skin = assets[SkinAsset.UI]
 
     private fun ecsWorld() = configureWorld {
         injectables {
@@ -148,21 +146,7 @@ class GameScreen(
     }
 
     private fun setupUI() {
-        val generator = FreeTypeFontGenerator("ui/PressStart2P-Regular.ttf".toInternalFile())
-        val parameter = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
-            size = 8
-            borderWidth = 1f
-            borderGamma = 0.1f
-            gamma = 0.1f
-            mono = true
-            spaceX = 1
-            minFilter = Texture.TextureFilter.Nearest
-            magFilter = Texture.TextureFilter.Nearest
-        }
-        val font = generator.generateFont(parameter)
-        generator.dispose()
-
-        stage.addActor(GameView(gameViewModel, assets[AtlasAsset.UI], font))
+        stage.addActor(GameView(gameViewModel, skin))
     }
 
     override fun hide() {

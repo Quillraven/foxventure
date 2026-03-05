@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.ktxPreferences)
     implementation(libs.ktxI18n)
     implementation(libs.fleks)
+    implementation(libs.stripeFreetype)
 
     testImplementation(kotlin("test"))
 }

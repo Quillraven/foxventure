@@ -7,6 +7,7 @@ gdxAiVersion = "1.8.2"
 fleksVersion = "2.13-SNAPSHOT"
 gdxTeaVmVersion = "1.5.2"
 construoVersion = "2.1.0"
+stripeVersion = "2.0.0"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
@@ -40,6 +41,8 @@ fleks = { module = "io.github.quillraven.fleks:Fleks", version.ref = "fleksVersi
 # teavm
 gdxTeaVmBackend = { module = "com.github.xpenatan.gdx-teavm:backend-web", version.ref = "gdxTeaVmVersion" }
 gdxTeaVmFreetype = { module = "com.github.xpenatan.gdx-teavm:gdx-freetype-teavm", version.ref = "gdxTeaVmVersion" }
+# stripe
+stripeFreetype = { module = "com.github.raeleus.stripe:freetype", version.ref = "stripeVersion" }
 
 [bundles]
 ktxBaseBundle = ["ktxActors", "ktxApp", "ktxAssets", "ktxCollections", "ktxGraphics", "ktxLog", "ktxMath", "ktxScene2d"]

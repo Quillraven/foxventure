@@ -3,14 +3,17 @@ package io.github.quillraven.foxventure
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.assets.loaders.SkinLoader
 import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.ray3k.stripe.FreeTypeSkinLoader
 import io.github.quillraven.foxventure.screen.LoadAssetsScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -25,8 +28,11 @@ class GdxGame : KtxGame<KtxScreen>() {
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
 
-        val tiledLoader = TmxMapLoader(serviceLocator.assets.fileHandleResolver)
-        serviceLocator.assets.setLoader<TiledMap, BaseTiledMapLoader.Parameters>(tiledLoader)
+        with(serviceLocator.assets) {
+            val tiledLoader = TmxMapLoader(this.fileHandleResolver)
+            this.setLoader<TiledMap, BaseTiledMapLoader.Parameters>(tiledLoader)
+            this.setLoader<Skin, SkinLoader.SkinParameter>(FreeTypeSkinLoader(this.fileHandleResolver))
+        }
 
         addScreen(LoadAssetsScreen(this))
         setScreen<LoadAssetsScreen>()

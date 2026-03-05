@@ -45,3 +45,5 @@ bin/
 *.tiled-session
 ### Minder mindmap ###
 *.minder
+### Skin Composer ###
+skin_composer_data

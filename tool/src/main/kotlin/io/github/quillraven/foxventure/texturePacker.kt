@@ -7,23 +7,9 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Resampling
 
 fun main() {
-    packSprites()
-    packUI()
-}
-
-private fun packSprites() {
     val inputFolder = "../assets/graphics/sprites"
     val outputFolder = "../assets/graphics"
     val packageFileName = "objects"
-    val settings = defaultSettings()
-
-    TexturePacker.process(settings, inputFolder, outputFolder, packageFileName)
-}
-
-private fun packUI() {
-    val inputFolder = "../assets/ui/graphics"
-    val outputFolder = "../assets/ui"
-    val packageFileName = "ui"
     val settings = defaultSettings()
 
     TexturePacker.process(settings, inputFolder, outputFolder, packageFileName)
