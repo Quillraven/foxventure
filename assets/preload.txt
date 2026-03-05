@@ -1,3 +1,11 @@
+i:b:/ui/graphics/life_04.png:409:1
+i:b:/ui/graphics/life_00.png:330:1
+i:b:/ui/graphics/life_01.png:384:1
+i:b:/ui/graphics/life_02.png:413:1
+i:b:/ui/graphics/life_03.png:424:1
+i:b:/ui/graphics/avatar_fox.png:456:1
+i:b:/ui/ui.png:861:1
+i:b:/ui/ui.atlas:617:1
 i:b:/shader/default.vert:315:1
 i:b:/shader/grayscale.frag:420:1
 i:b:/shader/pixelize.frag:694:1

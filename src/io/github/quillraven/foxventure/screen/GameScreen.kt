@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
+import io.github.quillraven.foxventure.Asset.Companion.get
+import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.component.DelayAction
@@ -47,6 +49,8 @@ import io.github.quillraven.foxventure.system.WanderSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.tiled.TiledService
+import io.github.quillraven.foxventure.ui.GameView
+import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.KtxScreen
 import ktx.collections.gdxArrayOf
 
@@ -62,6 +66,7 @@ class GameScreen(
 ) : KtxScreen {
 
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
+    private val gameViewModel = GameViewModel()
     private val world: World = ecsWorld()
 
     private fun ecsWorld() = configureWorld {
@@ -75,6 +80,7 @@ class GameScreen(
             add(audioService)
             add(game)
             add(shaderService)
+            add(gameViewModel)
         }
 
         val activationSystem = ActivationSystem(gameViewport)
@@ -116,11 +122,14 @@ class GameScreen(
     }
 
     override fun show() {
+        // UI
+        setupUI()
+        // input
         Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
-
+        // tile map initialisation
         registerTiledListeners()
         tiledService.setMap(MapAsset.TUTORIAL)
-
+        // fade in effect
         world.system<ControllerSystem>().enabled = false
         val transitionEntity = world.entity {
             it += Transition(
@@ -133,6 +142,10 @@ class GameScreen(
                 transitionEntity.remove()
             }
         }
+    }
+
+    private fun setupUI() {
+        stage.addActor(GameView(gameViewModel, assets[AtlasAsset.UI]))
     }
 
     override fun hide() {

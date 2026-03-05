@@ -1,0 +1,48 @@
+
+ui.png
+size: 128, 32
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+avatar_fox
+  rotate: false
+  xy: 91, 3
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+life
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+life
+  rotate: false
+  xy: 19, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+life
+  rotate: false
+  xy: 37, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+life
+  rotate: false
+  xy: 55, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+life
+  rotate: false
+  xy: 73, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
