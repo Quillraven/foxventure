@@ -11,6 +11,13 @@ avatar_fox
   orig: 14, 14
   offset: 0, 0
   index: -1
+gem
+  rotate: false
+  xy: 107, 4
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: -1
 life
   rotate: false
   xy: 1, 1

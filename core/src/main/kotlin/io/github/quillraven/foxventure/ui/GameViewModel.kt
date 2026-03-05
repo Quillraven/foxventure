@@ -17,5 +17,15 @@ class GameViewModel {
             }
         }
 
+    var gems: Int = 0
+        set(value) {
+            if (field != value) {
+                field = value
+                onGemsChanged?.invoke(field)
+            }
+        }
+
     var onLifeChanged: ((life: Int, maxLife: Int) -> Unit)? = null
+
+    var onGemsChanged: ((gems: Int) -> Unit)? = null
 }

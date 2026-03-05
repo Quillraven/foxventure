@@ -1,7 +1,10 @@
 package io.github.quillraven.foxventure.ui
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Scaling
@@ -9,18 +12,27 @@ import com.badlogic.gdx.utils.Scaling
 class GameView(
     viewModel: GameViewModel,
     uiAtlas: TextureAtlas,
+    font: BitmapFont,
 ) : Table() {
     private val lifeDrawables = uiAtlas.findRegions("life").map { TextureRegionDrawable(it) }
     private val lifeGroup: Table
+    private val gemLabel: Label
 
     init {
         setFillParent(true)
         top().left()
 
-        lifeGroup = Table().also { it.left() }
-        add(lifeGroup).expandX().fillX()
+        val gemImage = Image(TextureRegionDrawable(uiAtlas.findRegion("gem")), Scaling.fit)
+        add(gemImage).padLeft(2f).size(lifeDrawables[0].minWidth, lifeDrawables[0].minHeight)
+
+        gemLabel = Label("x0", Label.LabelStyle(font, Color.GRAY))
+        add(gemLabel).padLeft(2f).fillX()
+
+        lifeGroup = Table().also { it.top() }
+        add(lifeGroup).padLeft(10f)
 
         viewModel.onLifeChanged = this::onLifeChanged
+        viewModel.onGemsChanged = { gems -> gemLabel.setText("x$gems") }
     }
 
     private fun onLifeChanged(life: Int, maxLife: Int) {

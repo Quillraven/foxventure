@@ -23,10 +23,12 @@ import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.system.DamagedSystem.Companion.damageEntity
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
+import io.github.quillraven.foxventure.ui.GameViewModel
 
 class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val audioService: AudioService = inject(),
+    private val gameViewModel: GameViewModel = inject(),
     assets: AssetManager = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Collision, EntityTag.ACTIVE) },
@@ -106,7 +108,9 @@ class CollisionSystem(
     ) {
         when (otherType) {
             "gem" -> {
-                player[Player].gems++
+                val playerComponent = player[Player]
+                playerComponent.gems++
+                gameViewModel.gems = playerComponent.gems
 
                 val transform = other[Transform]
                 spawnPickupSfx(transform)
