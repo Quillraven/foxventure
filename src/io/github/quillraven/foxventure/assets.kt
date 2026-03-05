@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import ktx.assets.assetDescriptor
 
 interface Asset<T> {
@@ -16,8 +17,7 @@ interface Asset<T> {
 }
 
 enum class AtlasAsset(path: String) : Asset<TextureAtlas> {
-    OBJECTS("graphics/objects.atlas"),
-    UI("ui/ui.atlas");
+    OBJECTS("graphics/objects.atlas");
 
     override val descriptor = assetDescriptor<TextureAtlas>(path)
 }
@@ -32,4 +32,10 @@ enum class MapAsset : Asset<TiledMap> {
             projectFilePath = "maps/foxventure.tiled-project"
         }
     }
+}
+
+enum class SkinAsset : Asset<Skin> {
+    UI;
+
+    override val descriptor = assetDescriptor<Skin>("ui/${name.lowercase()}.json")
 }

@@ -1,55 +1,55 @@
 
 ui.png
-size: 128, 32
+size: 64, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-avatar_fox
+avatar-fox
   rotate: false
-  xy: 91, 3
+  xy: 19, 3
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 gem
   rotate: false
-  xy: 107, 4
+  xy: 37, 40
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: -1
-life
+life-0
+  rotate: false
+  xy: 1, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life-1
+  rotate: false
+  xy: 1, 19
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life-2
+  rotate: false
+  xy: 19, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+life-3
   rotate: false
   xy: 1, 1
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 0
-life
+  index: -1
+life-4
   rotate: false
-  xy: 19, 1
+  xy: 19, 19
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
-  index: 1
-life
-  rotate: false
-  xy: 37, 1
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 2
-life
-  rotate: false
-  xy: 55, 1
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 3
-life
-  rotate: false
-  xy: 73, 1
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 4
+  index: -1
