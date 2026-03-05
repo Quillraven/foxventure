@@ -11,6 +11,7 @@ import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Velocity
+import kotlin.math.max
 
 class DamagedSystem(
     private val audioService: AudioService = inject(),
@@ -25,7 +26,7 @@ class DamagedSystem(
         }
 
         if (damaged.timer == 0f) {
-            damaged.timer = 0.001f
+            damaged.timer = max(0.001f, deltaTime)
             val life = entity[Life]
             life.amount -= damaged.damage
 
