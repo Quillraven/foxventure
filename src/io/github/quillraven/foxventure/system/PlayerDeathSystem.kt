@@ -80,7 +80,7 @@ class PlayerDeathSystem(
         world.system<LifeSystem>().enabled = false
         world.system<ProximityDetectorSystem>().enabled = false
         world.system<WanderSystem>().enabled = false
-        deathTime = max(0.01f, deltaTime)
+        deathTime = max(0.001f, deltaTime)
 
         val transitionEntity = world.entity {
             it += Transition(
