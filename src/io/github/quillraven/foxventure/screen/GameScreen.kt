@@ -3,6 +3,8 @@ package io.github.quillraven.foxventure.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.World
@@ -52,6 +54,7 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import io.github.quillraven.foxventure.ui.GameView
 import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.KtxScreen
+import ktx.assets.toInternalFile
 import ktx.collections.gdxArrayOf
 
 class GameScreen(
@@ -145,7 +148,21 @@ class GameScreen(
     }
 
     private fun setupUI() {
-        stage.addActor(GameView(gameViewModel, assets[AtlasAsset.UI]))
+        val generator = FreeTypeFontGenerator("ui/PressStart2P-Regular.ttf".toInternalFile())
+        val parameter = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
+            size = 8
+            borderWidth = 1f
+            borderGamma = 0.1f
+            gamma = 0.1f
+            mono = true
+            spaceX = 1
+            minFilter = Texture.TextureFilter.Nearest
+            magFilter = Texture.TextureFilter.Nearest
+        }
+        val font = generator.generateFont(parameter)
+        generator.dispose()
+
+        stage.addActor(GameView(gameViewModel, assets[AtlasAsset.UI], font))
     }
 
     override fun hide() {
