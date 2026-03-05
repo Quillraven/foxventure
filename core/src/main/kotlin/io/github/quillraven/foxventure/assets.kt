@@ -15,10 +15,11 @@ interface Asset<T> {
     }
 }
 
-enum class AtlasAsset : Asset<TextureAtlas> {
-    OBJECTS;
+enum class AtlasAsset(path: String) : Asset<TextureAtlas> {
+    OBJECTS("graphics/objects.atlas"),
+    UI("ui/ui.atlas");
 
-    override val descriptor = assetDescriptor<TextureAtlas>("graphics/${name.lowercase()}.atlas")
+    override val descriptor = assetDescriptor<TextureAtlas>(path)
 }
 
 enum class MapAsset : Asset<TiledMap> {

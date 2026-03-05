@@ -39,6 +39,7 @@ import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Wander
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
+import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.gdxError
 import ktx.math.vec2
 import ktx.tiled.height
@@ -50,6 +51,7 @@ import ktx.tiled.width
 
 class SpawnSystem(
     assets: AssetManager = inject(),
+    private val gameViewModel: GameViewModel = inject(),
 ) : IntervalSystem(enabled = false), LoadTileObjectListener {
     private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val animationCache = mutableMapOf<String, Map<AnimationType, GdxAnimation>>()
@@ -79,6 +81,7 @@ class SpawnSystem(
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
             it += Tiled(id = mapObject.id)
             it += Type(tiledType)
+            // life
             tile.propertyOrNull<Int>("life")?.let { amount -> it += Life(amount) }
 
             // collision
@@ -153,6 +156,7 @@ class SpawnSystem(
                 entity += Player()
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
+                gameViewModel.life = entity[Life].amount
             }
 
             "enemy" -> configureEnemy(entity, atlasKey)

@@ -19,7 +19,7 @@ import ktx.assets.setLoader
 class GdxGame : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator() }
     val gameViewport: Viewport = ExtendViewport(16f, 9f)
-    val uiViewport: Viewport = ScreenViewport()
+    val uiViewport: Viewport = ScreenViewport().apply { unitsPerPixel = 2f.toWorldUnits() }
     val stage: Stage by lazy { Stage(uiViewport, serviceLocator.renderContext.batch) }
 
     override fun create() {

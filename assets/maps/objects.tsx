@@ -3,7 +3,7 @@
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
-   <property name="life" type="int" value="3"/>
+   <property name="life" type="int" value="4"/>
    <property name="physics" type="class" propertytype="Physics"/>
   </properties>
   <image source="../graphics/sprites/characters/fox/idle_0.png" width="33" height="32"/>

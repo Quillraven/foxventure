@@ -8,6 +8,7 @@ class UiRenderSystem(
     private val stage: Stage = inject(),
 ) : IntervalSystem() {
     override fun onTick() {
+        stage.batch.shader = null
         stage.viewport.apply()
         stage.act(deltaTime)
         stage.draw()
