@@ -6,18 +6,19 @@ dependencies {
     implementation(libs.gdxTeaVmBackend)
     implementation(libs.gdxTeaVmFreetype)
     implementation(project(":core"))
+    implementation(libs.stripeFreetype)
 }
 
-fun registerTeavmTask(name: String, description:String, javaMainArgs: List<String>) =
- tasks.register<JavaExec>(name) {
-     group = "teavm"
-     this.description = description
-     dependsOn(tasks.classes)
+fun registerTeavmTask(name: String, description: String, javaMainArgs: List<String>) =
+    tasks.register<JavaExec>(name) {
+        group = "teavm"
+        this.description = description
+        dependsOn(tasks.classes)
 
-     mainClass = "io.github.quillraven.foxventure.TeaVMBuilderKt"
-     classpath = sourceSets.main.get().runtimeClasspath
-     args = javaMainArgs
- }
+        mainClass = "io.github.quillraven.foxventure.TeaVMBuilderKt"
+        classpath = sourceSets.main.get().runtimeClasspath
+        args = javaMainArgs
+    }
 
 registerTeavmTask(
     "teavmDebugRun",

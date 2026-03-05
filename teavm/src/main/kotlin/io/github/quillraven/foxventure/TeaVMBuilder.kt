@@ -1,5 +1,6 @@
 package io.github.quillraven.foxventure
 
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.github.xpenatan.gdx.teavm.backends.shared.config.AssetFileHandle
 import com.github.xpenatan.gdx.teavm.backends.shared.config.compiler.TeaCompiler
 import com.github.xpenatan.gdx.teavm.backends.web.config.backend.WebBackend
@@ -35,9 +36,6 @@ fun main(args: Array<String>) {
         .setSourceFilePolicy(if (debug) TeaVMSourceFilePolicy.COPY else TeaVMSourceFilePolicy.DO_NOTHING)
         .addSourceFileProvider(DirectorySourceFileProvider(File("../core/src/main/kotlin")))
         // Register any classes or packages that require reflection here like
-        // - custom scene2d styles
-        // - typing label effects
-        // - freetype font
-        // .addReflectionClass(FreeTypeFontGenerator::class.java)
+        .addReflectionClass(FreeTypeFontGenerator::class.java)
         .build(File("build/dist"))
 }
