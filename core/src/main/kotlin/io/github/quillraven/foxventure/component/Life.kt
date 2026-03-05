@@ -4,7 +4,8 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
 data class Life(
-    var amount: Int,
+    var maxAmount: Int,
+    var amount: Int = maxAmount,
 ) : Component<Life> {
     override fun type() = Life
 

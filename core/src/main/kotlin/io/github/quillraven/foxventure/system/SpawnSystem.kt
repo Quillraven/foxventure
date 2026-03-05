@@ -156,7 +156,9 @@ class SpawnSystem(
                 entity += Player()
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
-                gameViewModel.life = entity[Life].amount
+                val life = entity[Life]
+                gameViewModel.maxLife = life.maxAmount
+                gameViewModel.life = life.amount
             }
 
             "enemy" -> configureEnemy(entity, atlasKey)
