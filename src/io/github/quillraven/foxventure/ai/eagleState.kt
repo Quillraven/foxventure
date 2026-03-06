@@ -56,9 +56,9 @@ data object EagleStateAttack : FsmState {
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.smooth, 1.2f),
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 1.2f, Interpolation.pow3Out),
                     MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 0.3f),
-                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.smooth, 0.8f)
+                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, 0.8f, Interpolation.pow3In)
                 )
             )
         }
