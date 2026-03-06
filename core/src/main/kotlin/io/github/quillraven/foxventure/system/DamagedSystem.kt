@@ -12,6 +12,7 @@ import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.ui.GameViewModel
 import kotlin.math.max
@@ -51,14 +52,20 @@ class DamagedSystem(
                 entity.configure { it -= EntityTag.CLIMBING }
             }
 
-            // push entity back slightly
-            val direction = if (damaged.source.wasRemoved()) {
-                if (entity[Graphic].flip) 1f else -1f
-            } else {
-                if (damaged.source[Graphic].flip) -1f else 1f
-            }
-            entity.getOrNull(Velocity)?.let { velocity ->
-                velocity.current.x = 6f * direction
+            // push entity back
+            val velocity = entity.getOrNull(Velocity)
+            if (damaged.pushBackForce != 0f && velocity != null) {
+                val sourceTransform = damaged.source.getOrNull(Transform)
+                val direction = if (damaged.source.wasRemoved()) {
+                    if (entity[Graphic].flip) 1f else -1f
+                } else if (sourceTransform != null) {
+                    val sourceCenterX = sourceTransform.position.x + sourceTransform.size.x / 2f
+                    val entityCenterX = entity[Transform].position.x + entity[Transform].size.x / 2f
+                    if (sourceCenterX > entityCenterX) -1f else 1f
+                } else {
+                    if (damaged.source[Graphic].flip) -1f else 1f
+                }
+                velocity.current.x = damaged.pushBackForce * direction
             }
 
             // play sound
@@ -77,10 +84,19 @@ class DamagedSystem(
             damage: Int,
             invulnerableTime: Float,
             soundName: String,
+            pushBackForce: Float,
         ): Boolean {
             if (target.has(Damaged)) return false // target invulnerable -> ignore damage
 
-            target.configure { it += Damaged(source, invulnerableTime = invulnerableTime, damage, soundName) }
+            target.configure {
+                it += Damaged(
+                    source,
+                    invulnerableTime = invulnerableTime,
+                    damage,
+                    soundName,
+                    pushBackForce
+                )
+            }
             return true
         }
     }

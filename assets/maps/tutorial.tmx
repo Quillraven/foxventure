@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="24">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="33">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
  <tileset firstgid="1" source="sunny_land.tsx"/>
  <tileset firstgid="576" source="props.tsx"/>
- <tileset firstgid="580" source="objects.tsx"/>
+ <tileset firstgid="585" source="objects.tsx"/>
  <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
   <image source="../graphics/sky.png" width="384" height="240"/>
  </imagelayer>
@@ -28,13 +28,21 @@
   <object id="2" gid="577" x="48" y="115" width="51" height="113.62"/>
   <object id="3" gid="579" x="128" y="224" width="16" height="10"/>
   <object id="6" gid="577" x="560" y="131" width="51" height="113.62"/>
-  <object id="8" gid="580" x="0" y="114" width="33" height="32"/>
-  <object id="9" gid="581" x="80" y="80" width="15" height="13"/>
-  <object id="10" gid="581" x="112" y="80" width="15" height="13"/>
-  <object id="11" gid="581" x="240" y="112" width="15" height="13"/>
-  <object id="12" gid="581" x="128" y="176" width="15" height="13"/>
-  <object id="18" gid="582" x="80" y="113" width="41" height="30"/>
-  <object id="19" gid="582" x="240" y="145" width="41" height="30"/>
-  <object id="23" gid="582" x="464" y="209" width="41" height="30"/>
+  <object id="8" gid="585" x="0" y="114" width="33" height="32"/>
+  <object id="9" gid="586" x="80" y="80" width="15" height="13"/>
+  <object id="10" gid="586" x="112" y="80" width="15" height="13"/>
+  <object id="11" gid="586" x="240" y="112" width="15" height="13"/>
+  <object id="12" gid="586" x="128" y="176" width="15" height="13"/>
+  <object id="19" gid="587" x="240" y="145" width="41" height="30"/>
+  <object id="23" gid="587" x="464" y="209" width="41" height="30"/>
+  <object id="24" gid="580" x="304" y="225" width="15" height="10"/>
+  <object id="25" gid="580" x="320" y="225" width="15" height="10"/>
+  <object id="26" gid="581" x="256" y="168" width="15" height="9"/>
+  <object id="27" gid="581" x="272" y="168" width="15" height="9"/>
+  <object id="28" gid="583" x="192" y="224" width="18" height="20"/>
+  <object id="29" gid="584" x="224" y="144" width="16" height="15"/>
+  <object id="30" gid="584" x="336" y="144" width="16" height="15"/>
+  <object id="31" gid="584" x="448" y="208" width="16" height="15"/>
+  <object id="32" gid="582" x="224" y="225" width="17" height="12"/>
  </objectgroup>
 </map>

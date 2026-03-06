@@ -291,11 +291,46 @@ props/rock2
   orig: 66, 57
   offset: 0, 0
   index: -1
+props/shrooms
+  rotate: false
+  xy: 495, 174
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: -1
+props/sign
+  rotate: false
+  xy: 492, 235
+  size: 18, 20
+  orig: 18, 20
+  offset: 0, 0
+  index: -1
 props/skulls
   rotate: false
-  xy: 495, 170
+  xy: 495, 162
   size: 16, 10
   orig: 16, 10
+  offset: 0, 0
+  index: -1
+props/spike-skull
+  rotate: false
+  xy: 494, 148
+  size: 17, 12
+  orig: 17, 12
+  offset: 0, 0
+  index: -1
+props/spikes
+  rotate: false
+  xy: 496, 193
+  size: 15, 10
+  orig: 15, 10
+  offset: 0, 0
+  index: -1
+props/spikes-top
+  rotate: false
+  xy: 375, 154
+  size: 15, 9
+  orig: 15, 9
   offset: 0, 0
   index: -1
 sfx/dust1/idle
@@ -384,49 +419,49 @@ sfx/dust2/idle
   index: 2
 sfx/dust2/idle
   rotate: false
-  xy: 435, 145
+  xy: 392, 145
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 3
 sfx/dust2/idle
   rotate: false
-  xy: 379, 6
+  xy: 426, 145
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 4
 sfx/dust2/idle
   rotate: false
-  xy: 379, 127
+  xy: 460, 145
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 5
 sfx/dust2/idle
   rotate: false
-  xy: 379, 145
+  xy: 379, 127
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 6
 sfx/dust2/idle
   rotate: false
-  xy: 384, 109
+  xy: 413, 127
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 7
 sfx/dust2/idle
   rotate: false
-  xy: 384, 91
+  xy: 447, 127
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: 8
 sfx/dust2/idle
   rotate: false
-  xy: 386, 73
+  xy: 384, 109
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
@@ -461,35 +496,35 @@ sfx/enemy-death/idle
   index: 3
 sfx/gem/idle
   rotate: false
-  xy: 492, 242
+  xy: 496, 220
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 0
 sfx/gem/idle
   rotate: false
-  xy: 492, 227
+  xy: 496, 205
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 1
 sfx/gem/idle
   rotate: false
-  xy: 496, 212
+  xy: 384, 94
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 2
 sfx/gem/idle
   rotate: false
-  xy: 496, 197
+  xy: 401, 94
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 3
 sfx/gem/idle
   rotate: false
-  xy: 496, 182
+  xy: 481, 130
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
