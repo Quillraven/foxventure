@@ -14,6 +14,7 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.ai.EagleStateIdle
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
@@ -240,8 +241,9 @@ class SpawnSystem(
         entity: Entity,
         atlasKey: String
     ) {
-        when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
-            "mushroom" -> entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
+        entity += when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
+            "mushroom" -> Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
+            "eagle" -> Fsm(FleksStateMachine(world, entity, EagleStateIdle))
 
             else -> gdxError("No enemy state for enemy $enemyType")
         }
