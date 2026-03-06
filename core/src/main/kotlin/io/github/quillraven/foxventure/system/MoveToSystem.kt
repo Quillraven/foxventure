@@ -28,7 +28,7 @@ class MoveToSystem : IteratingSystem(
         val progress = MathUtils.clamp(moveTo.elapsed / point.duration, 0f, 1f)
         // update position
         position.x = point.interpolation.apply(moveTo.startPosition.x, point.target.x, progress)
-        position.y = point.interpolation.apply(moveTo.startPosition.y, point.target.y, progress)
+        position.y = (point.interpolationY ?: point.interpolation).apply(moveTo.startPosition.y, point.target.y, progress)
 
         if (progress >= 1f) {
             moveTo.pointIdx++

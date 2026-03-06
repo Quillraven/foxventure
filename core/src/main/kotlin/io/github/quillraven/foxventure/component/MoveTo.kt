@@ -11,6 +11,7 @@ data class MoveToPoint(
     val target: Vector2,
     val interpolation: Interpolation,
     val duration: Float,
+    val interpolationY: Interpolation? = null,
 )
 
 data class MoveTo(
