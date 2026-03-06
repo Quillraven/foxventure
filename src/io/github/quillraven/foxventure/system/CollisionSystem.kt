@@ -107,56 +107,96 @@ class CollisionSystem(
         otherType: String
     ) {
         when (otherType) {
-            "gem" -> {
-                val playerComponent = player[Player]
-                playerComponent.gems++
-                gameViewModel.gems = playerComponent.gems
-
-                val transform = other[Transform]
-                spawnPickupSfx(transform)
-
-                other.remove()
-                audioService.playSound("pickup.wav")
-            }
-
-            "damage" -> {
-                val (source, damageAmount) = other[Damage]
-                if (world.damageEntity(source, target = player, damageAmount, invulnerableTime = 1f, "hurt2.wav")) {
-                    other.remove()
-                }
-            }
-
-            "enemy" -> {
-                val playerBottom = playerTransform.position.y + playerCollBox.y
-                val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
-
-                if (playerBottom >= enemyTop) {
-                    // player stomps on an enemy from above -> apply upwards impulse
-                    val jumpPressed = player[Controller].hasCommand(Command.JUMP)
-                    val physics = player[Physics]
-                    player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
-
-                    // damage enemy
-                    world.damageEntity(
-                        source = player,
-                        target = other,
-                        damage = 1,
-                        invulnerableTime = 0.5f,
-                        soundName = "hurt1.wav"
-                    )
-                    return
-                }
-
-                // the player collides from the side or below - the player gets damaged
-                world.damageEntity(
-                    source = other,
-                    target = player,
-                    damage = 1,
-                    invulnerableTime = 1f,
-                    soundName = "hurt2.wav"
-                )
-            }
+            "gem" -> onPlayerGemCollision(player, other)
+            "damage" -> onPlayerDamageCollision(player, other)
+            "spike" -> onPlayerSpikeCollision(player, other)
+            "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollBox, otherTransform, otherCollBox)
         }
+    }
+
+    private fun onPlayerSpikeCollision(
+        player: Entity,
+        other: Entity
+    ) {
+        world.damageEntity(
+            source = other,
+            target = player,
+            damage = 1,
+            invulnerableTime = 2.5f,
+            stunDuration = 0.25f,
+            soundName = "hurt2.wav",
+            pushBackForce = 8f,
+        )
+    }
+
+    private fun onPlayerEnemyCollision(
+        player: Entity,
+        other: Entity,
+        playerTransform: Transform,
+        playerCollBox: Rect,
+        otherTransform: Transform,
+        otherCollBox: Rect,
+    ) {
+        val playerBottom = playerTransform.position.y + playerCollBox.y
+        val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
+
+        if (playerBottom >= enemyTop) {
+            // player stomps on an enemy from above -> apply upwards impulse
+            val jumpPressed = player[Controller].hasCommand(Command.JUMP)
+            val physics = player[Physics]
+            player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
+
+            // damage enemy
+            world.damageEntity(
+                source = player,
+                target = other,
+                damage = 1,
+                invulnerableTime = 0.5f,
+                stunDuration = 0.25f,
+                soundName = "hurt1.wav",
+                pushBackForce = 0f,
+            )
+            return
+        }
+
+        // the player collides from the side or below - the player gets damaged
+        world.damageEntity(
+            source = other,
+            target = player,
+            damage = 1,
+            invulnerableTime = 2f,
+            stunDuration = 0.5f,
+            soundName = "hurt2.wav",
+            pushBackForce = 7f,
+        )
+    }
+
+    private fun onPlayerDamageCollision(player: Entity, other: Entity) {
+        val (source, damageAmount) = other[Damage]
+        if (world.damageEntity(
+                source,
+                target = player,
+                damageAmount,
+                invulnerableTime = 2f,
+                stunDuration = 0.5f,
+                soundName = "hurt2.wav",
+                pushBackForce = 6f
+            )
+        ) {
+            other.remove()
+        }
+    }
+
+    private fun onPlayerGemCollision(player: Entity, other: Entity) {
+        val playerComponent = player[Player]
+        playerComponent.gems++
+        gameViewModel.gems = playerComponent.gems
+
+        val transform = other[Transform]
+        spawnPickupSfx(transform)
+
+        other.remove()
+        audioService.playSound("pickup.wav")
     }
 
     private fun spawnPickupSfx(transform: Transform) {

@@ -21,25 +21,34 @@ class GameView(
     )
     private val lifeGroup: Table
     private val gemLabel: Label
+    private val creditsLabel: Label
 
     init {
         setFillParent(true)
         top().left()
 
-        val gemImage = Image(TextureRegionDrawable(skin.atlas.findRegion("gem")), Scaling.fit)
-        add(gemImage).padLeft(2f).size(lifeDrawables[0].minWidth, lifeDrawables[0].minHeight)
+        // credits
+        val creditsImage = Image(TextureRegionDrawable(skin.atlas.findRegion("avatar-fox")), Scaling.fit)
+        add(creditsImage).padLeft(2f)
+        creditsLabel = Label("x0", skin, "small_border")
+        add(creditsLabel).padLeft(2f).fillX().bottom().padBottom(2f)
 
+        // gems
+        val gemImage = Image(TextureRegionDrawable(skin.atlas.findRegion("gem")), Scaling.fit)
+        add(gemImage).padLeft(10f).size(lifeDrawables[0].minWidth, lifeDrawables[0].minHeight)
         gemLabel = Label("x0", skin, "small_border")
         add(gemLabel).padLeft(2f).fillX().bottom().padBottom(2f)
 
+        // life
         lifeGroup = Table(skin).also { it.top() }
-        add(lifeGroup).padLeft(10f)
+        add(lifeGroup).padLeft(20f)
 
         viewModel.onLifeChanged = this::onLifeChanged
         viewModel.onGemsChanged = { gems -> gemLabel.setText("x$gems") }
+        viewModel.onCreditsChanged = { credits -> creditsLabel.setText("x$credits") }
     }
 
-    private fun onLifeChanged(life: Int, maxLife: Int) {
+    private fun onLifeChanged(life: Float, maxLife: Int) {
         val numHearts = (maxLife + 3) / 4
 
         if (lifeGroup.children.size != numHearts) {
@@ -54,8 +63,9 @@ class GameView(
         }
 
         // Update each heart's drawable
+        val lifeInt = life.toInt()
         lifeGroup.children.forEachIndexed { index, image ->
-            val heartLife = (life - index * 4).coerceIn(0, 4)
+            val heartLife = (lifeInt - index * 4).coerceIn(0, 4)
             (image as Image).drawable = lifeDrawables[heartLife]
         }
     }

@@ -5,8 +5,8 @@ import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Collision
-import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.Fsm
+import io.github.quillraven.foxventure.component.Stun
 import io.github.quillraven.foxventure.component.Velocity
 
 data object PlayerStateIdle : FsmState {
@@ -18,8 +18,8 @@ data object PlayerStateIdle : FsmState {
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
 
-        if (entity has Damaged) {
-            entity[Fsm].state.changeState(PlayerStateHurt)
+        if (entity has Stun) {
+            entity[Fsm].state.changeState(PlayerStateStunned)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (velocity.x != 0f) {
@@ -40,8 +40,8 @@ data object PlayerStateRun : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val velocity = entity[Velocity]
 
-        if (entity has Damaged) {
-            entity[Fsm].state.changeState(PlayerStateHurt)
+        if (entity has Stun) {
+            entity[Fsm].state.changeState(PlayerStateStunned)
         } else if (velocity.current.x == 0f) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         } else if (velocity.current.y > 0f) {
@@ -64,8 +64,8 @@ data object PlayerStateJump : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
 
-        if (entity has Damaged) {
-            entity[Fsm].state.changeState(PlayerStateHurt)
+        if (entity has Stun) {
+            entity[Fsm].state.changeState(PlayerStateStunned)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (entity[Velocity].current.y <= 0f) {
@@ -82,8 +82,8 @@ data object PlayerStateFall : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
 
-        if (entity has Damaged) {
-            entity[Fsm].state.changeState(PlayerStateHurt)
+        if (entity has Stun) {
+            entity[Fsm].state.changeState(PlayerStateStunned)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
         } else if (collision.isGrounded) {
@@ -105,8 +105,9 @@ data object PlayerStateClimb : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val velocityY = entity[Velocity].current.y
-        if (entity has Damaged) {
-            entity[Fsm].state.changeState(PlayerStateHurt)
+
+        if (entity has Stun) {
+            entity[Fsm].state.changeState(PlayerStateStunned)
         } else if (!entity[Collision].isOnLadder) {
             when {
                 velocityY < 0f -> entity[Fsm].state.changeState(PlayerStateFall)
@@ -119,13 +120,13 @@ data object PlayerStateClimb : FsmState {
     }
 }
 
-data object PlayerStateHurt : FsmState {
+data object PlayerStateStunned : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.HURT)
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity hasNo Damaged) {
+        if (entity hasNo Stun) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         }
     }
