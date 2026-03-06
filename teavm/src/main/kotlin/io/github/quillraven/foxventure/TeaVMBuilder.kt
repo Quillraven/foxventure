@@ -35,7 +35,7 @@ fun main(args: Array<String>) {
         .setSourceMapsFileGenerated(debug)
         .setSourceFilePolicy(if (debug) TeaVMSourceFilePolicy.COPY else TeaVMSourceFilePolicy.DO_NOTHING)
         .addSourceFileProvider(DirectorySourceFileProvider(File("../core/src/main/kotlin")))
-        // Register any classes or packages that require reflection here like
+        // Register any classes or packages that require reflection here
         .addReflectionClass(FreeTypeFontGenerator::class.java)
         .build(File("build/dist"))
 }
