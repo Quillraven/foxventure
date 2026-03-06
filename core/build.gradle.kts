@@ -19,6 +19,8 @@ dependencies {
     implementation(libs.ktxI18n)
     implementation(libs.fleks)
     implementation(libs.stripeFreetype)
+    implementation(libs.textraTypist)
+    implementation(libs.freeTypist)
 
     testImplementation(kotlin("test"))
 }

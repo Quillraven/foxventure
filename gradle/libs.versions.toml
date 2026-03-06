@@ -8,6 +8,8 @@ fleksVersion = "2.13-SNAPSHOT"
 gdxTeaVmVersion = "1.5.2"
 construoVersion = "2.1.0"
 stripeVersion = "2.0.0"
+textraTypistVersion = "2.2.13"
+freeTypistVersion = "2.2.13.0"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
@@ -42,6 +44,10 @@ gdxTeaVmBackend = { module = "com.github.xpenatan.gdx-teavm:backend-web", versio
 gdxTeaVmFreetype = { module = "com.github.xpenatan.gdx-teavm:gdx-freetype-teavm", version.ref = "gdxTeaVmVersion" }
 # stripe
 stripeFreetype = { module = "com.github.raeleus.stripe:freetype", version.ref = "stripeVersion" }
+# textratypist
+textraTypist = { module = "com.github.tommyettinger:textratypist", version.ref = "textraTypistVersion" }
+# freetypist
+freeTypist = { module = "com.github.tommyettinger:freetypist", version.ref = "freeTypistVersion" }
 
 [bundles]
 ktxBaseBundle = ["ktxActors", "ktxApp", "ktxAssets", "ktxCollections", "ktxGraphics", "ktxLog", "ktxMath"]
