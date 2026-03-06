@@ -153,12 +153,16 @@ class SpawnSystem(
         when (tiledType) {
             "player" -> {
                 entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                entity += Player()
+                val playerCmp = Player()
+                entity += playerCmp
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
+
                 val life = entity[Life]
                 gameViewModel.maxLife = life.maxAmount
                 gameViewModel.life = life.amount
+                gameViewModel.gems = playerCmp.gems
+                gameViewModel.credits = playerCmp.credits
             }
 
             "enemy" -> configureEnemy(entity, atlasKey)

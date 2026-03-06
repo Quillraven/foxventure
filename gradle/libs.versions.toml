@@ -24,7 +24,6 @@ ktxCollections = { module = "io.github.libktx:ktx-collections", version.ref = "k
 ktxGraphics = { module = "io.github.libktx:ktx-graphics", version.ref = "ktxVersion" }
 ktxLog = { module = "io.github.libktx:ktx-log", version.ref = "ktxVersion" }
 ktxMath = { module = "io.github.libktx:ktx-math", version.ref = "ktxVersion" }
-ktxScene2d = { module = "io.github.libktx:ktx-scene2d", version.ref = "ktxVersion" }
 # freetype
 gdxFreetypePlatform = { module = "com.badlogicgames.gdx:gdx-freetype-platform", version.ref = "gdxVersion" }
 gdxFreetype = { module = "com.badlogicgames.gdx:gdx-freetype", version.ref = "gdxVersion" }
@@ -45,7 +44,7 @@ gdxTeaVmFreetype = { module = "com.github.xpenatan.gdx-teavm:gdx-freetype-teavm"
 stripeFreetype = { module = "com.github.raeleus.stripe:freetype", version.ref = "stripeVersion" }
 
 [bundles]
-ktxBaseBundle = ["ktxActors", "ktxApp", "ktxAssets", "ktxCollections", "ktxGraphics", "ktxLog", "ktxMath", "ktxScene2d"]
+ktxBaseBundle = ["ktxActors", "ktxApp", "ktxAssets", "ktxCollections", "ktxGraphics", "ktxLog", "ktxMath"]
 freetypeBundle = ["gdxFreetype", "ktxFreetype"]
 aiBundle = ["gdxAi", "ktxAi"]
 

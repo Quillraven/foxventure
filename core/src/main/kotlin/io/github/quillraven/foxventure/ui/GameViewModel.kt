@@ -25,7 +25,17 @@ class GameViewModel {
             }
         }
 
+    var credits: Int = 0
+        set(value) {
+            if (field != value) {
+                field = value
+                onCreditsChanged?.invoke(field)
+            }
+        }
+
     var onLifeChanged: ((life: Int, maxLife: Int) -> Unit)? = null
 
     var onGemsChanged: ((gems: Int) -> Unit)? = null
+
+    var onCreditsChanged: ((credits: Int) -> Unit)? = null
 }
