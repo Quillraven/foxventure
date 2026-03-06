@@ -17,6 +17,10 @@ class ControllerSystem : IteratingSystem(family = family { all(Controller, Entit
         Input.Keys.A to Command.MOVE_LEFT,
         Input.Keys.S to Command.MOVE_DOWN,
         Input.Keys.D to Command.MOVE_RIGHT,
+        Input.Keys.UP to Command.MOVE_UP,
+        Input.Keys.LEFT to Command.MOVE_LEFT,
+        Input.Keys.DOWN to Command.MOVE_DOWN,
+        Input.Keys.RIGHT to Command.MOVE_RIGHT,
         Input.Keys.SPACE to Command.JUMP,
     )
     private val commandsToAdd = gdxArrayOf<Command>()
