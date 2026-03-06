@@ -22,7 +22,7 @@ data object EagleStateIdle : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val fsm = entity[Fsm]
         val target = entity[ProximityDetector].target
-        if (fsm.state.stateTime < 2f || target == Entity.NONE || target.wasRemoved()) {
+        if (fsm.state.stateTime < 2.5f || target == Entity.NONE || target.wasRemoved()) {
             return
         }
 
@@ -34,14 +34,20 @@ data object EagleStateAttack : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.ATTACK)
 
-        val detector = entity[ProximityDetector]
-        val target = detector.target
-        val eagleTransform = entity[Transform]
+        val target = entity[ProximityDetector].target
+        if (target == Entity.NONE || target.wasRemoved() || target hasNo Collision) {
+            // e.g., player died already -> go back to idle
+            entity[Fsm].state.changeState(EagleStateIdle)
+            return
+        }
+
         val targetTransform = target[Transform]
         val targetCollision = target[Collision]
 
+        val eagleTransform = entity[Transform]
         val eagleX = eagleTransform.position.x
         val eagleY = eagleTransform.position.y
+
         val targetCenterX = targetTransform.position.x + targetCollision.box.x + targetCollision.box.width * 0.5f
         val targetY = targetTransform.position.y + targetCollision.box.y + targetCollision.box.height * 0.25f
         val distanceX = targetCenterX - eagleX
@@ -50,8 +56,9 @@ data object EagleStateAttack : FsmState {
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.swingOut, 1f),
-                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.swingIn, 0.8f)
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.smooth, 1.2f),
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 0.3f),
+                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.smooth, 0.8f)
                 )
             )
         }

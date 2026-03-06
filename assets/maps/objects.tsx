@@ -58,7 +58,7 @@
  <tile id="3" type="enemy">
   <properties>
    <property name="life" type="int" value="2"/>
-   <property name="proximity_range" type="float" value="6"/>
+   <property name="proximity_range" type="float" value="7"/>
   </properties>
   <image source="../graphics/sprites/characters/eagle/idle_0.png" width="40" height="41"/>
   <objectgroup draworder="index" id="2">
