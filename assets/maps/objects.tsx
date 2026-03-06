@@ -30,6 +30,12 @@
      <property name="range" type="float" value="1.5"/>
     </properties>
    </property>
+   <property name="follow" type="class" propertytype="Follow">
+    <properties>
+     <property name="break_range" type="float" value="5"/>
+     <property name="range" type="float" value="4"/>
+    </properties>
+   </property>
    <property name="life" type="int" value="1"/>
    <property name="physics" type="class" propertytype="Physics">
     <properties>
@@ -37,13 +43,7 @@
      <property name="max_speed" type="float" value="1"/>
     </properties>
    </property>
-   <property name="proximity" type="class" propertytype="Proximity">
-    <properties>
-     <property name="detector_range" type="float" value="4.5"/>
-     <property name="follow_break_range" type="float" value="5"/>
-     <property name="follow_range" type="float" value="4"/>
-    </properties>
-   </property>
+   <property name="proximity_range" type="float" value="4.5"/>
    <property name="wander" type="class" propertytype="Wander">
     <properties>
      <property name="distance" type="float" value="3"/>
@@ -57,25 +57,8 @@
  </tile>
  <tile id="3" type="enemy">
   <properties>
-   <property name="attack" type="class" propertytype="Attack">
-    <properties>
-     <property name="damage" type="int" value="1"/>
-    </properties>
-   </property>
    <property name="life" type="int" value="2"/>
-   <property name="physics" type="class" propertytype="Physics">
-    <properties>
-     <property name="air_control" type="float" value="1"/>
-     <property name="climb_speed" type="float" value="0"/>
-     <property name="gravity" type="float" value="0"/>
-     <property name="jump_impulse" type="float" value="-16"/>
-    </properties>
-   </property>
-   <property name="proximity" type="class" propertytype="Proximity">
-    <properties>
-     <property name="detector_range" type="float" value="6"/>
-    </properties>
-   </property>
+   <property name="proximity_range" type="float" value="6"/>
   </properties>
   <image source="../graphics/sprites/characters/eagle/idle_0.png" width="40" height="41"/>
   <objectgroup draworder="index" id="2">
