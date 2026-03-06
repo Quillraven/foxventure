@@ -7,6 +7,7 @@ import com.github.quillraven.fleks.Entity
 data class Damaged(
     val source: Entity,
     val invulnerableTime: Float, // how long do you remain invulnerable until the next damage can be applied?
+    var stunDuration: Float, // how long are you not able to move?
     val damage: Int,
     val soundName: String,
     val pushBackForce: Float,

@@ -70,7 +70,7 @@ class GroundMoveSystem(
     private fun getInputX(entity: Entity): Float {
         val controller = entity.getOrNull(Controller)
         val damaged = entity.getOrNull(Damaged)
-        if (controller != null && damaged == null) {
+        if (controller != null && (damaged == null || damaged.stunDuration <= 0f)) {
             var input = 0f
             if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
             if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f

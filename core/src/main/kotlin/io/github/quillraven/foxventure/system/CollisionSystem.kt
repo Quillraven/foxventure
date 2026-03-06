@@ -122,7 +122,8 @@ class CollisionSystem(
             source = other,
             target = player,
             damage = 1,
-            invulnerableTime = 0.75f,
+            invulnerableTime = 2.5f,
+            stunDuration = 0.25f,
             soundName = "hurt2.wav",
             pushBackForce = 8f,
         )
@@ -151,6 +152,7 @@ class CollisionSystem(
                 target = other,
                 damage = 1,
                 invulnerableTime = 0.5f,
+                stunDuration = 0.25f,
                 soundName = "hurt1.wav",
                 pushBackForce = 0f,
             )
@@ -162,7 +164,8 @@ class CollisionSystem(
             source = other,
             target = player,
             damage = 1,
-            invulnerableTime = 1f,
+            invulnerableTime = 2f,
+            stunDuration = 0.5f,
             soundName = "hurt2.wav",
             pushBackForce = 7f,
         )
@@ -174,8 +177,9 @@ class CollisionSystem(
                 source,
                 target = player,
                 damageAmount,
-                invulnerableTime = 1f,
-                "hurt2.wav",
+                invulnerableTime = 2f,
+                stunDuration = 0.5f,
+                soundName = "hurt2.wav",
                 pushBackForce = 6f
             )
         ) {

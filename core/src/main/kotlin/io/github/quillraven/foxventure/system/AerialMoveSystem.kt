@@ -59,7 +59,8 @@ class AerialMoveSystem(
         val landingDustThresholdSpeed = -7f
         val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
         val isPlayer = entity has Player
-        val isDamaged = entity has Damaged
+        val damaged = entity.getOrNull(Damaged)
+        val isDamaged = damaged != null && damaged.stunDuration > 0f
 
         updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, isPlayer, isDamaged)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)

@@ -17,8 +17,9 @@ data object PlayerStateIdle : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
         val velocity = entity[Velocity].current
+        val damaged = entity.getOrNull(Damaged)
 
-        if (entity has Damaged) {
+        if (damaged != null && damaged.stunDuration > 0f) {
             entity[Fsm].state.changeState(PlayerStateHurt)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
@@ -39,8 +40,9 @@ data object PlayerStateRun : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val velocity = entity[Velocity]
+        val damaged = entity.getOrNull(Damaged)
 
-        if (entity has Damaged) {
+        if (damaged != null && damaged.stunDuration > 0f) {
             entity[Fsm].state.changeState(PlayerStateHurt)
         } else if (velocity.current.x == 0f) {
             entity[Fsm].state.changeState(PlayerStateIdle)
@@ -63,8 +65,9 @@ data object PlayerStateJump : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
+        val damaged = entity.getOrNull(Damaged)
 
-        if (entity has Damaged) {
+        if (damaged != null && damaged.stunDuration > 0f) {
             entity[Fsm].state.changeState(PlayerStateHurt)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
@@ -81,8 +84,9 @@ data object PlayerStateFall : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val collision = entity[Collision]
+        val damaged = entity.getOrNull(Damaged)
 
-        if (entity has Damaged) {
+        if (damaged != null && damaged.stunDuration > 0f) {
             entity[Fsm].state.changeState(PlayerStateHurt)
         } else if (collision.isOnLadder) {
             entity[Fsm].state.changeState(PlayerStateClimb)
@@ -105,7 +109,9 @@ data object PlayerStateClimb : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         val velocityY = entity[Velocity].current.y
-        if (entity has Damaged) {
+        val damaged = entity.getOrNull(Damaged)
+
+        if (damaged != null && damaged.stunDuration > 0f) {
             entity[Fsm].state.changeState(PlayerStateHurt)
         } else if (!entity[Collision].isOnLadder) {
             when {
@@ -125,7 +131,8 @@ data object PlayerStateHurt : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity hasNo Damaged) {
+        val damaged = entity.getOrNull(Damaged)
+        if (damaged == null || damaged.stunDuration <= 0f) {
             entity[Fsm].state.changeState(PlayerStateIdle)
         }
     }

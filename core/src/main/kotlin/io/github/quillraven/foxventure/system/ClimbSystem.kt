@@ -22,7 +22,7 @@ class ClimbSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(
-    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(Damaged) },
+    family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE) },
 ) {
     override fun onTick() {
         repeat(physicsTimer.numSteps) {
@@ -35,7 +35,7 @@ class ClimbSystem(
         val collBox = collision.box
         val physics = entity[Physics]
         val controller = entity.getOrNull(Controller)
-        val inputY = getInputY(controller)
+        val inputY = getInputY(entity, controller)
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
 
         // first check if we should start climbing
@@ -149,8 +149,12 @@ class ClimbSystem(
         return input
     }
 
-    private fun getInputY(controller: Controller?): Float {
+    private fun getInputY(entity: Entity, controller: Controller?): Float {
         if (controller == null) return 0f
+
+        val damaged = entity.getOrNull(Damaged)
+        if (damaged != null && damaged.stunDuration > 0f) return 0f
+
         var input = 0f
         if (controller.hasCommand(Command.MOVE_UP)) input += 1f
         if (controller.hasCommand(Command.MOVE_DOWN)) input -= 1f
