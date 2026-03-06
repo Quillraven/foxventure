@@ -42,6 +42,35 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 5,
+            "members": [
+                {
+                    "name": "break_range",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "range",
+                    "type": "float",
+                    "value": 0
+                },
+                {
+                    "name": "stop_at_cliff",
+                    "type": "bool",
+                    "value": true
+                }
+            ],
+            "name": "Follow",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 1,
             "members": [
                 {
@@ -111,40 +140,6 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 3,
-            "members": [
-                {
-                    "name": "detector_range",
-                    "type": "float",
-                    "value": 0
-                },
-                {
-                    "name": "follow_break_range",
-                    "type": "float",
-                    "value": 0
-                },
-                {
-                    "name": "follow_range",
-                    "type": "float",
-                    "value": 0
-                },
-                {
-                    "name": "stop_at_cliff",
-                    "type": "bool",
-                    "value": true
-                }
-            ],
-            "name": "Proximity",
-            "type": "class",
-            "useAs": [
-                "property",
-                "tile",
-                "project"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
             "id": 4,
             "members": [
                 {
@@ -162,7 +157,6 @@
             "type": "class",
             "useAs": [
                 "property",
-                "layer",
                 "tile",
                 "project"
             ]

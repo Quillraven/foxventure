@@ -14,6 +14,7 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
+import io.github.quillraven.foxventure.ai.EagleStateAttack
 import io.github.quillraven.foxventure.ai.EagleStateIdle
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.MushroomStateIdle
@@ -90,12 +91,11 @@ class SpawnSystem(
                 it += Collision(Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle))
             }
 
-            graphicEntityCfg(atlasKey, it, tile)
+            graphicEntityCfg(tile, it, atlasKey)
             physicsEntityCfg(tile, it, x, y)
             attackEntityCfg(tile, it)
-            proximityAndFollowCfg(tile, it)
             wanderCfg(tile, it)
-            typeSpecificEntityCfg(tiledType, it, atlasKey)
+            typeSpecificEntityCfg(tile, it, atlasKey, tiledType)
         }
     }
 
@@ -107,28 +107,6 @@ class SpawnSystem(
             val distance = wanderProps["distance"] as Float
             val (position, size) = entity[Transform]
             entity += Wander(distance, position.x + size.x * 0.5f, stopAtCliff = true)
-        }
-    }
-
-    private fun EntityCreateContext.proximityAndFollowCfg(
-        tile: TiledMapTile,
-        entity: Entity,
-    ) {
-        (tile.properties.get("proximity") as? MapProperties)?.let { proximityProps ->
-            val proximityRange = proximityProps["detector_range"] as Float
-            entity += ProximityDetector(
-                squaredRange = proximityRange * proximityRange,
-                predicate = { target -> target has Player },
-                onDetect = { source, target -> source[Follow].target = target },
-                onBreak = { source, _ -> source[Follow].target = Entity.NONE }
-            )
-            val breakDistance = proximityProps["follow_break_range"] as Float
-            val followRange = proximityProps["follow_range"] as Float
-            entity += Follow(
-                squaredDistance = followRange * followRange,
-                squaredBreakDistance = breakDistance * breakDistance,
-                stopAtCliff = proximityProps["stop_at_cliff"] as Boolean,
-            )
         }
     }
 
@@ -147,9 +125,10 @@ class SpawnSystem(
 
 
     private fun EntityCreateContext.typeSpecificEntityCfg(
-        tiledType: String,
+        tile: TiledMapTile,
         entity: Entity,
-        atlasKey: String
+        atlasKey: String,
+        tiledType: String,
     ) {
         when (tiledType) {
             "player" -> {
@@ -166,14 +145,14 @@ class SpawnSystem(
                 gameViewModel.credits = playerCmp.credits
             }
 
-            "enemy" -> configureEnemy(entity, atlasKey)
+            "enemy" -> configureEnemy(tile, entity, atlasKey)
         }
     }
 
     private fun EntityCreateContext.graphicEntityCfg(
-        atlasKey: String,
+        tile: TiledMapTile,
         entity: Entity,
-        tile: TiledMapTile
+        atlasKey: String,
     ) {
         // graphic, animation
         val regions = objectsAtlas.findRegions(atlasKey)
@@ -238,12 +217,41 @@ class SpawnSystem(
     }
 
     private fun EntityCreateContext.configureEnemy(
+        tile: TiledMapTile,
         entity: Entity,
-        atlasKey: String
+        atlasKey: String,
     ) {
-        entity += when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
-            "mushroom" -> Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
-            "eagle" -> Fsm(FleksStateMachine(world, entity, EagleStateIdle))
+        val proximityRange = tile.property("proximity_range", 0f)
+
+        when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
+            "mushroom" -> {
+                entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
+                entity += ProximityDetector(
+                    squaredRange = proximityRange * proximityRange,
+                    predicate = { target -> target has Player },
+                    onDetect = { source, target -> source[Follow].target = target },
+                    onBreak = { source, _ -> source[Follow].target = Entity.NONE }
+                )
+
+                val followProps = tile.property<MapProperties>("follow")
+                val range = followProps["range"] as Float
+                val breakRange = followProps["break_range"] as Float
+                entity += Follow(
+                    squaredDistance = range * range,
+                    squaredBreakDistance = breakRange * breakRange,
+                    stopAtCliff = followProps["stop_at_cliff"] as Boolean,
+                )
+            }
+
+            "eagle" -> {
+                entity += Fsm(FleksStateMachine(world, entity, EagleStateIdle))
+                entity += ProximityDetector(
+                    squaredRange = proximityRange * proximityRange,
+                    predicate = { target -> target has Player },
+                    onDetect = { source, _ -> source[Fsm].state.changeState(EagleStateAttack) },
+                    onBreak = { _, _ -> }
+                )
+            }
 
             else -> gdxError("No enemy state for enemy $enemyType")
         }

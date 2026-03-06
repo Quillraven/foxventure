@@ -106,8 +106,8 @@ i:b:/sound/hurt1.wav:6800:1
 i:b:/sound/pickup.wav:31592:1
 i:b:/music/game_over.mp3:73920:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
-i:b:/maps/foxventure.tiled-project:4527:1
-i:b:/maps/objects.tsx:3325:1
+i:b:/maps/foxventure.tiled-project:4334:1
+i:b:/maps/objects.tsx:2669:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/props.tsx:1412:1
 i:b:/maps/tutorial.tmx:2937:1
