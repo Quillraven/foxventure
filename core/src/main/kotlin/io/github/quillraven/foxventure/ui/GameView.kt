@@ -48,7 +48,7 @@ class GameView(
         viewModel.onCreditsChanged = { credits -> creditsLabel.setText("x$credits") }
     }
 
-    private fun onLifeChanged(life: Int, maxLife: Int) {
+    private fun onLifeChanged(life: Float, maxLife: Int) {
         val numHearts = (maxLife + 3) / 4
 
         if (lifeGroup.children.size != numHearts) {
@@ -63,8 +63,9 @@ class GameView(
         }
 
         // Update each heart's drawable
+        val lifeInt = life.toInt()
         lifeGroup.children.forEachIndexed { index, image ->
-            val heartLife = (life - index * 4).coerceIn(0, 4)
+            val heartLife = (lifeInt - index * 4).coerceIn(0, 4)
             (image as Image).drawable = lifeDrawables[heartLife]
         }
     }
