@@ -6,7 +6,7 @@ i:b:/ui/graphics/life-2.png:413:1
 i:b:/ui/graphics/gem.png:1091:1
 i:b:/ui/graphics/life-1.png:384:1
 i:b:/ui/graphics/avatar-fox.png:456:1
-i:b:/ui/ui.json:1061:1
+i:b:/ui/ui.json:1062:1
 i:b:/ui/ui.png:1272:1
 i:b:/ui/ui.atlas:723:1
 i:b:/shader/default.vert:315:1
