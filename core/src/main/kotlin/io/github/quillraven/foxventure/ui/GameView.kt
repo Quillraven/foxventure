@@ -35,7 +35,7 @@ class GameView(
 
         // gems
         val gemImage = Image(TextureRegionDrawable(skin.atlas.findRegion("gem")), Scaling.fit)
-        add(gemImage).padLeft(10f).size(lifeDrawables[0].minWidth, lifeDrawables[0].minHeight)
+        add(gemImage).padLeft(10f)
         gemLabel = Label("x0", skin, "small_border")
         add(gemLabel).padLeft(2f).fillX().bottom().padBottom(2f)
 
