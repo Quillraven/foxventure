@@ -117,7 +117,7 @@ class SpawnSystem(
             val proximityRange = proximityProps["detector_range"] as Float
             entity += ProximityDetector(
                 squaredRange = proximityRange * proximityRange,
-                predicate = { target -> target.has(Player) },
+                predicate = { target -> target has Player },
                 onDetect = { source, target -> source[Follow].target = target },
                 onBreak = { source, _ -> source[Follow].target = Entity.NONE }
             )

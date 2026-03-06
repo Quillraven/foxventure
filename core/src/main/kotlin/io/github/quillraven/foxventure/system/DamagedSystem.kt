@@ -10,12 +10,13 @@ import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
+import io.github.quillraven.foxventure.component.Invulnerable
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.Stun
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.ui.GameViewModel
-import kotlin.math.max
 
 class DamagedSystem(
     private val audioService: AudioService = inject(),
@@ -25,26 +26,14 @@ class DamagedSystem(
 ) {
     override fun onTickEntity(entity: Entity) {
         val damaged = entity[Damaged]
-        if (damaged.timer >= damaged.invulnerableTime) {
-            entity.configure { it -= Damaged }
-            return
-        }
-
-        if (damaged.timer == 0f) {
-            onDamageTaken(entity, damaged)
-            return
-        }
-
-        damaged.timer += deltaTime
-        damaged.stunDuration -= deltaTime
+        onDamageTaken(entity, damaged)
+        entity.configure { it -= Damaged }
     }
 
     private fun onDamageTaken(
         entity: Entity,
         damaged: Damaged,
     ) {
-        damaged.timer = max(0.001f, deltaTime)
-        damaged.stunDuration -= damaged.timer
         val life = entity[Life]
         life.amount -= damaged.damage
 
@@ -53,11 +42,6 @@ class DamagedSystem(
             gameViewModel.life = life.amount
             // add a camera shake if the player is taking damage
             entity.configure { it += CameraShake(max = 4f, duration = 1.25f) }
-        }
-
-        // flash if still alive
-        if (life.amount > 0) {
-            entity.configure { it += Flash(damaged.invulnerableTime) }
         }
 
         // detach from ladder
@@ -95,17 +79,20 @@ class DamagedSystem(
             soundName: String,
             pushBackForce: Float,
         ): Boolean {
-            if (target.has(Damaged)) return false // target invulnerable -> ignore damage
+            if (target has Invulnerable) return false // target invulnerable -> ignore damage
 
             target.configure {
-                it += Damaged(
-                    source,
-                    invulnerableTime,
-                    stunDuration,
-                    damage,
-                    soundName,
-                    pushBackForce
-                )
+                it += Damaged(source, damage, soundName, pushBackForce)
+                if (invulnerableTime > 0f) {
+                    it += Invulnerable(invulnerableTime)
+                }
+                if (stunDuration > 0f) {
+                    it += Stun(stunDuration)
+                }
+                // flash if still alive
+                if (invulnerableTime > 0f && target[Life].amount - damage > 0) {
+                    target += Flash(invulnerableTime)
+                }
             }
             return true
         }

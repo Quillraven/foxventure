@@ -7,11 +7,11 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
-import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Stun
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.tiled.GroundTile
@@ -150,11 +150,7 @@ class ClimbSystem(
     }
 
     private fun getInputY(entity: Entity, controller: Controller?): Float {
-        if (controller == null) return 0f
-
-        val damaged = entity.getOrNull(Damaged)
-        if (damaged != null && damaged.stunDuration > 0f) return 0f
-
+        if (controller == null || entity has Stun) return 0f
         var input = 0f
         if (controller.hasCommand(Command.MOVE_UP)) input += 1f
         if (controller.hasCommand(Command.MOVE_DOWN)) input -= 1f

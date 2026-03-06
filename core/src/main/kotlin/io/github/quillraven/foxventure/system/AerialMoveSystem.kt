@@ -11,13 +11,13 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
-import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Stun
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
@@ -59,10 +59,9 @@ class AerialMoveSystem(
         val landingDustThresholdSpeed = -7f
         val wasFalling = velocity.y < landingDustThresholdSpeed && !collision.isGrounded
         val isPlayer = entity has Player
-        val damaged = entity.getOrNull(Damaged)
-        val isDamaged = damaged != null && damaged.stunDuration > 0f
+        val isStunned = entity has Stun
 
-        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, isPlayer, isDamaged)
+        updateJumpState(velocity, physics, jumpControl, jumpPressed, collision.isGrounded, isPlayer, isStunned)
         applyGravity(velocity, physics, jumpControl?.isJumping == true, collision.isGrounded)
         applyVerticalMovement(physics.position, collision, velocity)
 
@@ -78,9 +77,9 @@ class AerialMoveSystem(
         jumpPressed: Boolean,
         isGrounded: Boolean,
         isPlayer: Boolean,
-        isGettingDamaged: Boolean,
+        iStunned: Boolean,
     ) {
-        if (jumpControl == null || isGettingDamaged) return
+        if (jumpControl == null || iStunned) return
 
         if (checkForJumpStart(velocity, physics, jumpControl, jumpPressed, isGrounded, isPlayer)) {
             return

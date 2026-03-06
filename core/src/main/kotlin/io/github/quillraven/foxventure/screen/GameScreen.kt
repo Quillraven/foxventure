@@ -33,6 +33,7 @@ import io.github.quillraven.foxventure.system.DelayActionSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
 import io.github.quillraven.foxventure.system.FlashSystem
 import io.github.quillraven.foxventure.system.FollowSystem
+import io.github.quillraven.foxventure.system.InvulnerabilitySystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.LifeSystem
@@ -44,6 +45,7 @@ import io.github.quillraven.foxventure.system.PreInterpolationSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
+import io.github.quillraven.foxventure.system.StunSystem
 import io.github.quillraven.foxventure.system.TransitionType
 import io.github.quillraven.foxventure.system.UiRenderSystem
 import io.github.quillraven.foxventure.system.WanderSystem
@@ -99,6 +101,8 @@ class GameScreen(
             add(GroundMoveSystem())
             add(CollisionSystem())
             add(DamagedSystem())
+            add(InvulnerabilitySystem())
+            add(StunSystem())
             add(LifeSystem())
             add(PlayerDeathSystem())
             add(FsmSystem())

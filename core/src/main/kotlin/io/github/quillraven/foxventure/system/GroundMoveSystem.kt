@@ -11,13 +11,13 @@ import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
-import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Stun
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Wander
@@ -69,8 +69,7 @@ class GroundMoveSystem(
 
     private fun getInputX(entity: Entity): Float {
         val controller = entity.getOrNull(Controller)
-        val damaged = entity.getOrNull(Damaged)
-        if (controller != null && (damaged == null || damaged.stunDuration <= 0f)) {
+        if (controller != null && entity hasNo Stun) {
             var input = 0f
             if (controller.hasCommand(Command.MOVE_LEFT)) input -= 1f
             if (controller.hasCommand(Command.MOVE_RIGHT)) input += 1f
