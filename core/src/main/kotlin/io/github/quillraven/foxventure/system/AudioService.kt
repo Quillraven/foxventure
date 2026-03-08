@@ -19,6 +19,7 @@ class AudioService : MapChangeListener, Disposable {
     var soundVolume = 1f
 
     private var currentMusic: Music? = null
+    var currentMusicName: String? = null
     private val soundCache = mutableMapOf<String, Sound>()
 
     fun playSound(name: String) {
@@ -32,7 +33,7 @@ class AudioService : MapChangeListener, Disposable {
         sound.play(soundVolume)
     }
 
-    fun playMusic(name: String) {
+    fun playMusic(name: String): Music {
         // dispose of current music if there is any
         currentMusic?.let { music ->
             music.stop()
@@ -40,11 +41,12 @@ class AudioService : MapChangeListener, Disposable {
         }
 
         // load and play new music
-        Gdx.audio.newMusic("music/$name".toInternalFile())?.let { music ->
+        return Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
             music.isLooping = true
             music.play()
             music.volume = musicVolume
             currentMusic = music
+            currentMusicName = name
         }
     }
 

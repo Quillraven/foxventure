@@ -4,9 +4,10 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
 data class Flash(
-    val duration: Float,
-    var timer: Float = 0f,
+    var duration: Float,
 ) : Component<Flash> {
+    var timer: Float = 0f
+
     override fun type() = Flash
 
     companion object : ComponentType<Flash>()
