@@ -29,6 +29,9 @@ import io.github.quillraven.foxventure.system.DamagedSystem.Companion.damageEnti
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.ui.GameViewModel
 
+/**
+ * Detects collisions between entities and handles damage, pickups, and collision responses.
+ */
 class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val audioService: AudioService = inject(),

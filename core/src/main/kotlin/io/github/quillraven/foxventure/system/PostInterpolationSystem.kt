@@ -12,6 +12,9 @@ import io.github.quillraven.foxventure.component.Transform
 import ktx.math.component1
 import ktx.math.component2
 
+/**
+ * Interpolates entity transform positions between physics steps for smooth rendering.
+ */
 class PostInterpolationSystem(
     private val physicsTimer: PhysicsTimer = inject(),
 ) : IteratingSystem(

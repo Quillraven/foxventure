@@ -12,10 +12,16 @@ import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.graphic.ShaderService
 import ktx.graphics.use
 
+/**
+ * Types of screen transition effects.
+ */
 enum class TransitionType {
     PIXELIZE, GRAYSCALE
 }
 
+/**
+ * Applies post-processing shader effects and transitions to the rendered framebuffer.
+ */
 class PostRenderSystem(
     private val renderContext: RenderContext = inject(),
     private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize

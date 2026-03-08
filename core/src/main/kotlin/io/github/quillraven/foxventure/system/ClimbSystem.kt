@@ -19,6 +19,9 @@ import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 
+/**
+ * Handles ladder climbing mechanics including attachment, detachment, and vertical movement on ladders.
+ */
 class ClimbSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),

@@ -19,6 +19,9 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.ui.GameViewModel
 
+/**
+ * Processes damaged entities by applying effects like stun, invulnerability, flash, and pushback.
+ */
 class DamagedSystem(
     private val audioService: AudioService = inject(),
     private val gameViewModel: GameViewModel = inject(),

@@ -51,6 +51,9 @@ import ktx.tiled.property
 import ktx.tiled.propertyOrNull
 import ktx.tiled.width
 
+/**
+ * Spawns entities from Tiled map objects including players, enemies, and collectibles.
+ */
 class SpawnSystem(
     assets: AssetManager = inject(),
     private val gameViewModel: GameViewModel = inject(),

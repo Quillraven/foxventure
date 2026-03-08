@@ -5,6 +5,9 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.DelayRemoval
 
+/**
+ * Removes entities after their delay timer expires.
+ */
 class DelayRemovalSystem : IteratingSystem(
     family = family { all(DelayRemoval) }
 ) {

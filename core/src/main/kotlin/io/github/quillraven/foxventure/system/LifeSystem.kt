@@ -19,6 +19,9 @@ import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.math.vec2
 import kotlin.math.min
 
+/**
+ * Manages entity health, healing, and death including visual effects and player death handling.
+ */
 class LifeSystem(
     assets: AssetManager = inject(),
     private val gameViewModel: GameViewModel = inject(),

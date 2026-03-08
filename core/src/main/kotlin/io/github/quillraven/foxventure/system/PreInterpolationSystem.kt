@@ -7,6 +7,9 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 
+/**
+ * Stores the previous physics position before physics updates for interpolation.
+ */
 class PreInterpolationSystem : IteratingSystem(
     family = family { all(Transform, Physics, EntityTag.ACTIVE) }
 ) {

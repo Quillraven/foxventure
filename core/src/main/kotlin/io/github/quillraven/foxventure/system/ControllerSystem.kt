@@ -11,6 +11,9 @@ import ktx.app.KtxInputAdapter
 import ktx.collections.gdxArrayOf
 import ktx.collections.removeAll
 
+/**
+ * Processes keyboard input and updates controller commands for active entities.
+ */
 class ControllerSystem : IteratingSystem(family = family { all(Controller, EntityTag.ACTIVE) }), KtxInputAdapter {
     private val keyboardMapping = mapOf(
         Input.Keys.W to Command.MOVE_UP,

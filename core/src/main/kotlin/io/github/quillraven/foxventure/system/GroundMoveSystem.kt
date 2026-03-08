@@ -29,6 +29,9 @@ import ktx.math.vec2
 import kotlin.math.abs
 import kotlin.math.sign
 
+/**
+ * Handles horizontal ground movement including acceleration, deceleration, skidding, and horizontal collision detection.
+ */
 class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),

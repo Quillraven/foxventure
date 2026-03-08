@@ -5,6 +5,9 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.DelayAction
 
+/**
+ * Executes delayed actions after their timer expires.
+ */
 class DelayActionSystem : IteratingSystem(
     family = family { all(DelayAction) }
 ) {

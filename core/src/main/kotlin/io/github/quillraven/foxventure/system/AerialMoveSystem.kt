@@ -28,6 +28,9 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.vec2
 import kotlin.math.abs
 
+/**
+ * Handles aerial movement including jumping, gravity, vertical collision detection, and landing effects.
+ */
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),

@@ -16,6 +16,9 @@ import ktx.math.component2
 import ktx.math.component3
 import ktx.math.vec3
 
+/**
+ * Updates animation frames and adjusts entity dimensions when animations change.
+ */
 class AnimationSystem : IteratingSystem(
     family = family { all(Animation, Graphic, EntityTag.ACTIVE) }
 ) {

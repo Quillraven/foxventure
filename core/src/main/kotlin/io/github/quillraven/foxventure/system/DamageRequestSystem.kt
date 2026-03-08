@@ -13,6 +13,9 @@ import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 
+/**
+ * Processes damage requests and creates damage area entities.
+ */
 class DamageRequestSystem : IteratingSystem(
     family = family { all(DamageRequest) }
 ) {

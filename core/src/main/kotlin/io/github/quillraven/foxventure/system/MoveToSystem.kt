@@ -8,6 +8,9 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.Transform
 
+/**
+ * Moves entities through a sequence of interpolated waypoints.
+ */
 class MoveToSystem : IteratingSystem(
     family = family { all(Transform, MoveTo, EntityTag.ACTIVE) }
 ) {

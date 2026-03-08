@@ -8,6 +8,9 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 
+/**
+ * Creates a flashing visual effect by modulating graphic alpha over time.
+ */
 class FlashSystem : IteratingSystem(
     family = family { all(Flash, Graphic, EntityTag.ACTIVE) }
 ) {

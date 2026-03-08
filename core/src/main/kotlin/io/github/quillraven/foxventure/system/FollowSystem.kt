@@ -14,6 +14,9 @@ import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.sign
 
+/**
+ * Makes entities follow their target within range, stopping at cliffs if configured.
+ */
 class FollowSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
