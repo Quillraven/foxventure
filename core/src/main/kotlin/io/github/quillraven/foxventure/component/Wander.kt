@@ -3,6 +3,10 @@ package io.github.quillraven.foxventure.component
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+/**
+ * Makes an entity wander within [distance] from [originX]. Optionally [stopAtCliff] to prevent falling.
+ * Tracks [moveDirection].
+ */
 data class Wander(
     val distance: Float,
     val originX: Float,

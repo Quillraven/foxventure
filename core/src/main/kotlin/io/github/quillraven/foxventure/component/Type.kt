@@ -3,6 +3,9 @@ package io.github.quillraven.foxventure.component
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+/**
+ * Categorizes an entity by its [type] string.
+ */
 data class Type(val type: String) : Component<Type> {
     override fun type() = Type
 

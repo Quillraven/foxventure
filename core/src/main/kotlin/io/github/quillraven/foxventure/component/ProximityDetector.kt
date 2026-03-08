@@ -5,6 +5,10 @@ import com.github.quillraven.fleks.ComponentType
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 
+/**
+ * Detects entities within [range] using a [predicate], invoking [onDetect] when found
+ * and [onBreak] when lost. Tracks the current [target].
+ */
 class ProximityDetector(
     range: Float,
     var predicate: (World.(target: Entity) -> Boolean),

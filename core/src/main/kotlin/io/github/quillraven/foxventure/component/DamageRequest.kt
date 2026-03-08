@@ -5,6 +5,9 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 import com.github.quillraven.fleks.Entity
 
+/**
+ * Request to create a damage area from [source] with [damage], [position], [size], and [lifeSpan].
+ */
 data class DamageRequest(
     val source: Entity,
     val damage: Int,

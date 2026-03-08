@@ -5,14 +5,8 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
 /**
- * Represents a 2D transformation component that defines the spatial properties of an entity
- * in the game world. This includes position, size, rotation, scale, and depth order.
- *
- * @property position The position of the entity in 2D space, represented as a [Vector2].
- * @property size The dimensions of the entity, represented as a [Vector2].
- * @property rotationDegrees The rotational angle of the entity in degrees. Defaults to 0.
- * @property scale The scaling factor applied to the entity. Defaults to 1.
- * @property z The depth or layering order of the entity. A higher value is rendered on top of entities with lower values.
+ * Defines the spatial properties of an entity including [position], [size], [rotationDegrees], [scale], and [z] depth.
+ * Higher [z] values render on top of lower values. Entities are sorted by z-order, then by y-position, then by x-position.
  */
 data class Transform(
     val position: Vector2,

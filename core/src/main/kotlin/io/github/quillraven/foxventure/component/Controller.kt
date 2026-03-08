@@ -6,6 +6,9 @@ import io.github.quillraven.foxventure.input.Command
 import ktx.collections.GdxSet
 import ktx.collections.gdxSetOf
 
+/**
+ * Stores input [commands] for controlling an entity's behavior.
+ */
 data class Controller(
     val commands: GdxSet<Command> = gdxSetOf()
 ) : Component<Controller> {

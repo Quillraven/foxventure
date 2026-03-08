@@ -4,6 +4,10 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 import com.github.quillraven.fleks.Entity
 
+/**
+ * Makes an entity follow a [target] within [distance], breaking at [breakDistance].
+ * Optionally [stopAtCliff] to prevent falling. Tracks [moveDirection].
+ */
 class Follow(
     distance: Float,
     breakDistance: Float,

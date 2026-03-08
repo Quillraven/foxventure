@@ -4,6 +4,9 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 import com.github.quillraven.fleks.Entity
 
+/**
+ * Marks an entity as damaged by [source] with [damage] amount, playing [soundName] and applying [pushBackForce].
+ */
 data class Damaged(
     val source: Entity,
     val damage: Int,

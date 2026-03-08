@@ -9,19 +9,7 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import ktx.math.vec2
 
 /**
- * Represents a graphical component tied to an entity, allowing it to display a texture
- * region on the screen. The component is responsible for tracking the graphical region and
- * its size.
- *
- * @constructor
- * Creates a new [Graphic] instance with the given texture region.
- *
- * @property region The texture region displayed by this graphical component. Updating this property
- * dynamically recalculates the size of the graphic in world units.
- * @property regionSize The size of the texture region in world units. This value is automatically
- * updated based on the [region].
- * @property flip Boolean property that indicates whether the texture is horizontally flipped.
- * @property offset The offset of the render position in world units.
+ * Displays a texture [region] with [regionSize] in world units, optional [flip], [color] tint, and render [offset].
  */
 class Graphic(
     region: TextureRegion,
