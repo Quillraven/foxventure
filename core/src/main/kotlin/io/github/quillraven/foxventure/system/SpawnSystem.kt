@@ -14,7 +14,6 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
-import io.github.quillraven.foxventure.ai.EagleStateAttack
 import io.github.quillraven.foxventure.ai.EagleStateIdle
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.MushroomStateIdle
@@ -256,8 +255,6 @@ class SpawnSystem(
                 entity += ProximityDetector(
                     range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
-                    onDetect = { source, _ -> source[Fsm].state.changeState(EagleStateAttack) },
-                    onBreak = { _, _ -> }
                 )
             }
 

@@ -12,8 +12,8 @@ import com.github.quillraven.fleks.World
 class ProximityDetector(
     range: Float,
     var predicate: (World.(target: Entity) -> Boolean),
-    var onDetect: (World.(source: Entity, target: Entity) -> Unit),
-    var onBreak: (World.(source: Entity, target: Entity) -> Unit),
+    var onDetect: (World.(source: Entity, target: Entity) -> Unit) = { _, _ -> },
+    var onBreak: (World.(source: Entity, target: Entity) -> Unit) = { _, _ -> },
 ) : Component<ProximityDetector> {
     var squaredRange: Float = range * range
     var target: Entity = Entity.NONE
