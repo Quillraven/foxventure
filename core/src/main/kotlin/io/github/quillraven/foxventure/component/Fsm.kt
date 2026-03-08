@@ -11,6 +11,8 @@ data class Fsm(
     val state: FleksStateMachine,
     val customProperties: Map<String, Any> = emptyMap(),
 ) : Component<Fsm> {
+    inline fun <reified T> customProperty(key: String): T = customProperties[key] as T
+
     override fun type() = Fsm
 
     companion object : ComponentType<Fsm>()

@@ -54,9 +54,9 @@ data object EagleStateAttack : FsmState {
         val distanceX = targetCenterX - eagleX
         val mirroredX = targetCenterX + distanceX
 
-        val diveTime = fsm.customProperties["dive_time"] as Float
-        val peakTime = fsm.customProperties["dive_peak_time"] as Float
-        val riseTime = fsm.customProperties["rise_time"] as Float
+        val diveTime = fsm.customProperty<Float>("dive_time")
+        val peakTime = fsm.customProperty<Float>("dive_peak_time")
+        val riseTime = fsm.customProperty<Float>("rise_time")
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
