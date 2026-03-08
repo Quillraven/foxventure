@@ -34,9 +34,10 @@ data class Rect(val x: Float, val y: Float, val width: Float, val height: Float)
 
 data class Collision(
     val box: Rect,
-    var isGrounded: Boolean = false,
-    var isOnLadder: Boolean = false,
 ) : Component<Collision> {
+    var isGrounded: Boolean = false
+    var isOnLadder: Boolean = false
+
     override fun type() = Collision
 
     companion object : ComponentType<Collision>()

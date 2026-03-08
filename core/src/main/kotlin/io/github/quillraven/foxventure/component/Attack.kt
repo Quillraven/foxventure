@@ -7,9 +7,10 @@ data class Attack(
     val range: Float,
     val cooldown: Float,
     val damage: Int,
-    var time: Float = 0f,
-    var readyToAttack: Boolean = false,
 ) : Component<Attack> {
+    var time: Float = 0f
+    var readyToAttack: Boolean = false
+
     override fun type() = Attack
 
     fun resetCooldown() {

@@ -7,8 +7,9 @@ data class Wander(
     val distance: Float,
     val originX: Float,
     val stopAtCliff: Boolean,
-    var moveDirection: Float = 0f,
 ) : Component<Wander> {
+    var moveDirection: Float = 0f
+
     override fun type() = Wander
 
     companion object : ComponentType<Wander>()

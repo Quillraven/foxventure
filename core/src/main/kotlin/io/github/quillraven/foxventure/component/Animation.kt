@@ -24,8 +24,8 @@ class Animation(
     val idle: GdxAnimation,
     val gdxAnimations: Map<AnimationType, GdxAnimation>,
     var speed: Float,
-    var stateTime: Float = 0f,
 ) : Component<Animation> {
+    var stateTime: Float = 0f
 
     private val defaultSpeed: Float = speed
 

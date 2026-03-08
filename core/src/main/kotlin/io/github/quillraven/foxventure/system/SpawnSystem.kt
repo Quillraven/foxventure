@@ -133,7 +133,7 @@ class SpawnSystem(
         when (tiledType) {
             "player" -> {
                 entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                val playerCmp = Player()
+                val playerCmp = Player(credits = 5, gems = 0)
                 entity += playerCmp
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
@@ -221,24 +221,20 @@ class SpawnSystem(
         entity: Entity,
         atlasKey: String,
     ) {
-        val proximityRange = tile.property("proximity_range", 0f)
-
         when (val enemyType = atlasKey.substringAfter("objects/").substringBefore("/")) {
             "mushroom" -> {
                 entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
                 entity += ProximityDetector(
-                    squaredRange = proximityRange * proximityRange,
+                    range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
                     onDetect = { source, target -> source[Follow].target = target },
                     onBreak = { source, _ -> source[Follow].target = Entity.NONE }
                 )
 
                 val followProps = tile.property<MapProperties>("follow")
-                val range = followProps["range"] as Float
-                val breakRange = followProps["break_range"] as Float
                 entity += Follow(
-                    squaredDistance = range * range,
-                    squaredBreakDistance = breakRange * breakRange,
+                    distance = followProps["range"] as Float,
+                    breakDistance = followProps["break_range"] as Float,
                     stopAtCliff = followProps["stop_at_cliff"] as Boolean,
                 )
             }
@@ -246,7 +242,7 @@ class SpawnSystem(
             "eagle" -> {
                 entity += Fsm(FleksStateMachine(world, entity, EagleStateIdle))
                 entity += ProximityDetector(
-                    squaredRange = proximityRange * proximityRange,
+                    range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
                     onDetect = { source, _ -> source[Fsm].state.changeState(EagleStateAttack) },
                     onBreak = { _, _ -> }
