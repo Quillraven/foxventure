@@ -35,7 +35,8 @@ class ClimbSystem(
         val collBox = collision.box
         val physics = entity[Physics]
         val controller = entity.getOrNull(Controller)
-        val inputY = getInputY(entity, controller)
+        val isStunned = entity has Stun
+        val inputY = getInputY(controller, isStunned)
         val jumpPressed = controller?.hasCommand(Command.JUMP) == true
 
         // first check if we should start climbing
@@ -53,7 +54,7 @@ class ClimbSystem(
         val ladderTile = tiledService.getLadderTile(physics.position, collBox, false)
         val velocity = entity[Velocity].current
         val abortClimbing = inputY == 0f && (getInputX(controller) != 0f || jumpPressed || ladderTile == null)
-        if (abortClimbing) {
+        if (isStunned || abortClimbing) {
             stopClimbing(entity, collision, velocity)
             return
         }
@@ -149,8 +150,8 @@ class ClimbSystem(
         return input
     }
 
-    private fun getInputY(entity: Entity, controller: Controller?): Float {
-        if (controller == null || entity has Stun) return 0f
+    private fun getInputY(controller: Controller?, isStunned: Boolean): Float {
+        if (controller == null || isStunned) return 0f
         var input = 0f
         if (controller.hasCommand(Command.MOVE_UP)) input += 1f
         if (controller.hasCommand(Command.MOVE_DOWN)) input -= 1f
