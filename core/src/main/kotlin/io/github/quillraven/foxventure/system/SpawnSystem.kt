@@ -88,7 +88,9 @@ class SpawnSystem(
 
             // collision
             if (tile.objects.isNotEmpty()) {
-                it += Collision(Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle))
+                val collisionDamage = tile.property("collision_damage", 1)
+                val collisionBox = Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle)
+                it += Collision(collisionBox, collisionDamage)
             }
 
             graphicEntityCfg(tile, it, atlasKey)

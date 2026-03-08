@@ -19,7 +19,6 @@ import io.github.quillraven.foxventure.component.Invulnerable
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
-import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
@@ -54,7 +53,8 @@ class CollisionSystem(
     override fun onTickEntity(entity: Entity) {
         val entityTransform = entity[Transform]
         val (position) = entityTransform
-        val collBox = entity[Collision].box
+        val collision = entity[Collision]
+        val collBox = collision.box
         val type = entity.getOrNull(Type)?.type ?: ""
 
         family.forEach { other ->
@@ -66,7 +66,8 @@ class CollisionSystem(
 
             val otherTransform = other[Transform]
             val (otherPosition) = otherTransform
-            val otherCollBox = other[Collision].box
+            val otherCollision = other[Collision]
+            val otherCollBox = otherCollision.box
             val otherType = other.getOrNull(Type)?.type ?: ""
 
             if (collBox.overlaps(position, otherPosition, otherCollBox)) {
@@ -74,20 +75,20 @@ class CollisionSystem(
                     "player" == type -> onPlayerCollision(
                         player = entity,
                         entityTransform,
-                        collBox,
+                        collision,
                         other = other,
                         otherTransform,
-                        otherCollBox,
+                        otherCollision,
                         otherType = otherType
                     )
 
                     "player" == otherType -> onPlayerCollision(
                         player = other,
                         otherTransform,
-                        otherCollBox,
+                        otherCollision,
                         other = entity,
                         entityTransform,
-                        collBox,
+                        collision,
                         otherType = type
                     )
 
@@ -103,10 +104,10 @@ class CollisionSystem(
     private fun onPlayerCollision(
         player: Entity,
         playerTransform: Transform,
-        playerCollBox: Rect,
+        playerCollision: Collision,
         other: Entity,
         otherTransform: Transform,
-        otherCollBox: Rect,
+        otherCollision: Collision,
         otherType: String
     ) {
         when (otherType) {
@@ -114,19 +115,20 @@ class CollisionSystem(
             "cherry" -> onPlayerCherryCollision(player, other)
             "gold-cherry" -> onPlayerGoldCherryCollision(player, other)
             "damage" -> onPlayerDamageCollision(player, other)
-            "spike" -> onPlayerSpikeCollision(player, other)
-            "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollBox, otherTransform, otherCollBox)
+            "spike" -> onPlayerSpikeCollision(player, other, otherCollision)
+            "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollision, otherTransform, otherCollision)
         }
     }
 
     private fun onPlayerSpikeCollision(
         player: Entity,
-        other: Entity
+        other: Entity,
+        otherCollision: Collision
     ) {
         world.damageEntity(
             source = other,
             target = player,
-            damage = 1,
+            damage = otherCollision.collisionDamage,
             invulnerableTime = 2.5f,
             stunDuration = 0.25f,
             soundName = "hurt2.wav",
@@ -138,12 +140,12 @@ class CollisionSystem(
         player: Entity,
         other: Entity,
         playerTransform: Transform,
-        playerCollBox: Rect,
+        playerCollision: Collision,
         otherTransform: Transform,
-        otherCollBox: Rect,
+        otherCollision: Collision,
     ) {
-        val playerBottom = playerTransform.position.y + playerCollBox.y
-        val enemyTop = otherTransform.position.y + otherCollBox.y + otherCollBox.height * 0.75f
+        val playerBottom = playerTransform.position.y + playerCollision.box.y
+        val enemyTop = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * 0.75f
 
         if (playerBottom >= enemyTop) {
             // player stomps on an enemy from above -> apply upwards impulse
@@ -155,7 +157,7 @@ class CollisionSystem(
             world.damageEntity(
                 source = player,
                 target = other,
-                damage = 1,
+                damage = playerCollision.collisionDamage,
                 invulnerableTime = 0.5f,
                 stunDuration = 0.25f,
                 soundName = "hurt1.wav",
@@ -168,7 +170,7 @@ class CollisionSystem(
         world.damageEntity(
             source = other,
             target = player,
-            damage = 1,
+            damage = otherCollision.collisionDamage,
             invulnerableTime = 2f,
             stunDuration = 0.5f,
             soundName = "hurt2.wav",

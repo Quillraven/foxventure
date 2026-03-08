@@ -36,10 +36,11 @@ data class Rect(val x: Float, val y: Float, val width: Float, val height: Float)
 }
 
 /**
- * Collision detection component with a collision [box] and state flags for [isGrounded] and [isOnLadder].
+ * Collision detection component with a collision [box], [collisionDamage] and state flags for [isGrounded] and [isOnLadder].
  */
 data class Collision(
     val box: Rect,
+    val collisionDamage: Int,
 ) : Component<Collision> {
     var isGrounded: Boolean = false
     var isOnLadder: Boolean = false
