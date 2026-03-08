@@ -244,7 +244,6 @@ class CollisionSystem(
         spawnPickupSfx(transform, scale = 1f)
 
         other.remove()
-        audioService.playSound("heal.wav")
     }
 
     private fun spawnPickupSfx(transform: Transform, scale: Float) {
