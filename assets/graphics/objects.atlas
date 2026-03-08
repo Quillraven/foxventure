@@ -4,6 +4,55 @@ size: 1024, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+objects/cherry-gold/idle
+  rotate: false
+  xy: 990, 199
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 0
+objects/cherry-gold/idle
+  rotate: false
+  xy: 218, 7
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 1
+objects/cherry-gold/idle
+  rotate: false
+  xy: 820, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 2
+objects/cherry-gold/idle
+  rotate: false
+  xy: 866, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 3
+objects/cherry-gold/idle
+  rotate: false
+  xy: 912, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 4
+objects/cherry-gold/idle
+  rotate: false
+  xy: 958, 178
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 5
+objects/cherry-gold/idle
+  rotate: false
+  xy: 302, 92
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 6
 objects/cherry/idle
   rotate: false
   xy: 967, 201
@@ -13,42 +62,42 @@ objects/cherry/idle
   index: 0
 objects/cherry/idle
   rotate: false
-  xy: 990, 199
+  xy: 195, 7
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 1
 objects/cherry/idle
   rotate: false
-  xy: 195, 7
+  xy: 797, 183
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 2
 objects/cherry/idle
   rotate: false
-  xy: 218, 7
+  xy: 843, 183
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 3
 objects/cherry/idle
   rotate: false
-  xy: 797, 183
+  xy: 889, 183
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 4
 objects/cherry/idle
   rotate: false
-  xy: 820, 183
+  xy: 935, 183
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 5
 objects/cherry/idle
   rotate: false
-  xy: 843, 183
+  xy: 981, 176
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
@@ -209,35 +258,35 @@ objects/fox/run
   index: 5
 objects/gem/idle
   rotate: false
-  xy: 923, 191
+  xy: 286, 63
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 0
 objects/gem/idle
   rotate: false
-  xy: 940, 191
+  xy: 343, 86
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 1
 objects/gem/idle
   rotate: false
-  xy: 286, 63
+  xy: 362, 100
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 2
 objects/gem/idle
   rotate: false
-  xy: 389, 105
+  xy: 360, 85
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 3
 objects/gem/idle
   rotate: false
-  xy: 886, 174
+  xy: 379, 105
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
@@ -412,42 +461,42 @@ props/rock2
   index: -1
 props/shrooms
   rotate: false
-  xy: 886, 189
+  xy: 325, 98
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: -1
 props/sign
   rotate: false
-  xy: 866, 184
+  xy: 1004, 177
   size: 18, 20
   orig: 18, 20
   offset: 0, 0
   index: -1
 props/skulls
   rotate: false
-  xy: 371, 108
+  xy: 325, 86
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
 props/spike-skull
   rotate: false
-  xy: 904, 192
+  xy: 343, 101
   size: 17, 12
   orig: 17, 12
   offset: 0, 0
   index: -1
 props/spikes
   rotate: false
-  xy: 302, 103
+  xy: 379, 93
   size: 15, 10
   orig: 15, 10
   offset: 0, 0
   index: -1
 props/spikes-top
   rotate: false
-  xy: 319, 104
+  xy: 377, 82
   size: 15, 9
   orig: 15, 9
   offset: 0, 0

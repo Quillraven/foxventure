@@ -12,8 +12,11 @@ import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
+import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.GdxAnimation
+import io.github.quillraven.foxventure.component.Invulnerable
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
@@ -110,6 +113,7 @@ class CollisionSystem(
         when (otherType) {
             "gem" -> onPlayerGemCollision(player, other)
             "cherry" -> onPlayerCherryCollision(player, other)
+            "gold-cherry" -> onPlayerGoldCherryCollision(player, other)
             "damage" -> onPlayerDamageCollision(player, other)
             "spike" -> onPlayerSpikeCollision(player, other)
             "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollBox, otherTransform, otherCollBox)
@@ -206,6 +210,35 @@ class CollisionSystem(
         other: Entity
     ) {
         player[Life].heal = 4
+
+        val transform = other[Transform]
+        spawnPickupSfx(transform, scale = 1f)
+
+        other.remove()
+        audioService.playSound("heal.wav")
+    }
+
+    private fun onPlayerGoldCherryCollision(
+        player: Entity,
+        other: Entity
+    ) {
+        player.configure {
+            val invulnerable = it.getOrAdd(Invulnerable) { Invulnerable(0f) }
+            val flash = it.getOrAdd(Flash) { Flash(0f) }
+            invulnerable.duration = 10f
+            flash.duration = 10f
+        }
+
+        // play invulnerability jingle
+        val currentMusicName = audioService.currentMusicName
+        val song = audioService.playMusic("overdrive_loop.mp3")
+        world.entity {
+            it += DelayAction(delay = 10f) {
+                song.stop()
+                song.dispose()
+                currentMusicName?.let { name -> audioService.playMusic(name) }
+            }
+        }
 
         val transform = other[Transform]
         spawnPickupSfx(transform, scale = 1f)

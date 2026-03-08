@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="41" tileheight="41" tilecount="5" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="41" tileheight="41" tilecount="6" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -70,6 +70,12 @@
    <property name="animation_speed" type="float" value="0.8"/>
   </properties>
   <image source="../graphics/sprites/objects/cherry/idle_0.png" width="21" height="21"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="4" width="15" height="13"/>
+  </objectgroup>
+ </tile>
+ <tile id="5" type="gold-cherry">
+  <image source="../graphics/sprites/objects/cherry-gold/idle_0.png" width="21" height="21"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="4" width="15" height="13"/>
   </objectgroup>
