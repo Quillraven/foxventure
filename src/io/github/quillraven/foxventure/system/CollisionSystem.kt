@@ -14,6 +14,7 @@ import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
+import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
@@ -108,6 +109,7 @@ class CollisionSystem(
     ) {
         when (otherType) {
             "gem" -> onPlayerGemCollision(player, other)
+            "cherry" -> onPlayerCherryCollision(player, other)
             "damage" -> onPlayerDamageCollision(player, other)
             "spike" -> onPlayerSpikeCollision(player, other)
             "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollBox, otherTransform, otherCollBox)
@@ -144,7 +146,7 @@ class CollisionSystem(
             // player stomps on an enemy from above -> apply upwards impulse
             val jumpPressed = player[Controller].hasCommand(Command.JUMP)
             val physics = player[Physics]
-            player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse else physics.jumpImpulse * 0.7f
+            player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse * 0.75f else physics.jumpImpulse * 0.4f
 
             // damage enemy
             world.damageEntity(
@@ -193,14 +195,27 @@ class CollisionSystem(
         gameViewModel.gems = playerComponent.gems
 
         val transform = other[Transform]
-        spawnPickupSfx(transform)
+        spawnPickupSfx(transform, scale = 1.5f)
 
         other.remove()
         audioService.playSound("pickup.wav")
     }
 
-    private fun spawnPickupSfx(transform: Transform) {
-        val scaledSize = transform.size.cpy().scl(1.5f)
+    private fun onPlayerCherryCollision(
+        player: Entity,
+        other: Entity
+    ) {
+        player[Life].heal = 4
+
+        val transform = other[Transform]
+        spawnPickupSfx(transform, scale = 1f)
+
+        other.remove()
+        audioService.playSound("heal.wav")
+    }
+
+    private fun spawnPickupSfx(transform: Transform, scale: Float) {
+        val scaledSize = transform.size.cpy().scl(scale)
         val offset = (scaledSize.x - transform.size.x) * 0.5f
         val centeredPosition = transform.position.cpy().sub(offset, offset)
 

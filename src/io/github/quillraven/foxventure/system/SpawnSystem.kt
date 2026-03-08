@@ -167,7 +167,7 @@ class SpawnSystem(
                 objectsAtlas.regions
                     // get all regions of the object via its key
                     .filter { region -> region.name.startsWith(objectKey) && region.index == 0 }
-                    // the substring after the last '/' is the AnimationType like characters/fox/idle -> idle
+                    // the substring after the last '/' is the AnimationType like objects/fox/idle -> idle
                     .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
                     // map AnimationType to real GdxAnimation
                     .associateWith { animationType -> getAnimation(objectKey, animationType) }
@@ -223,7 +223,7 @@ class SpawnSystem(
     ) {
         val proximityRange = tile.property("proximity_range", 0f)
 
-        when (val enemyType = atlasKey.substringAfter("characters/").substringBefore("/")) {
+        when (val enemyType = atlasKey.substringAfter("objects/").substringBefore("/")) {
             "mushroom" -> {
                 entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
                 entity += ProximityDetector(
