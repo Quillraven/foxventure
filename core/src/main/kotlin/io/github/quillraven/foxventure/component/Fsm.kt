@@ -9,6 +9,7 @@ import io.github.quillraven.foxventure.ai.FleksStateMachine
  */
 data class Fsm(
     val state: FleksStateMachine,
+    val customProperties: Map<String, Any> = emptyMap(),
 ) : Component<Fsm> {
     override fun type() = Fsm
 

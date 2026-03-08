@@ -33,11 +33,12 @@ data object EagleStateIdle : FsmState {
 data object EagleStateAttack : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.ATTACK)
+        val fsm = entity[Fsm]
 
         val target = entity[ProximityDetector].target
         if (target.wasRemoved() || target hasNo Collision) {
             // e.g., player died already -> go back to idle
-            entity[Fsm].state.changeState(EagleStateIdle)
+            fsm.state.changeState(EagleStateIdle)
             return
         }
 
@@ -53,12 +54,15 @@ data object EagleStateAttack : FsmState {
         val distanceX = targetCenterX - eagleX
         val mirroredX = targetCenterX + distanceX
 
+        val diveTime = fsm.customProperties["dive_time"] as Float
+        val peakTime = fsm.customProperties["dive_peak_time"] as Float
+        val riseTime = fsm.customProperties["rise_time"] as Float
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 1.2f, Interpolation.pow3Out),
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 0.3f),
-                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, 0.8f, Interpolation.pow3In)
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, diveTime, Interpolation.pow3Out),
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, peakTime),
+                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, riseTime, Interpolation.pow3In)
                 )
             )
         }

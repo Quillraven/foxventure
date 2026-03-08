@@ -245,7 +245,14 @@ class SpawnSystem(
             }
 
             "eagle" -> {
-                entity += Fsm(FleksStateMachine(world, entity, EagleStateIdle))
+                entity += Fsm(
+                    FleksStateMachine(world, entity, EagleStateIdle),
+                    customProperties = mapOf(
+                        "dive_time" to tile.property<Float>("dive_time"),
+                        "dive_peak_time" to tile.property<Float>("dive_peak_time"),
+                        "rise_time" to tile.property<Float>("rise_time"),
+                    ),
+                )
                 entity += ProximityDetector(
                     range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
