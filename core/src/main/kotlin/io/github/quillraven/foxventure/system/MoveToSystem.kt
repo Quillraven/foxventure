@@ -4,11 +4,12 @@ import com.badlogic.gdx.math.MathUtils
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
+import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.Transform
 
 class MoveToSystem : IteratingSystem(
-    family = family { all(Transform, MoveTo) }
+    family = family { all(Transform, MoveTo, EntityTag.ACTIVE) }
 ) {
     override fun onTickEntity(entity: Entity) {
         val moveTo = entity[MoveTo]

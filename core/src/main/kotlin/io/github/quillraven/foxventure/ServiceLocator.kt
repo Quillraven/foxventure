@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.utils.Disposable
 import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.graphic.ShaderService
-import io.github.quillraven.foxventure.system.AudioService
 import io.github.quillraven.foxventure.tiled.TiledService
 
 class ServiceLocator(

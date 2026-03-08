@@ -9,6 +9,8 @@ import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntity
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
+import io.github.quillraven.foxventure.AudioService
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
@@ -92,14 +94,16 @@ class CollisionSystem(
                         otherType = type
                     )
 
-                    else -> onCollision(entity = entity, other = other)
+                    else -> onOtherCollision(entity = entity, other = other)
                 }
             }
         }
     }
 
+    // non-player collision -> atm no usage for it but might be useful in the future
+    // to avoid that certain enemies walk inside each other
     @Suppress("unused")
-    private fun onCollision(entity: Entity, other: Entity) = Unit
+    private fun onOtherCollision(entity: Entity, other: Entity) = Unit
 
     private fun onPlayerCollision(
         player: Entity,

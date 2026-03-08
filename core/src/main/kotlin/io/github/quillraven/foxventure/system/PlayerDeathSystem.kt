@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.ai.PlayerStateDeath
 import io.github.quillraven.foxventure.component.Collision

@@ -1,4 +1,4 @@
-package io.github.quillraven.foxventure.system
+package io.github.quillraven.foxventure
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
