@@ -15,6 +15,9 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 import kotlin.math.sign
 
+/**
+ * Makes entities wander within a distance from their origin, stopping at cliffs if configured.
+ */
 class WanderSystem(
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(

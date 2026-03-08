@@ -5,6 +5,9 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.Stun
 
+/**
+ * Manages stun duration and removes the component when expired.
+ */
 class StunSystem : IteratingSystem(
     family = family { all(Stun) }
 ) {

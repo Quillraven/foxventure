@@ -3,6 +3,9 @@ package io.github.quillraven.foxventure.component
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+/**
+ * Delays entity removal by [timer] seconds.
+ */
 data class DelayRemoval(
     var timer: Float
 ) : Component<DelayRemoval> {

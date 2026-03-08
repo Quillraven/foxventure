@@ -6,6 +6,9 @@ import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 
+/**
+ * An immutable rectangular area defined by [x], [y], [width], and [height] coordinates.
+ */
 data class Rect(val x: Float, val y: Float, val width: Float, val height: Float) {
     fun overlaps(otherX: Float, otherY: Float, otherWidth: Float, otherHeight: Float): Boolean {
         return x < otherX + otherWidth && x + width > otherX && y < otherY + otherHeight && y + height > otherY
@@ -32,11 +35,16 @@ data class Rect(val x: Float, val y: Float, val width: Float, val height: Float)
     }
 }
 
+/**
+ * Collision detection component with a collision [box], [collisionDamage] and state flags for [isGrounded] and [isOnLadder].
+ */
 data class Collision(
     val box: Rect,
-    var isGrounded: Boolean = false,
-    var isOnLadder: Boolean = false,
+    val collisionDamage: Int,
 ) : Component<Collision> {
+    var isGrounded: Boolean = false
+    var isOnLadder: Boolean = false
+
     override fun type() = Collision
 
     companion object : ComponentType<Collision>()

@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -18,6 +19,9 @@ import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 
+/**
+ * Handles ladder climbing mechanics including attachment, detachment, and vertical movement on ladders.
+ */
 class ClimbSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),

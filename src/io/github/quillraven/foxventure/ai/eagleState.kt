@@ -22,7 +22,7 @@ data object EagleStateIdle : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val fsm = entity[Fsm]
         val target = entity[ProximityDetector].target
-        if (fsm.state.stateTime < 2.5f || target == Entity.NONE || target.wasRemoved()) {
+        if (fsm.state.stateTime < 2.5f || target.wasRemoved()) {
             return
         }
 
@@ -33,11 +33,12 @@ data object EagleStateIdle : FsmState {
 data object EagleStateAttack : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.ATTACK)
+        val fsm = entity[Fsm]
 
         val target = entity[ProximityDetector].target
-        if (target == Entity.NONE || target.wasRemoved() || target hasNo Collision) {
+        if (target.wasRemoved() || target hasNo Collision) {
             // e.g., player died already -> go back to idle
-            entity[Fsm].state.changeState(EagleStateIdle)
+            fsm.state.changeState(EagleStateIdle)
             return
         }
 
@@ -53,12 +54,15 @@ data object EagleStateAttack : FsmState {
         val distanceX = targetCenterX - eagleX
         val mirroredX = targetCenterX + distanceX
 
+        val diveTime = fsm.customProperty<Float>("dive_time")
+        val peakTime = fsm.customProperty<Float>("dive_peak_time")
+        val riseTime = fsm.customProperty<Float>("rise_time")
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 1.2f, Interpolation.pow3Out),
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, 0.3f),
-                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, 0.8f, Interpolation.pow3In)
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, diveTime, Interpolation.pow3Out),
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, peakTime),
+                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, riseTime, Interpolation.pow3In)
                 )
             )
         }

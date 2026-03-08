@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.component.CameraShake
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
@@ -18,6 +19,9 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.ui.GameViewModel
 
+/**
+ * Processes damaged entities by applying effects like stun, invulnerability, flash, and pushback.
+ */
 class DamagedSystem(
     private val audioService: AudioService = inject(),
     private val gameViewModel: GameViewModel = inject(),

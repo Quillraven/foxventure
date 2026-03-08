@@ -57,8 +57,11 @@
  </tile>
  <tile id="3" type="enemy">
   <properties>
+   <property name="dive_peak_time" type="float" value="0.3"/>
+   <property name="dive_time" type="float" value="1.2"/>
    <property name="life" type="int" value="2"/>
-   <property name="proximity_range" type="float" value="7"/>
+   <property name="proximity_range" type="float" value="8"/>
+   <property name="rise_time" type="float" value="0.8"/>
   </properties>
   <image source="../graphics/sprites/objects/eagle/idle_0.png" width="40" height="41"/>
   <objectgroup draworder="index" id="2">

@@ -13,6 +13,9 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
 
+/**
+ * Manages attack cooldowns and determines when entities are ready to attack based on target proximity.
+ */
 class AttackSystem(
     private val tiledService: TiledService = inject(),
 ) : IteratingSystem(

@@ -14,12 +14,18 @@
   <image source="../graphics/sprites/props/skulls.png" width="16" height="10"/>
  </tile>
  <tile id="4" type="spike">
+  <properties>
+   <property name="collision_damage" type="int" value="2"/>
+  </properties>
   <image source="../graphics/sprites/props/spikes.png" width="15" height="10"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="1" width="15" height="9"/>
   </objectgroup>
  </tile>
  <tile id="5" type="spike">
+  <properties>
+   <property name="collision_damage" type="int" value="2"/>
+  </properties>
   <image source="../graphics/sprites/props/spikes-top.png" width="15" height="9"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="15" height="9"/>

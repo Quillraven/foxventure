@@ -3,6 +3,9 @@ package io.github.quillraven.foxventure.component
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+/**
+ * Executes an [action] after [delay] seconds.
+ */
 data class DelayAction(
     var delay: Float,
     val action: () -> Unit,

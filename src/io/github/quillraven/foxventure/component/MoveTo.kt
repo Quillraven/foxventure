@@ -7,6 +7,9 @@ import com.github.quillraven.fleks.ComponentType
 import ktx.collections.GdxArray
 import ktx.math.vec2
 
+/**
+ * A movement point with [target] position, [interpolation] curve, [duration], and optional separate [interpolationY].
+ */
 data class MoveToPoint(
     val target: Vector2,
     val interpolation: Interpolation,
@@ -14,6 +17,9 @@ data class MoveToPoint(
     val interpolationY: Interpolation? = null,
 )
 
+/**
+ * Moves an entity through a sequence of [points]. Tracks [startPosition], [elapsed] time, and current [pointIdx].
+ */
 data class MoveTo(
     val points: GdxArray<MoveToPoint>,
 ) : Component<MoveTo> {

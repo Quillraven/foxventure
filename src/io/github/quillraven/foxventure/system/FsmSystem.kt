@@ -6,6 +6,9 @@ import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 
+/**
+ * Updates finite state machines for active entities.
+ */
 class FsmSystem : IteratingSystem(
     family = family { all(Fsm, EntityTag.ACTIVE) }
 ) {

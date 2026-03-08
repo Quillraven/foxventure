@@ -7,6 +7,9 @@ import ktx.app.gdxError
 
 typealias GdxAnimation = com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>
 
+/**
+ * Animation types mapped to their atlas keys.
+ */
 enum class AnimationType {
     IDLE, RUN, JUMP, FALL, CLIMB, ATTACK, HURT;
 
@@ -19,13 +22,17 @@ enum class AnimationType {
     }
 }
 
+/**
+ * Manages entity animations with an [objectKey] for caching dimensions, [idle] default animation,
+ * [gdxAnimations] map by type, and playback [speed]. Tracks [stateTime] and the [active] animation.
+ */
 class Animation(
-    val objectKey: String, // used inside the AnimationSystem to cache dimension updates
+    val objectKey: String,
     val idle: GdxAnimation,
     val gdxAnimations: Map<AnimationType, GdxAnimation>,
     var speed: Float,
-    var stateTime: Float = 0f,
 ) : Component<Animation> {
+    var stateTime: Float = 0f
 
     private val defaultSpeed: Float = speed
 

@@ -9,6 +9,7 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -28,6 +29,9 @@ import ktx.math.vec2
 import kotlin.math.abs
 import kotlin.math.sign
 
+/**
+ * Handles horizontal ground movement including acceleration, deceleration, skidding, and horizontal collision detection.
+ */
 class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),

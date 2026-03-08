@@ -14,6 +14,9 @@ import io.github.quillraven.foxventure.component.Transform
 import ktx.graphics.use
 import kotlin.math.sqrt
 
+/**
+ * Renders debug shapes for entity transforms, collision boxes, proximity detectors, and follow ranges.
+ */
 class DebugRenderSystem(
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(

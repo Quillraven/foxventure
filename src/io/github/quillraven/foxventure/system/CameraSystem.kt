@@ -15,6 +15,9 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.component1
 import ktx.math.component2
 
+/**
+ * Smoothly follows the camera focus entity with lerp and applies camera shake effects.
+ */
 class CameraSystem(
     private val gameViewport: Viewport = inject(),
     private val tiledService: TiledService = inject(),

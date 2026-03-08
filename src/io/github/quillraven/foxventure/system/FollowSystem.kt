@@ -4,6 +4,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Damaged
 import io.github.quillraven.foxventure.component.EntityTag
@@ -13,6 +14,9 @@ import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.sign
 
+/**
+ * Makes entities follow their target within range, stopping at cliffs if configured.
+ */
 class FollowSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),

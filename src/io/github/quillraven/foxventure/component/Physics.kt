@@ -4,6 +4,11 @@ import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
 
+/**
+ * Physics properties including [gravity], [maxFallSpeed], [jumpImpulse], jump timing thresholds,
+ * movement speeds, [acceleration], [deceleration], [airControl], peak gravity adjustments,
+ * [climbSpeed], and current [position] with [prevPosition] for interpolation.
+ */
 data class Physics(
     var gravity: Float,
     var maxFallSpeed: Float,

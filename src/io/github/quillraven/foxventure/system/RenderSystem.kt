@@ -31,6 +31,9 @@ import ktx.collections.gdxArrayOf
 import ktx.graphics.use
 import ktx.tiled.use
 
+/**
+ * Renders Tiled map layers and entity graphics sorted by z-order to a framebuffer.
+ */
 class RenderSystem(
     private val renderContext: RenderContext = inject(),
     private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize

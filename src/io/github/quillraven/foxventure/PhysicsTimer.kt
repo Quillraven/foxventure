@@ -1,4 +1,4 @@
-package io.github.quillraven.foxventure.system
+package io.github.quillraven.foxventure
 
 data class PhysicsTimer(
     val interval: Float,

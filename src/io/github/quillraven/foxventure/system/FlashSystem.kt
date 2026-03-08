@@ -8,18 +8,21 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.Graphic
 
+/**
+ * Creates a flashing visual effect by modulating graphic alpha over time.
+ */
 class FlashSystem : IteratingSystem(
     family = family { all(Flash, Graphic, EntityTag.ACTIVE) }
 ) {
     override fun onTickEntity(entity: Entity) {
         val flash = entity[Flash]
-        flash.timer += deltaTime
+        flash.duration -= deltaTime
 
-        if (flash.timer >= flash.duration) {
+        if (flash.duration <= 0f) {
             entity[Graphic].color.a = 1f
             entity.configure { it -= Flash }
         } else {
-            val progress = (flash.timer * 5f) % 1f // 5 flashes per second
+            val progress = (flash.duration * 5f) % 1f // 5 flashes per second (sawtooth wave)
             entity[Graphic].color.a = Interpolation.pow2Out.apply(1f, 0.3f, progress)
         }
     }

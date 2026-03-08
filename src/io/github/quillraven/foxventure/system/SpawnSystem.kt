@@ -14,7 +14,6 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
-import io.github.quillraven.foxventure.ai.EagleStateAttack
 import io.github.quillraven.foxventure.ai.EagleStateIdle
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.MushroomStateIdle
@@ -51,6 +50,9 @@ import ktx.tiled.property
 import ktx.tiled.propertyOrNull
 import ktx.tiled.width
 
+/**
+ * Spawns entities from Tiled map objects including players, enemies, and collectibles.
+ */
 class SpawnSystem(
     assets: AssetManager = inject(),
     private val gameViewModel: GameViewModel = inject(),
@@ -88,7 +90,9 @@ class SpawnSystem(
 
             // collision
             if (tile.objects.isNotEmpty()) {
-                it += Collision(Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle))
+                val collisionDamage = tile.property("collision_damage", 1)
+                val collisionBox = Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle)
+                it += Collision(collisionBox, collisionDamage)
             }
 
             graphicEntityCfg(tile, it, atlasKey)
@@ -133,7 +137,7 @@ class SpawnSystem(
         when (tiledType) {
             "player" -> {
                 entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                val playerCmp = Player()
+                val playerCmp = Player(credits = 5, gems = 0)
                 entity += playerCmp
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
@@ -221,35 +225,36 @@ class SpawnSystem(
         entity: Entity,
         atlasKey: String,
     ) {
-        val proximityRange = tile.property("proximity_range", 0f)
-
         when (val enemyType = atlasKey.substringAfter("objects/").substringBefore("/")) {
             "mushroom" -> {
                 entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
                 entity += ProximityDetector(
-                    squaredRange = proximityRange * proximityRange,
+                    range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
                     onDetect = { source, target -> source[Follow].target = target },
                     onBreak = { source, _ -> source[Follow].target = Entity.NONE }
                 )
 
                 val followProps = tile.property<MapProperties>("follow")
-                val range = followProps["range"] as Float
-                val breakRange = followProps["break_range"] as Float
                 entity += Follow(
-                    squaredDistance = range * range,
-                    squaredBreakDistance = breakRange * breakRange,
+                    distance = followProps["range"] as Float,
+                    breakDistance = followProps["break_range"] as Float,
                     stopAtCliff = followProps["stop_at_cliff"] as Boolean,
                 )
             }
 
             "eagle" -> {
-                entity += Fsm(FleksStateMachine(world, entity, EagleStateIdle))
+                entity += Fsm(
+                    FleksStateMachine(world, entity, EagleStateIdle),
+                    customProperties = mapOf(
+                        "dive_time" to tile.property<Float>("dive_time"),
+                        "dive_peak_time" to tile.property<Float>("dive_peak_time"),
+                        "rise_time" to tile.property<Float>("rise_time"),
+                    ),
+                )
                 entity += ProximityDetector(
-                    squaredRange = proximityRange * proximityRange,
+                    range = tile.property("proximity_range"),
                     predicate = { target -> target has Player },
-                    onDetect = { source, _ -> source[Fsm].state.changeState(EagleStateAttack) },
-                    onBreak = { _, _ -> }
                 )
             }
 

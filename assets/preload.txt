@@ -123,9 +123,9 @@ i:b:/music/game_over.mp3:73920:1
 i:b:/music/hurt_and_heart.ogg:1976209:1
 i:b:/music/overdrive_loop.mp3:813792:1
 i:b:/maps/foxventure.tiled-project:4334:1
-i:b:/maps/objects.tsx:3248:1
+i:b:/maps/objects.tsx:3424:1
 i:b:/maps/sunny_land.tsx:4077:1
-i:b:/maps/props.tsx:1412:1
+i:b:/maps/props.tsx:1594:1
 i:b:/maps/tutorial.tmx:3070:1
 c:b:/com/badlogic/gdx/utils/lsans-15.png:10270:1
 c:b:/com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:9096:1

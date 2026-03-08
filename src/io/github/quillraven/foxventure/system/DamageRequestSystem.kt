@@ -13,6 +13,9 @@ import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 
+/**
+ * Processes damage requests and creates damage area entities.
+ */
 class DamageRequestSystem : IteratingSystem(
     family = family { all(DamageRequest) }
 ) {
@@ -27,7 +30,7 @@ class DamageRequestSystem : IteratingSystem(
         world.entity {
             val damageOffsetX = if (flip) -size.x else 0f
             it += Transform(position.add(damageOffsetX, 0f), size)
-            it += Collision(box = Rect(0f, 0f, size.x, size.y))
+            it += Collision(box = Rect(0f, 0f, size.x, size.y), collisionDamage = 0)
             it += Damage(source = source, amount = damage)
             it += DelayRemoval(timer = lifeSpan)
             it += Type("damage")

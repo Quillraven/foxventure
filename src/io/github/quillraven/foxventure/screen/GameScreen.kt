@@ -21,7 +21,7 @@ import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
 import io.github.quillraven.foxventure.system.AttackSystem
-import io.github.quillraven.foxventure.system.AudioService
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.CollisionSystem
@@ -38,7 +38,7 @@ import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.MoveToSystem
-import io.github.quillraven.foxventure.system.PhysicsTimer
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.system.PlayerDeathSystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PostRenderSystem

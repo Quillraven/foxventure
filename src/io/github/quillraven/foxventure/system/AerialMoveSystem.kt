@@ -9,6 +9,8 @@ import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
+import io.github.quillraven.foxventure.AudioService
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
@@ -26,6 +28,9 @@ import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.vec2
 import kotlin.math.abs
 
+/**
+ * Handles aerial movement including jumping, gravity, vertical collision detection, and landing effects.
+ */
 class AerialMoveSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val tiledService: TiledService = inject(),

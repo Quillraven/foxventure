@@ -10,6 +10,9 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Transform
 
+/**
+ * Detects entities within proximity range and triggers callbacks when targets are found or lost.
+ */
 class ProximityDetectorSystem : IteratingSystem(
     family = family { all(Transform, Collision, ProximityDetector, EntityTag.ACTIVE) },
     interval = Fixed(1 / 20f),
