@@ -15,10 +15,13 @@ import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
+import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.math.vec2
+import kotlin.math.min
 
 class LifeSystem(
     assets: AssetManager = inject(),
+    private val gameViewModel: GameViewModel = inject(),
 ) : IteratingSystem(
     family = family { all(Life, EntityTag.ACTIVE) }
 ) {
@@ -31,8 +34,18 @@ class LifeSystem(
     }
 
     override fun onTickEntity(entity: Entity) {
-        if (entity[Life].amount > 0) return
+        val life = entity[Life]
+        if (life.heal > 0) {
+            life.amount = min(life.maxAmount.toFloat(), life.amount + life.heal)
+            life.heal = 0
+            if (entity has Player) {
+                gameViewModel.life = life.amount
+            }
+        }
 
+        if (life.amount > 0) return
+
+        // entity has no life left -> remove it
         if (entity hasNo Player) {
             val (position) = entity[Transform]
             val (collBox) = entity[Collision]

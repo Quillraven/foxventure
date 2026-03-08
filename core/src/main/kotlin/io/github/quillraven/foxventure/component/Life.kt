@@ -7,6 +7,8 @@ data class Life(
     var maxAmount: Int,
     var amount: Float = maxAmount.toFloat(),
 ) : Component<Life> {
+    var heal: Int = 0
+
     override fun type() = Life
 
     companion object : ComponentType<Life>()

@@ -4,301 +4,385 @@ size: 1024, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-characters/eagle/attack
+objects/cherry/idle
+  rotate: false
+  xy: 967, 201
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 0
+objects/cherry/idle
+  rotate: false
+  xy: 990, 199
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 1
+objects/cherry/idle
+  rotate: false
+  xy: 195, 7
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 2
+objects/cherry/idle
+  rotate: false
+  xy: 218, 7
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 3
+objects/cherry/idle
+  rotate: false
+  xy: 797, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 4
+objects/cherry/idle
+  rotate: false
+  xy: 820, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 5
+objects/cherry/idle
+  rotate: false
+  xy: 843, 183
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: 6
+objects/eagle/attack
   rotate: false
   xy: 69, 25
   size: 40, 41
   orig: 40, 41
   offset: 0, 0
   index: 0
-characters/eagle/idle
+objects/eagle/idle
   rotate: false
   xy: 111, 25
   size: 40, 41
   orig: 40, 41
   offset: 0, 0
   index: 0
-characters/eagle/idle
+objects/eagle/idle
   rotate: false
   xy: 168, 62
   size: 40, 41
   orig: 40, 41
   offset: 0, 0
   index: 1
-characters/eagle/idle
+objects/eagle/idle
   rotate: false
   xy: 153, 19
   size: 40, 41
   orig: 40, 41
   offset: 0, 0
   index: 2
-characters/eagle/idle
+objects/eagle/idle
   rotate: false
   xy: 210, 62
   size: 40, 41
   orig: 40, 41
   offset: 0, 0
   index: 3
-characters/fox/climb
+objects/fox/climb
   rotate: false
   xy: 197, 105
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/climb
+objects/fox/climb
   rotate: false
   xy: 232, 110
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-characters/fox/climb
+objects/fox/climb
   rotate: false
   xy: 262, 144
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 2
-characters/fox/fall
+objects/fox/fall
   rotate: false
   xy: 267, 110
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/hurt
+objects/fox/hurt
   rotate: false
   xy: 297, 149
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/hurt
+objects/fox/hurt
   rotate: false
   xy: 302, 115
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 1
-characters/fox/idle
+objects/fox/idle
   rotate: false
   xy: 327, 183
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/idle
-  rotate: false
-  xy: 332, 149
-  size: 33, 32
-  orig: 33, 32
-  offset: 0, 0
-  index: 1
-characters/fox/idle
+objects/fox/idle
   rotate: false
   xy: 362, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 2
-characters/fox/idle
+  index: 1
+objects/fox/idle
   rotate: false
   xy: 397, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 3
-characters/fox/jump
+  index: 2
+objects/fox/idle
   rotate: false
   xy: 432, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 0
-characters/fox/run
+  index: 3
+objects/fox/jump
   rotate: false
   xy: 467, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: 0
-characters/fox/run
+objects/fox/run
   rotate: false
   xy: 502, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 1
-characters/fox/run
+  index: 0
+objects/fox/run
   rotate: false
   xy: 537, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 2
-characters/fox/run
+  index: 1
+objects/fox/run
   rotate: false
   xy: 572, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 3
-characters/fox/run
+  index: 2
+objects/fox/run
   rotate: false
   xy: 607, 188
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: 4
-characters/fox/run
+  index: 3
+objects/fox/run
   rotate: false
   xy: 642, 192
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
+  index: 4
+objects/fox/run
+  rotate: false
+  xy: 366, 154
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
   index: 5
-characters/mushroom/attack
+objects/gem/idle
+  rotate: false
+  xy: 923, 191
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 0
+objects/gem/idle
+  rotate: false
+  xy: 940, 191
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 1
+objects/gem/idle
+  rotate: false
+  xy: 286, 63
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 2
+objects/gem/idle
+  rotate: false
+  xy: 389, 105
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 3
+objects/gem/idle
+  rotate: false
+  xy: 886, 174
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 4
+objects/mushroom/attack
   rotate: false
   xy: 82, 217
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 0
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 82, 178
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 1
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 147, 217
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 2
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 82, 139
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 3
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 147, 178
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 4
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 212, 217
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 5
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 82, 100
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 6
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 147, 139
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 7
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 212, 178
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 8
-characters/mushroom/attack
+objects/mushroom/attack
   rotate: false
   xy: 277, 217
   size: 63, 37
   orig: 63, 37
   offset: 0, 0
   index: 9
-characters/mushroom/idle
+objects/mushroom/idle
   rotate: false
   xy: 690, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 0
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 733, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 0
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 776, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 1
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 819, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 2
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 862, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 3
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 905, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 4
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 948, 224
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 5
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 82, 68
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 6
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 125, 68
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 7
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 195, 30
   size: 41, 30
   orig: 41, 30
   offset: 0, 0
   index: 8
-characters/mushroom/run
+objects/mushroom/run
   rotate: false
   xy: 252, 78
   size: 41, 30
@@ -328,42 +412,42 @@ props/rock2
   index: -1
 props/shrooms
   rotate: false
-  xy: 987, 205
+  xy: 886, 189
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: -1
 props/sign
   rotate: false
-  xy: 967, 202
+  xy: 866, 184
   size: 18, 20
   orig: 18, 20
   offset: 0, 0
   index: -1
 props/skulls
   rotate: false
-  xy: 195, 18
+  xy: 371, 108
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
   index: -1
 props/spike-skull
   rotate: false
-  xy: 1005, 208
+  xy: 904, 192
   size: 17, 12
   orig: 17, 12
   offset: 0, 0
   index: -1
 props/spikes
   rotate: false
-  xy: 865, 194
+  xy: 302, 103
   size: 15, 10
   orig: 15, 10
   offset: 0, 0
   index: -1
 props/spikes-top
   rotate: false
-  xy: 882, 195
+  xy: 319, 104
   size: 15, 9
   orig: 15, 9
   offset: 0, 0
@@ -529,41 +613,6 @@ sfx/enemy-death/idle
   orig: 28, 26
   offset: 0, 0
   index: 3
-sfx/gem/idle
-  rotate: false
-  xy: 213, 15
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 0
-sfx/gem/idle
-  rotate: false
-  xy: 797, 191
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 1
-sfx/gem/idle
-  rotate: false
-  xy: 814, 191
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 2
-sfx/gem/idle
-  rotate: false
-  xy: 831, 191
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 3
-sfx/gem/idle
-  rotate: false
-  xy: 848, 191
-  size: 15, 13
-  orig: 15, 13
-  offset: 0, 0
-  index: 4
 sfx/item-feedback/idle
   rotate: false
   xy: 991, 222
@@ -573,14 +622,14 @@ sfx/item-feedback/idle
   index: 0
 sfx/item-feedback/idle
   rotate: false
-  xy: 337, 115
+  xy: 332, 149
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 sfx/item-feedback/idle
   rotate: false
-  xy: 367, 154
+  xy: 337, 115
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
