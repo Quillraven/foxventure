@@ -22,7 +22,7 @@ data object EagleStateIdle : FsmState {
     override fun World.onUpdate(entity: Entity) {
         val fsm = entity[Fsm]
         val target = entity[ProximityDetector].target
-        if (fsm.state.stateTime < 2.5f || target == Entity.NONE || target.wasRemoved()) {
+        if (fsm.state.stateTime < 2.5f || target.wasRemoved()) {
             return
         }
 
@@ -35,7 +35,7 @@ data object EagleStateAttack : FsmState {
         entity[Animation].changeTo(AnimationType.ATTACK)
 
         val target = entity[ProximityDetector].target
-        if (target == Entity.NONE || target.wasRemoved() || target hasNo Collision) {
+        if (target.wasRemoved() || target hasNo Collision) {
             // e.g., player died already -> go back to idle
             entity[Fsm].state.changeState(EagleStateIdle)
             return
