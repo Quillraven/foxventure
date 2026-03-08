@@ -12,7 +12,6 @@ import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
-import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.GdxAnimation
@@ -222,6 +221,7 @@ class CollisionSystem(
         player: Entity,
         other: Entity
     ) {
+        // make player invulnerable
         player.configure {
             val invulnerable = it.getOrAdd(Invulnerable) { Invulnerable(0f) }
             val flash = it.getOrAdd(Flash) { Flash(0f) }
@@ -230,16 +230,9 @@ class CollisionSystem(
         }
 
         // play invulnerability jingle
-        val currentMusicName = audioService.currentMusicName
-        val song = audioService.playMusic("overdrive_loop.mp3")
-        world.entity {
-            it += DelayAction(delay = 10f) {
-                song.stop()
-                song.dispose()
-                currentMusicName?.let { name -> audioService.playMusic(name) }
-            }
-        }
+        audioService.playTempMusic("overdrive_loop.mp3", duration = 10f)
 
+        // display pickup sfx and remove cherry
         val transform = other[Transform]
         spawnPickupSfx(transform, scale = 1f)
 

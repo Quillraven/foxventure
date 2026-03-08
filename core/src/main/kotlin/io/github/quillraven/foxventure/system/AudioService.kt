@@ -20,6 +20,10 @@ class AudioService : MapChangeListener, Disposable {
 
     private var currentMusic: Music? = null
     var currentMusicName: String? = null
+
+    private var tmpMusic: Music? = null
+    private var tmpMusicTimer: Float = 0f
+
     private val soundCache = mutableMapOf<String, Sound>()
 
     fun playSound(name: String) {
@@ -33,7 +37,7 @@ class AudioService : MapChangeListener, Disposable {
         sound.play(soundVolume)
     }
 
-    fun playMusic(name: String): Music {
+    fun playMusic(name: String) {
         // dispose of current music if there is any
         currentMusic?.let { music ->
             music.stop()
@@ -41,7 +45,7 @@ class AudioService : MapChangeListener, Disposable {
         }
 
         // load and play new music
-        return Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
+        Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
             music.isLooping = true
             music.play()
             music.volume = musicVolume
@@ -50,11 +54,36 @@ class AudioService : MapChangeListener, Disposable {
         }
     }
 
+    fun playTempMusic(name: String, duration: Float) {
+        tmpMusicTimer = duration
+        currentMusic?.pause()
+
+        tmpMusic?.stop()
+        tmpMusic?.dispose()
+        tmpMusic = Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
+            music.isLooping = true
+            music.play()
+            music.volume = musicVolume
+        }
+    }
+
     override fun onMapChanged(tiledMap: TiledMap) {
         val musicPath = tiledMap.property("music", "").substringAfterLast("/")
         if (musicPath.isBlank()) return
 
         playMusic(musicPath)
+    }
+
+    fun update(deltaTime: Float) {
+        if (tmpMusicTimer <= 0f) return
+
+        tmpMusicTimer -= deltaTime
+        if (tmpMusicTimer <= 0f) {
+            tmpMusic?.stop()
+            tmpMusic?.dispose()
+            tmpMusic = null
+            currentMusic?.play()
+        }
     }
 
     override fun dispose() {

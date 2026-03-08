@@ -48,6 +48,7 @@ class GdxGame : KtxGame<KtxScreen>() {
         ScreenUtils.clear(0f, 0f, 0f, 1f, true)
         val deltaTime = Gdx.graphics.deltaTime.coerceIn(0f, 1 / 30f)
         currentScreen.render(deltaTime)
+        serviceLocator.audioService.update(deltaTime)
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit()
