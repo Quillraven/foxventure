@@ -5,12 +5,13 @@ import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
 import io.github.quillraven.foxventure.Asset.Companion.get
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.MapAsset
+import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.SkinAsset
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
@@ -21,7 +22,6 @@ import io.github.quillraven.foxventure.system.ActivationSystem
 import io.github.quillraven.foxventure.system.AerialMoveSystem
 import io.github.quillraven.foxventure.system.AnimationSystem
 import io.github.quillraven.foxventure.system.AttackSystem
-import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.system.CameraSystem
 import io.github.quillraven.foxventure.system.ClimbSystem
 import io.github.quillraven.foxventure.system.CollisionSystem
@@ -33,12 +33,11 @@ import io.github.quillraven.foxventure.system.DelayActionSystem
 import io.github.quillraven.foxventure.system.DelayRemovalSystem
 import io.github.quillraven.foxventure.system.FlashSystem
 import io.github.quillraven.foxventure.system.FollowSystem
-import io.github.quillraven.foxventure.system.InvulnerabilitySystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
+import io.github.quillraven.foxventure.system.InvulnerabilitySystem
 import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.MoveToSystem
-import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.system.PlayerDeathSystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PostRenderSystem
@@ -62,7 +61,6 @@ class GameScreen(
     private val game: GdxGame,
     private val renderContext: RenderContext = game.serviceLocator.renderContext,
     private val assets: AssetManager = game.serviceLocator.assets,
-    private val gameViewport: Viewport = game.gameViewport,
     private val stage: Stage = game.stage,
     private val tiledService: TiledService = game.serviceLocator.tiledService,
     private val audioService: AudioService = game.serviceLocator.audioService,
@@ -76,7 +74,7 @@ class GameScreen(
     private fun ecsWorld() = configureWorld {
         injectables {
             add(renderContext)
-            add(gameViewport)
+            add(renderContext.gameViewport)
             add(stage)
             add(assets)
             add(tiledService)
@@ -87,7 +85,7 @@ class GameScreen(
             add(gameViewModel)
         }
 
-        val activationSystem = ActivationSystem(gameViewport)
+        val activationSystem = ActivationSystem(renderContext.gameViewport)
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
