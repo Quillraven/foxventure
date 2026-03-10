@@ -10,8 +10,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.ScreenUtils
-import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.badlogic.gdx.utils.viewport.Viewport
 import com.ray3k.stripe.FreeTypeSkinLoader
 import io.github.quillraven.foxventure.screen.LoadAssetsScreen
 import ktx.app.KtxGame
@@ -20,9 +18,7 @@ import ktx.assets.setLoader
 
 class GdxGame : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator() }
-    val gameViewport: Viewport = ExtendViewport(16f, 9f)
-    val uiViewport: Viewport = ExtendViewport(854f, 480f)
-    val stage: Stage by lazy { Stage(uiViewport, serviceLocator.renderContext.batch) }
+    val stage: Stage by lazy { Stage(serviceLocator.renderContext.uiViewport, serviceLocator.renderContext.batch) }
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
@@ -38,8 +34,6 @@ class GdxGame : KtxGame<KtxScreen>() {
     }
 
     override fun resize(width: Int, height: Int) {
-        gameViewport.update(width, height, false)
-        uiViewport.update(width, height, true)
         serviceLocator.renderContext.resize(width, height)
         super.resize(width, height)
     }
