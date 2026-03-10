@@ -36,4 +36,5 @@ Credits:
 - https://ansimuz.itch.io/sunny-land-pixel-game-art
 - https://sfxr.me/
 - https://pixabay.com/sound-effects/film-special-effects-game-over-38511/
-- https://burpyfresh.itch.io/plain-pixel
+- https://ansimuz.itch.io/sunnyland-enemies-extended-pack
+- https://fonts.google.com/specimen/Press+Start+2P
