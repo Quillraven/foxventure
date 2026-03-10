@@ -31,6 +31,7 @@ data object PiranhaStateAttack : FsmState {
 
     override fun World.onUpdate(entity: Entity) {
         if (entity[Animation].isFinished()) {
+            entity[Attack].resetCooldown()
             entity[Fsm].state.changeState(PiranhaStateIdle)
         }
     }

@@ -36,7 +36,7 @@ class AttackSystem(
             ?: entity.getOrNull(ProximityDetector)?.target
             ?: Entity.NONE
         if (target.wasRemoved()) {
-            attack.readyToAttack = true
+            attack.readyToAttack = target != Entity.NONE
             return
         }
 

@@ -85,6 +85,7 @@
  </tile>
  <tile id="6" type="enemy">
   <properties>
+   <property name="animation_speed" type="float" value="0.75"/>
    <property name="attack" type="class" propertytype="Attack">
     <properties>
      <property name="cooldown" type="float" value="1"/>
