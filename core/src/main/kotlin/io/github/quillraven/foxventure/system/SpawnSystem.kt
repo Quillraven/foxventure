@@ -14,17 +14,16 @@ import com.github.quillraven.fleks.World.Companion.inject
 import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
-import io.github.quillraven.foxventure.ai.EagleStateIdle
 import io.github.quillraven.foxventure.ai.FleksStateMachine
-import io.github.quillraven.foxventure.ai.MushroomStateIdle
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
+import io.github.quillraven.foxventure.cfg.eagleCfg
+import io.github.quillraven.foxventure.cfg.mushroomCfg
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Attack
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
-import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
@@ -32,7 +31,6 @@ import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
-import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
@@ -226,38 +224,8 @@ class SpawnSystem(
         atlasKey: String,
     ) {
         when (val enemyType = atlasKey.substringAfter("objects/").substringBefore("/")) {
-            "mushroom" -> {
-                entity += Fsm(FleksStateMachine(world, entity, MushroomStateIdle))
-                entity += ProximityDetector(
-                    range = tile.property("proximity_range"),
-                    predicate = { target -> target has Player },
-                    onDetect = { source, target -> source[Follow].target = target },
-                    onBreak = { source, _ -> source[Follow].target = Entity.NONE }
-                )
-
-                val followProps = tile.property<MapProperties>("follow")
-                entity += Follow(
-                    distance = followProps["range"] as Float,
-                    breakDistance = followProps["break_range"] as Float,
-                    stopAtCliff = followProps["stop_at_cliff"] as Boolean,
-                )
-            }
-
-            "eagle" -> {
-                entity += Fsm(
-                    FleksStateMachine(world, entity, EagleStateIdle),
-                    customProperties = mapOf(
-                        "dive_time" to tile.property<Float>("dive_time"),
-                        "dive_peak_time" to tile.property<Float>("dive_peak_time"),
-                        "rise_time" to tile.property<Float>("rise_time"),
-                    ),
-                )
-                entity += ProximityDetector(
-                    range = tile.property("proximity_range"),
-                    predicate = { target -> target has Player },
-                )
-            }
-
+            "mushroom" -> mushroomCfg(world, tile, entity)
+            "eagle" -> eagleCfg(world, tile, entity)
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }
