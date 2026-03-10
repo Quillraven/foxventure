@@ -12,10 +12,10 @@ import com.badlogic.gdx.utils.viewport.Viewport
 
 data class RenderContext(
     val batch: Batch = SpriteBatch(),
-    val gameViewport: Viewport = ExtendViewport(16f, 9f),
+    val gameViewport: Viewport = ExtendViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT),
     val uiViewport: Viewport = ExtendViewport(854f, 480f),
-    var fbo1: FrameBuffer = frameBuffer(Gdx.graphics.width, Gdx.graphics.height),
-    var fbo2: FrameBuffer = frameBuffer(Gdx.graphics.width, Gdx.graphics.height),
+    var fbo1: FrameBuffer = frameBuffer(VIRTUAL_WIDTH * FBO_PIXELS_PER_UNIT, VIRTUAL_HEIGHT * FBO_PIXELS_PER_UNIT),
+    var fbo2: FrameBuffer = frameBuffer(VIRTUAL_WIDTH * FBO_PIXELS_PER_UNIT, VIRTUAL_HEIGHT * FBO_PIXELS_PER_UNIT),
 ) : Disposable {
     var activeFbo: FrameBuffer = fbo1
 
@@ -23,12 +23,15 @@ data class RenderContext(
         gameViewport.update(width, height, false)
         uiViewport.update(width, height, true)
 
-        if (width > 0 && height > 0 && (width != fbo1.width || height != fbo1.height)) {
+        if (gameViewport.worldWidth != VIRTUAL_WIDTH || gameViewport.worldHeight != VIRTUAL_HEIGHT) {
+            val fboW = gameViewport.worldWidth * FBO_PIXELS_PER_UNIT
+            val fboH = gameViewport.worldHeight * FBO_PIXELS_PER_UNIT
             fbo1.dispose()
-            fbo1 = frameBuffer(width, height)
+            fbo1 = frameBuffer(fboW, fboH)
             fbo2.dispose()
-            fbo2 = frameBuffer(width, height)
+            fbo2 = frameBuffer(fboW, fboH)
         }
+        Gdx.app.debug("RenderContext", "FBO dimensions: ${fbo1.width}x${fbo1.height}")
     }
 
     override fun dispose() {
@@ -45,8 +48,12 @@ data class RenderContext(
     }
 
     companion object {
-        private fun frameBuffer(width: Int, height: Int) =
-            FrameBuffer(Pixmap.Format.RGBA8888, width, height, false).apply {
+        private const val VIRTUAL_WIDTH = 16f
+        private const val VIRTUAL_HEIGHT = 9f
+        private const val FBO_PIXELS_PER_UNIT = 48
+
+        private fun frameBuffer(width: Float, height: Float) =
+            FrameBuffer(Pixmap.Format.RGBA8888, width.toInt(), height.toInt(), false).apply {
                 colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
             }
     }

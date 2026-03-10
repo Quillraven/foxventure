@@ -2,6 +2,7 @@ package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.glutils.HdpiUtils
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
@@ -37,7 +38,7 @@ import ktx.tiled.use
 class RenderSystem(
     private val renderContext: RenderContext = inject(),
     private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize
-    private val gameViewport: Viewport = inject(),
+    gameViewport: Viewport = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Graphic, EntityTag.ACTIVE) },
     comparator = compareEntityBy(Transform),
@@ -51,8 +52,7 @@ class RenderSystem(
     override fun onTick() {
         renderContext.fbo1.use {
             ScreenUtils.clear(0f, 0f, 0f, 0f, true)
-
-            gameViewport.apply()
+            HdpiUtils.glViewport(0, 0, renderContext.fbo1.width, renderContext.fbo1.height)
             mapRenderer.use(camera) {
                 bgdLayers.forEach(it::renderMapLayer)
                 super.onTick() // render entities
