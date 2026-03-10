@@ -9,6 +9,7 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.Graphic
+import io.github.quillraven.foxventure.component.ProximityDetector
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.tiled.TiledService
 import kotlin.math.abs
@@ -31,20 +32,22 @@ class AttackSystem(
         }
 
         // attack timer is zero -> ready to attack
-        val follow = entity.getOrNull(Follow)
-        if (follow == null || follow.target == Entity.NONE) {
-            attack.readyToAttack = follow == null
+        val target = entity.getOrNull(Follow)?.target
+            ?: entity.getOrNull(ProximityDetector)?.target
+            ?: Entity.NONE
+        if (target.wasRemoved()) {
+            attack.readyToAttack = true
             return
         }
 
-        // ready to attack only if Follow target is within attack range
+        // ready to attack only if target is within attack range
         val (position) = entity[Transform]
         val collBox = entity[Collision].box
         val centerX = position.x + collBox.x + (collBox.width * 0.5f)
         val centerY = position.y + collBox.y + (collBox.height * 0.5f)
 
-        val (targetPosition) = follow.target[Transform]
-        val targetCollBox = follow.target[Collision].box
+        val (targetPosition) = target[Transform]
+        val targetCollBox = target[Collision].box
         val targetCenterX = targetPosition.x + targetCollBox.x + (targetCollBox.width * 0.5f)
         val targetCenterY = targetPosition.y + targetCollBox.y + (targetCollBox.height * 0.5f)
 
