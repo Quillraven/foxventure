@@ -114,11 +114,11 @@ class GameScreen(
             add(RenderSystem())
             add(PostRenderSystem())
             add(UiRenderSystem())
-            add(DelayActionSystem())
-            add(DelayRemovalSystem())
             if (System.getenv("debug") == "true") {
                 add(DebugRenderSystem())
             }
+            add(DelayActionSystem())
+            add(DelayRemovalSystem())
         }
 
         onRemoveEntity { entity ->
@@ -130,12 +130,13 @@ class GameScreen(
         // UI
         setupUI()
         // input
-        Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
+        val controllerSystem = world.system<ControllerSystem>()
+        Gdx.input.inputProcessor = InputMultiplexer(stage, controllerSystem)
         // tile map initialisation
         registerTiledListeners()
         tiledService.setMap(MapAsset.TUTORIAL)
         // fade in effect
-        world.system<ControllerSystem>().enabled = false
+        controllerSystem.enabled = false
         val transitionEntity = world.entity {
             it += Transition(
                 effects = gdxArrayOf(TransitionEffect(TransitionType.PIXELIZE, duration = 1.25f, reversed = true))
@@ -143,7 +144,7 @@ class GameScreen(
         }
         world.entity {
             it += DelayAction(delay = 1.5f) {
-                world.system<ControllerSystem>().enabled = true
+                controllerSystem.enabled = true
                 transitionEntity.remove()
             }
         }
