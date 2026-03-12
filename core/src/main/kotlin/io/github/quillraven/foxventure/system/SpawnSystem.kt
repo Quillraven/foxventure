@@ -97,11 +97,11 @@ class SpawnSystem(
             attackEntityCfg(tile, it)
             wanderCfg(tile, it)
             typeSpecificEntityCfg(tile, it, atlasKey, tiledType)
-            projecticleCfg(tile, it)
+            projectileCfg(tile, it)
         }
     }
 
-    private fun EntityCreateContext.projecticleCfg(
+    private fun EntityCreateContext.projectileCfg(
         tile: TiledMapTile,
         entity: Entity
     ) {
