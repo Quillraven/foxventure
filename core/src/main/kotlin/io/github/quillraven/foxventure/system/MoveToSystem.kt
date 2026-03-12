@@ -5,6 +5,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.Transform
 
@@ -33,6 +34,12 @@ class MoveToSystem : IteratingSystem(
         // update position
         position.x = point.interpolation.apply(moveTo.startPosition.x, point.target.x, progress)
         position.y = (point.interpolationY ?: point.interpolation).apply(moveTo.startPosition.y, point.target.y, progress)
+        // flip graphic
+        if (!MathUtils.isEqual(moveTo.startPosition.x, point.target.x, 0.001f)) {
+            entity.getOrNull(Graphic)?.let { graphic ->
+                graphic.flip = moveTo.startPosition.x > point.target.x
+            }
+        }
 
         if (progress >= 1f) {
             moveTo.pointIdx++
