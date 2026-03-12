@@ -6,6 +6,7 @@ import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Attack
 import io.github.quillraven.foxventure.component.Fsm
+import io.github.quillraven.foxventure.component.ProjectileRequest
 import io.github.quillraven.foxventure.component.ProximityDetector
 
 data object PiranhaStateIdle : FsmState {
@@ -30,7 +31,43 @@ data object PiranhaStateAttack : FsmState {
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity[Animation].isFinished()) {
+        val target = entity[ProximityDetector].target
+        if (target.wasRemoved()) {
+            entity[Attack].resetCooldown()
+            entity[Fsm].state.changeState(PiranhaStateIdle)
+            return
+        }
+
+        val animation = entity[Animation]
+        if (animation.isLastFrame()) {
+            entity[Fsm].state.changeState(PiranhaStateSpawnProjectile)
+            return
+        }
+    }
+}
+
+data object PiranhaStateSpawnProjectile : FsmState {
+    override fun World.onEnter(entity: Entity) {
+        entity[Animation].speed = 0.1f
+        val fsm = entity[Fsm]
+
+        entity {
+            it += ProjectileRequest(
+                source = entity,
+                target = entity[ProximityDetector].target,
+                damage = entity[Attack].damage,
+                spawnOffset = fsm.customProperty("projectile_spawn_offset"),
+                atlasKey = "sfx/piranha-ball",
+                speed = fsm.customProperty("projectile_speed"),
+            )
+        }
+    }
+
+    override fun World.onUpdate(entity: Entity) {
+        val animation = entity[Animation]
+
+        if (animation.isFinished()) {
+            animation.resetSpeed()
             entity[Attack].resetCooldown()
             entity[Fsm].state.changeState(PiranhaStateIdle)
         }

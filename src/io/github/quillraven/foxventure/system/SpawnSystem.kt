@@ -1,7 +1,6 @@
 package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.graphics.glutils.FileTextureData
 import com.badlogic.gdx.maps.MapProperties
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -20,6 +19,7 @@ import io.github.quillraven.foxventure.cfg.eagleCfg
 import io.github.quillraven.foxventure.cfg.mushroomCfg
 import io.github.quillraven.foxventure.cfg.piranhaCfg
 import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.Animation.Companion.getGdxAnimation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Attack
 import io.github.quillraven.foxventure.component.Collision
@@ -90,7 +90,8 @@ class SpawnSystem(
             // collision
             if (tile.objects.isNotEmpty()) {
                 val collisionDamage = tile.property("collision_damage", 1)
-                val collisionBox = Rect.ofRectangle((tile.objects.single() as RectangleMapObject).rectangle)
+                val tiledRect = tile.objects.single { obj -> obj is RectangleMapObject } as RectangleMapObject
+                val collisionBox = Rect.ofRectangle(tiledRect.rectangle)
                 it += Collision(collisionBox, collisionDamage)
             }
 
@@ -173,7 +174,7 @@ class SpawnSystem(
                     // the substring after the last '/' is the AnimationType like objects/fox/idle -> idle
                     .map { region -> AnimationType.byAtlasKey(region.name.substringAfterLast("/")) }
                     // map AnimationType to real GdxAnimation
-                    .associateWith { animationType -> getAnimation(objectKey, animationType) }
+                    .associateWith { animationType -> objectsAtlas.getGdxAnimation(objectKey, animationType) }
             }
 
             val idleAnimation = gdxAnimations.getOrElse(AnimationType.IDLE) {
@@ -230,17 +231,5 @@ class SpawnSystem(
             "piranha" -> piranhaCfg(world, tile, entity)
             else -> gdxError("No enemy state for enemy $enemyType")
         }
-    }
-
-    private fun getAnimation(
-        objectKey: String,
-        animationType: AnimationType
-    ): GdxAnimation {
-        val animationKey = "$objectKey/${animationType.atlasKey}"
-        val regions = objectsAtlas.findRegions(animationKey)
-        if (regions.isEmpty) {
-            gdxError("No regions for animation $animationKey")
-        }
-        return GdxAnimation(1 / 12f, regions, PlayMode.LOOP)
     }
 }

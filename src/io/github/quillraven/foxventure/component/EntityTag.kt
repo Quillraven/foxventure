@@ -12,4 +12,5 @@ enum class EntityTag : EntityTags by entityTagOf() {
     CLIMBING,
     ROOT,
     PLAYER_DEATH,
+    PROJECTILE,
 }

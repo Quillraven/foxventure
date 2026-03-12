@@ -28,5 +28,22 @@ data class Physics(
 ) : Component<Physics> {
     override fun type() = Physics
 
-    companion object : ComponentType<Physics>()
+    companion object : ComponentType<Physics>() {
+        fun projectilePhysics(position: Vector2, speed: Float, acceleration: Float = speed * 10f): Physics = Physics(
+            gravity = 0f,
+            maxFallSpeed = 0f,
+            jumpImpulse = 0f,
+            coyoteThreshold = 0f,
+            jumpBufferThreshold = 0f,
+            maxSpeed = speed,
+            acceleration = acceleration,
+            deceleration = 0f,
+            skidDeceleration = 0f,
+            airControl = 0f,
+            peakGravityMultiplier = 0f,
+            peakVelocityThreshold = 0f,
+            climbSpeed = 0f,
+            position = position,
+        )
+    }
 }

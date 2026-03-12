@@ -69,7 +69,7 @@ private class Chunk {
  * - `BUFFER` provides an additional boundary around the camera for preloading entities.
  */
 class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
-    family = family { all(Transform, EntityTag.ACTIVE).none(Player, DelayRemoval) },
+    family = family { all(Transform, EntityTag.ACTIVE).none(Player, DelayRemoval, EntityTag.PROJECTILE) },
     interval = Fixed(1 / 20f),
 ), MapChangeListener {
     private val chunks = gdxArrayOf<Chunk>()

@@ -59,14 +59,15 @@ class GroundMoveSystem(
         val physics = entity[Physics]
 
         val inputX = getInputX(entity)
-
         val wasAtMaxSpeed = abs(velocity.current.x) >= physics.maxSpeed && collision.isGrounded
+        val isPlayer = entity has Player
+        val deltaTime = physicsTimer.interval
 
-        updateHorizontalVelocity(entity, velocity, physics, inputX, collision.isGrounded, physicsTimer.interval)
-        applyHorizontalMovement(velocity.current, physics.position, collision.box)
+        updateHorizontalVelocity(entity, velocity, physics, inputX, collision.isGrounded, deltaTime, isPlayer)
+        applyHorizontalMovement(velocity.current, physics.position, collision.box, isPlayer)
 
         val isAtMaxSpeed = abs(velocity.current.x) >= physics.maxSpeed && collision.isGrounded
-        if (!wasAtMaxSpeed && isAtMaxSpeed && entity.has(Player)) {
+        if (!wasAtMaxSpeed && isAtMaxSpeed && isPlayer) {
             spawnRunDust(entity, 1.5f)
         }
     }
@@ -98,7 +99,8 @@ class GroundMoveSystem(
         physics: Physics,
         inputX: Float,
         isGrounded: Boolean,
-        deltaTime: Float
+        deltaTime: Float,
+        isPlayer: Boolean,
     ) {
         val speed = velocity.current
         when {
@@ -118,7 +120,7 @@ class GroundMoveSystem(
                     else -> (speed.x + inputX * rate * deltaTime).coerceIn(-physics.maxSpeed, physics.maxSpeed)
                 }
 
-                if (!wasSkidding && velocity.isSkidding && isGrounded && entity has Player) {
+                if (!wasSkidding && velocity.isSkidding && isGrounded && isPlayer) {
                     spawnRunDust(entity, 0.9f)
                 }
             }
@@ -150,12 +152,15 @@ class GroundMoveSystem(
         velocity: Vector2,
         position: Vector2,
         collisionBox: Rect,
+        isPlayer: Boolean,
     ) {
         val delta = velocity.x * physicsTimer.interval
         if (delta == 0f) return
 
         position.x += delta
-        clampToMapBounds(position, collisionBox)
+        if (isPlayer) {
+            clampToMapBounds(position, collisionBox)
+        }
 
         val rect = tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false)
         if (rect != null) {

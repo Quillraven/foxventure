@@ -42,6 +42,8 @@ import io.github.quillraven.foxventure.system.PlayerDeathSystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PostRenderSystem
 import io.github.quillraven.foxventure.system.PreInterpolationSystem
+import io.github.quillraven.foxventure.system.ProjectileRemovalSystem
+import io.github.quillraven.foxventure.system.ProjectileRequestSystem
 import io.github.quillraven.foxventure.system.ProximityDetectorSystem
 import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
@@ -107,6 +109,7 @@ class GameScreen(
             add(PlayerDeathSystem())
             add(FsmSystem())
             add(DamageRequestSystem())
+            add(ProjectileRequestSystem())
             add(CameraSystem())
             add(AnimationSystem())
             add(FlashSystem())
@@ -119,6 +122,7 @@ class GameScreen(
             }
             add(DelayActionSystem())
             add(DelayRemovalSystem())
+            add(ProjectileRemovalSystem())
         }
 
         onRemoveEntity { entity ->

@@ -96,17 +96,10 @@ class CollisionSystem(
                         collision,
                         otherType = type
                     )
-
-                    else -> onOtherCollision(entity = entity, other = other)
                 }
             }
         }
     }
-
-    // non-player collision -> atm no usage for it but might be useful in the future
-    // to avoid that certain enemies walk inside each other
-    @Suppress("unused")
-    private fun onOtherCollision(entity: Entity, other: Entity) = Unit
 
     private fun onPlayerCollision(
         player: Entity,
