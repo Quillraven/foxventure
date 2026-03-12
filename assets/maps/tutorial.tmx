@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="40">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="41">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
@@ -45,8 +45,8 @@
   <object id="34" gid="588" x="528" y="80" width="40" height="41"/>
   <object id="35" gid="589" x="139" y="75" width="21" height="21"/>
   <object id="36" gid="590" x="130" y="143" width="21" height="21"/>
-  <object id="37" gid="591" x="32" y="112" width="61" height="45"/>
   <object id="38" gid="591" x="192" y="224" width="61" height="45"/>
   <object id="39" gid="591" x="496" y="128" width="61" height="45"/>
+  <object id="40" gid="588" x="160" y="64" width="40" height="41"/>
  </objectgroup>
 </map>

@@ -127,8 +127,10 @@ class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
     }
 
     private fun getChunkAt(x: Float, y: Float): Chunk {
-        val chunkX = (x / CHUNK_WIDTH).toInt()
-        val chunkY = (y / CHUNK_HEIGHT).toInt()
+        // some entities might move outside the map to the left (e.g., eagle). Just clamp the values to 0
+        // to avoid negative chunk indices
+        val chunkX = (x.coerceAtLeast(0f) / CHUNK_WIDTH).toInt()
+        val chunkY = (y.coerceAtLeast(0f) / CHUNK_HEIGHT).toInt()
         if (chunkX < 0 || chunkY < 0 || chunkX >= chunksX) gdxError("Invalid chunk index")
         val index = chunkY * chunksX + chunkX
         if (index < 0 || index >= chunks.size) gdxError("Invalid chunk index")

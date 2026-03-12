@@ -77,14 +77,15 @@ class Animation(
     companion object : ComponentType<Animation>() {
         fun TextureAtlas.getGdxAnimation(
             objectKey: String,
-            animationType: AnimationType
+            animationType: AnimationType,
+            playMode: PlayMode = PlayMode.LOOP,
         ): GdxAnimation {
             val animationKey = "$objectKey/${animationType.atlasKey}"
             val regions = this.findRegions(animationKey)
             if (regions.isEmpty) {
                 gdxError("No regions for animation $animationKey")
             }
-            return GdxAnimation(1 / 12f, regions, PlayMode.LOOP)
+            return GdxAnimation(1 / 12f, regions, playMode)
         }
     }
 }

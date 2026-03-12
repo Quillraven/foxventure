@@ -1,9 +1,8 @@
 package io.github.quillraven.foxventure.system
 
 import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.graphics.glutils.FileTextureData
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.maps.MapProperties
-import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.github.quillraven.fleks.Entity
@@ -32,6 +31,7 @@ import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.ProjectileCfg
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
@@ -39,6 +39,10 @@ import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Wander
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
+import io.github.quillraven.foxventure.tiled.TiledService
+import io.github.quillraven.foxventure.tiled.TiledService.Companion.atlasKey
+import io.github.quillraven.foxventure.tiled.TiledService.Companion.collisionRect
+import io.github.quillraven.foxventure.tiled.TiledService.Companion.pointObject
 import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.gdxError
 import ktx.math.vec2
@@ -55,6 +59,7 @@ import ktx.tiled.width
 class SpawnSystem(
     assets: AssetManager = inject(),
     private val gameViewModel: GameViewModel = inject(),
+    private val tiledService: TiledService = inject(),
 ) : IntervalSystem(enabled = false), LoadTileObjectListener {
     private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val animationCache = mutableMapOf<String, Map<AnimationType, GdxAnimation>>()
@@ -71,14 +76,7 @@ class SpawnSystem(
         val h = mapObject.height.toWorldUnits()
         val tiledType = tile.property("type", "")
         val z = mapObject.property("z", Transform.zByTiledType(tiledType))
-        val data = tile.textureRegion.texture.textureData as FileTextureData
-        // Tiled references graphics in the "collection of images" tilesets as a relative path.
-        // This path is the input path for the TexturePacker tool that creates a TextureAtlas out of those single images.
-        // Since we use the atlas for rendering instead of the single images, we need the atlas key instead of the path.
-        // The key is the path without the input folder part (= 'graphics/sprites/') and without the file extension.
-        val atlasKey = data.fileHandle.pathWithoutExtension()
-            .substringAfter("graphics/sprites/") // atlas key is without TexturePacker input directory name
-            .substringBeforeLast("_") // remove index -> "idle_0" becomes "idle"
+        val atlasKey = tile.atlasKey()
 
         world.entity {
             it += Transform(position = vec2(x, y), size = vec2(w, h), z = z)
@@ -90,8 +88,7 @@ class SpawnSystem(
             // collision
             if (tile.objects.isNotEmpty()) {
                 val collisionDamage = tile.property("collision_damage", 1)
-                val tiledRect = tile.objects.single { obj -> obj is RectangleMapObject } as RectangleMapObject
-                val collisionBox = Rect.ofRectangle(tiledRect.rectangle)
+                val collisionBox = Rect.ofRectangle(tile.collisionRect())
                 it += Collision(collisionBox, collisionDamage)
             }
 
@@ -100,6 +97,33 @@ class SpawnSystem(
             attackEntityCfg(tile, it)
             wanderCfg(tile, it)
             typeSpecificEntityCfg(tile, it, atlasKey, tiledType)
+            projectileCfg(tile, it)
+        }
+    }
+
+    private fun EntityCreateContext.projectileCfg(
+        tile: TiledMapTile,
+        entity: Entity
+    ) {
+        tile.propertyOrNull<Int>("projectile_id")?.let { id ->
+            val projectileTile: TiledMapTile = tiledService.tileById("objects", id)
+            val w = projectileTile.textureRegion.regionWidth.toWorldUnits()
+            val h = projectileTile.textureRegion.regionHeight.toWorldUnits()
+            val playModeStr = projectileTile.property("play_mode", "loop").uppercase()
+            val spawnOffset = tile.pointObject("projectile_spawn").point.cpy().apply {
+                x = x.toWorldUnits()
+                y = y.toWorldUnits()
+            }
+
+            entity += ProjectileCfg(
+                atlasKey = projectileTile.atlasKey().substringBeforeLast("/"),
+                size = vec2(w, h),
+                collisionRect = Rect.ofRectangle(projectileTile.collisionRect()),
+                speed = projectileTile.property("speed") as Float,
+                playMode = PlayMode.valueOf(playModeStr),
+                spawnOffset = spawnOffset,
+                damage = entity[Attack].damage,
+            )
         }
     }
 

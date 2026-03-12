@@ -445,6 +445,34 @@ objects/mushroom/run
   orig: 41, 30
   offset: 0, 0
   index: 9
+objects/piranha-ball/idle
+  rotate: false
+  xy: 689, 178
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+objects/piranha-ball/idle
+  rotate: false
+  xy: 201, 105
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+objects/piranha-ball/idle
+  rotate: false
+  xy: 201, 87
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+objects/piranha-ball/idle
+  rotate: false
+  xy: 753, 173
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
 objects/piranha/attack
   rotate: false
   xy: 82, 210
@@ -730,33 +758,5 @@ sfx/item-feedback/idle
   xy: 522, 113
   size: 32, 32
   orig: 32, 32
-  offset: 0, 0
-  index: 3
-sfx/piranha-ball/idle
-  rotate: false
-  xy: 689, 178
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 0
-sfx/piranha-ball/idle
-  rotate: false
-  xy: 201, 105
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 1
-sfx/piranha-ball/idle
-  rotate: false
-  xy: 201, 87
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 2
-sfx/piranha-ball/idle
-  rotate: false
-  xy: 753, 173
-  size: 16, 16
-  orig: 16, 16
   offset: 0, 0
   index: 3

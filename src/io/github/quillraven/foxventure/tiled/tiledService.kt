@@ -1,10 +1,14 @@
 package io.github.quillraven.foxventure.tiled
 
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.glutils.FileTextureData
+import com.badlogic.gdx.maps.objects.PointMapObject
+import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.MapAsset
@@ -302,5 +306,33 @@ class TiledService(
     fun clearAllListener() {
         loadTileObjectListeners.clear()
         mapChangeListeners.clear()
+    }
+
+    fun tileById(tilesetName: String, id: Int): TiledMapTile {
+        val tileSet = currentMap.tileSets.single { it.name == tilesetName }
+        val tiledId = tileSet.property<Int>("firstgid") + id
+
+        return tileSet.getTile(tiledId) ?: gdxError("There is no tile with id $id in tileset $tilesetName")
+    }
+
+    companion object {
+        fun TiledMapTile.collisionRect(): Rectangle {
+            return (this.objects.single { obj -> obj is RectangleMapObject } as RectangleMapObject).rectangle
+        }
+
+        fun TiledMapTile.atlasKey(): String {
+            val data = this.textureRegion.texture.textureData as FileTextureData
+            // Tiled references graphics in the "collection of images" tilesets as a relative path.
+            // This path is the input path for the TexturePacker tool that creates a TextureAtlas out of those single images.
+            // Since we use the atlas for rendering instead of the single images, we need the atlas key instead of the path.
+            // The key is the path without the input folder part (= 'graphics/sprites/') and without the file extension.
+            return data.fileHandle.pathWithoutExtension()
+                .substringAfter("graphics/sprites/") // atlas key is without TexturePacker input directory name
+                .substringBeforeLast("_") // remove index -> "idle_0" becomes "idle"
+        }
+
+        fun TiledMapTile.pointObject(name: String): PointMapObject {
+            return this.objects.single { it.name == name } as PointMapObject
+        }
     }
 }

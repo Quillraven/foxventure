@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="61" tileheight="45" tilecount="7" columns="0">
+<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="61" tileheight="45" tilecount="8" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -60,7 +60,7 @@
    <property name="dive_peak_time" type="float" value="0.3"/>
    <property name="dive_time" type="float" value="1.2"/>
    <property name="life" type="int" value="2"/>
-   <property name="proximity_range" type="float" value="8"/>
+   <property name="proximity_range" type="float" value="9"/>
    <property name="rise_time" type="float" value="0.8"/>
   </properties>
   <image source="../graphics/sprites/objects/eagle/idle_0.png" width="40" height="41"/>
@@ -94,7 +94,7 @@
     </properties>
    </property>
    <property name="life" type="int" value="1"/>
-   <property name="projectile_speed" type="float" value="4.5"/>
+   <property name="projectile_id" type="int" value="7"/>
    <property name="proximity_range" type="float" value="4.5"/>
   </properties>
   <image source="../graphics/sprites/objects/piranha/idle_0.png" width="61" height="45"/>
@@ -103,6 +103,16 @@
    <object id="2" name="projectile_spawn" x="37" y="25">
     <point/>
    </object>
+  </objectgroup>
+ </tile>
+ <tile id="7">
+  <properties>
+   <property name="play_mode" value="loop_pingpong"/>
+   <property name="speed" type="float" value="4.5"/>
+  </properties>
+  <image source="../graphics/sprites/objects/piranha-ball/idle_0.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2" y="5" width="13" height="8"/>
   </objectgroup>
  </tile>
 </tileset>

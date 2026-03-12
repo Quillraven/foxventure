@@ -6,7 +6,7 @@ import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Attack
 import io.github.quillraven.foxventure.component.Fsm
-import io.github.quillraven.foxventure.component.ProjectileRequest
+import io.github.quillraven.foxventure.component.ProjectileCfg
 import io.github.quillraven.foxventure.component.ProximityDetector
 
 data object PiranhaStateIdle : FsmState {
@@ -49,17 +49,10 @@ data object PiranhaStateAttack : FsmState {
 data object PiranhaStateSpawnProjectile : FsmState {
     override fun World.onEnter(entity: Entity) {
         entity[Animation].speed = 0.1f
-        val fsm = entity[Fsm]
+        val projectileCfg = entity[ProjectileCfg]
 
         entity {
-            it += ProjectileRequest(
-                source = entity,
-                target = entity[ProximityDetector].target,
-                damage = entity[Attack].damage,
-                spawnOffset = fsm.customProperty("projectile_spawn_offset"),
-                atlasKey = "sfx/piranha-ball",
-                speed = fsm.customProperty("projectile_speed"),
-            )
+            it += projectileCfg.toRequest(source = entity, target = entity[ProximityDetector].target)
         }
     }
 

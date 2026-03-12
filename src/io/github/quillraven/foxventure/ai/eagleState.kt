@@ -60,17 +60,25 @@ data object EagleStateAttack : FsmState {
         entity.configure {
             it += MoveTo(
                 points = gdxArrayOf(
-                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, diveTime, Interpolation.pow3Out),
+                    MoveToPoint(vec2(targetCenterX, targetY), Interpolation.smooth, diveTime, Interpolation.pow3Out),
                     MoveToPoint(vec2(targetCenterX, targetY), Interpolation.linear, peakTime),
-                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.linear, riseTime, Interpolation.pow3In)
+                    MoveToPoint(vec2(mirroredX, eagleY), Interpolation.smooth, riseTime, Interpolation.pow3In)
                 )
             )
         }
     }
 
     override fun World.onUpdate(entity: Entity) {
-        if (entity.getOrNull(MoveTo) == null) {
+        val moveTo = entity.getOrNull(MoveTo)
+
+        if (moveTo == null) {
             entity[Fsm].state.changeState(EagleStateIdle)
+            return
+        }
+
+        val animation = entity[Animation]
+        if (moveTo.pointIdx == 2 && animation.activeType != AnimationType.IDLE) {
+            animation.changeTo(AnimationType.IDLE)
         }
     }
 }
