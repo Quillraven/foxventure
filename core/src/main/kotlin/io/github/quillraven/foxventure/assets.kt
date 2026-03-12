@@ -23,7 +23,8 @@ enum class AtlasAsset(path: String) : Asset<TextureAtlas> {
 }
 
 enum class MapAsset : Asset<TiledMap> {
-    TUTORIAL;
+    TUTORIAL,
+    PLAYGROUND;
 
     override val descriptor = assetDescriptor("maps/${name.lowercase()}.tmx", defaultParams())
 

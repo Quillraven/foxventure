@@ -1,51 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="42">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="75" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="71">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
  <tileset firstgid="1" source="sunny_land.tsx"/>
  <tileset firstgid="576" source="props.tsx"/>
- <tileset firstgid="585" source="objects.tsx"/>
+ <tileset firstgid="587" source="objects.tsx"/>
  <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
   <image source="../graphics/sky.png" width="384" height="240"/>
  </imagelayer>
- <layer id="1" name="ground" width="40" height="15">
+ <layer id="7" name="bgd" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJztksFKAlEUhr9/3sC2ES1EepohpB6glfgKShES5b6wlaDgUtHVoK4iLGpTUQ8TtQvzDlymM8ygCC3mwMflzmLOd/5zoaiiiipqO7UL7KWw/w9CD4FDIHJnzBSobnF2n0Dp+cR+FkfAsdG3Ifr3QB7OxEnWHEu/0MiomuGXll9D0BTUBE8edXf2BH3BqX79yOtn9Q+NvcZzXAJXQDvxv2vBjefVFQwELXefCeaCjuB2Tb9og/yGgpHnFyVyfBd8CMaCyYb5nRt7z/J7EDy6zF4Er4K3hGPMs+f3JfgW3CXe6MLltNydtd9WChfAp/6+eetbHkoB7ARQFlQ8DrTKyer/Ayq/Zt4=
+   eJzt07EJAEAMAzFn/7l+r5AV0jwBqXNruAQAAHZeeQ5+9TZbg5DTGoNqAxk=
   </data>
  </layer>
- <layer id="3" name="props" width="40" height="15">
+ <layer id="1" name="ground" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDCewmWHkAHx+3QjFpOobBaNgFNAOXGGE0DtHQCADAOC+BQo=
+   eJzdltFKFVEUhr+19QXsRsPEC/VxRKSoV+gViiTEN/DgnaCod4VdDaeuIkq8qiik94iDojcqmzNLlru9Z++ZBJs2/DAz57CH9fH//x64v/VC4KXAicCewL7AUYG2pN3eJf/vw9KZvgp8E/hewOpQ4F3B/IMWbPuydKYmeX84BxMOJl0Zr0FLtn1npdk8EJh18MjBnINXAmuFrKr/iNeg9k2K17a5ft4iV4Mg233P4huBt5n8VeZ6vbCvY/v2mVVsnkuBKz+Tg1+Jzj/OZEr3tf3W595K+WnawYyDh/V8MXlWTuAj8Cmiz4yzavvtpvOAuQ6a/4fPPu2lJla/gSEwMqqAU8ZZtWeo77ynwDNgxagK7mPy71ilO+e/5Z5jtZ45F5XVKCLPKtV5y2b+FJtzgQu5/cyzWs6wbdqzCrh3+QY9KvxeUH8cB74KPRVjZTtPWVmdBVymHDxwt2dUViVscl5ty2pT/vTWjsBu5HvBdnTISvlYPQaeBLwWgEVgKeOL1JyWVZN/Sry22rHb7bn3XuBDJDu2oy2rBRl7wnIa1r46SXgz5qsSxXyV8lAui5rx0vWlzpQ9934I/ExkR/ffrqX3mkPb8fpbyElZ6Xyec84jQ8PqtT8z7kBTdcb9+8MzvPRZk3T/8N57aylQ+F/7zq7zbgDXURNbIQ==
+  </data>
+ </layer>
+ <layer id="3" name="props" width="75" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzt0LEJACAUQ8Hsv41Yics5go3IV+7apHoJANwzxC6pbfaeN80iTfvBLwCQbywOGgWh
   </data>
  </layer>
  <objectgroup id="4" name="objects">
-  <object id="1" gid="576" x="288" y="147" width="46" height="28">
+  <object id="42" gid="577" x="57" y="144" width="79" height="176"/>
+  <object id="43" gid="577" x="176" y="146" width="79" height="176">
+   <properties>
+    <property name="z" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="44" gid="587" x="16" y="146" width="33" height="32"/>
+  <object id="45" gid="588" x="400" y="160" width="15" height="13"/>
+  <object id="46" gid="588" x="448" y="160" width="15" height="13"/>
+  <object id="47" gid="588" x="656" y="64" width="15" height="13"/>
+  <object id="48" gid="588" x="624" y="80" width="15" height="13"/>
+  <object id="49" gid="588" x="608" y="112" width="15" height="13"/>
+  <object id="50" gid="583" x="448" y="224" width="18" height="20"/>
+  <object id="51" gid="582" x="304" y="209" width="17" height="12"/>
+  <object id="52" gid="576" x="112" y="144" width="46" height="28"/>
+  <object id="53" gid="576" x="784" y="115" width="46" height="28">
    <properties>
     <property name="z" type="int" value="100"/>
    </properties>
   </object>
-  <object id="2" gid="577" x="48" y="115" width="51" height="113.62"/>
-  <object id="3" gid="579" x="128" y="224" width="16" height="10"/>
-  <object id="6" gid="577" x="560" y="131" width="51" height="113.62"/>
-  <object id="8" gid="585" x="0" y="114" width="33" height="32"/>
-  <object id="11" gid="586" x="240" y="112" width="15" height="13"/>
-  <object id="12" gid="586" x="128" y="176" width="15" height="13"/>
-  <object id="19" gid="587" x="240" y="145" width="41" height="30"/>
-  <object id="23" gid="587" x="464" y="209" width="41" height="30"/>
-  <object id="24" gid="580" x="304" y="225" width="15" height="10"/>
-  <object id="25" gid="580" x="320" y="225" width="15" height="10"/>
-  <object id="26" gid="581" x="256" y="168" width="15" height="9"/>
-  <object id="27" gid="581" x="272" y="168" width="15" height="9"/>
-  <object id="28" gid="583" x="192" y="224" width="18" height="20"/>
-  <object id="29" gid="584" x="224" y="144" width="16" height="15"/>
-  <object id="30" gid="584" x="336" y="144" width="16" height="15"/>
-  <object id="31" gid="584" x="448" y="208" width="16" height="15"/>
-  <object id="32" gid="582" x="224" y="225" width="17" height="12"/>
-  <object id="34" gid="588" x="528" y="80" width="40" height="41"/>
-  <object id="35" gid="589" x="139" y="75" width="21" height="21"/>
-  <object id="36" gid="590" x="130" y="143" width="21" height="21"/>
-  <object id="39" gid="591" x="496" y="128" width="61" height="45"/>
-  <object id="41" gid="591" x="80" y="112" width="61" height="45"/>
+  <object id="54" gid="584" x="608" y="224" width="16" height="15"/>
+  <object id="55" gid="588" x="736" y="96" width="15" height="13"/>
+  <object id="56" gid="584" x="928" y="224" width="16" height="15"/>
+  <object id="57" gid="584" x="944" y="176" width="16" height="15"/>
+  <object id="58" gid="582" x="880" y="225" width="17" height="12"/>
+  <object id="59" gid="577" x="976" y="112" width="79" height="176"/>
+  <object id="60" gid="586" x="1072" y="112" width="112" height="98"/>
+  <object id="62" gid="588" x="864" y="176" width="15" height="13"/>
+  <object id="63" gid="588" x="944" y="128" width="15" height="13"/>
+  <object id="64" gid="588" x="944" y="224" width="15" height="13"/>
+  <object id="65" gid="588" x="992" y="64" width="15" height="13"/>
+  <object id="70" gid="577" x="-11" y="144" width="79" height="176"/>
  </objectgroup>
 </map>
