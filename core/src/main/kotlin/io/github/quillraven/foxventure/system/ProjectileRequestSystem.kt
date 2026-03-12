@@ -30,7 +30,7 @@ class ProjectileRequestSystem(
 
     override fun onTickEntity(entity: Entity) {
         val (source, target, damage, spawnOffset, atlasKey, projectileSize, collisionRect, speed, playMode) = entity[ProjectileRequest]
-        if (source.wasRemoved() || target.wasRemoved()) {
+        if (source.wasRemoved() || target.wasRemoved() || target hasNo Collision) {
             entity.remove()
             return
         }
