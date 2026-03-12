@@ -155,6 +155,7 @@ class GameScreen(
     }
 
     private fun setupUI() {
+        stage.clear()
         stage.addActor(GameView(gameViewModel, skin))
     }
 
