@@ -3,6 +3,7 @@ package io.github.quillraven.foxventure.system
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
+import com.github.quillraven.fleks.Fixed
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
@@ -15,7 +16,8 @@ class ProjectileRemovalSystem(
     private val tiledService: TiledService = inject(),
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
-    family = family { all(EntityTag.PROJECTILE) }
+    family = family { all(EntityTag.PROJECTILE) },
+    interval = Fixed(1 / 20f),
 ) {
     override fun onTickEntity(entity: Entity) {
         val (position, size) = entity[Transform]
