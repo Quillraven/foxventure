@@ -1,5 +1,7 @@
 package io.github.quillraven.foxventure.component
 
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.github.quillraven.fleks.Component
 import com.github.quillraven.fleks.ComponentType
@@ -61,11 +63,28 @@ class Animation(
 
     fun isFinished(): Boolean = active.isAnimationFinished(stateTime)
 
+    fun isLastFrame(): Boolean {
+        val frameIndex = active.getKeyFrameIndex(stateTime)
+        return frameIndex == active.keyFrames.size - 1
+    }
+
     fun resetSpeed() {
         speed = defaultSpeed
     }
 
     override fun type() = Animation
 
-    companion object : ComponentType<Animation>()
+    companion object : ComponentType<Animation>() {
+        fun TextureAtlas.getGdxAnimation(
+            objectKey: String,
+            animationType: AnimationType
+        ): GdxAnimation {
+            val animationKey = "$objectKey/${animationType.atlasKey}"
+            val regions = this.findRegions(animationKey)
+            if (regions.isEmpty) {
+                gdxError("No regions for animation $animationKey")
+            }
+            return GdxAnimation(1 / 12f, regions, PlayMode.LOOP)
+        }
+    }
 }

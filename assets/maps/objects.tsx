@@ -94,11 +94,15 @@
     </properties>
    </property>
    <property name="life" type="int" value="1"/>
+   <property name="projectile_speed" type="float" value="4.5"/>
    <property name="proximity_range" type="float" value="4.5"/>
   </properties>
   <image source="../graphics/sprites/objects/piranha/idle_0.png" width="61" height="45"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="20" y="16" width="21" height="29"/>
+   <object id="2" name="projectile_spawn" x="37" y="25">
+    <point/>
+   </object>
   </objectgroup>
  </tile>
 </tileset>
