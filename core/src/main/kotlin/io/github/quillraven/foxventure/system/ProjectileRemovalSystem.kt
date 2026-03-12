@@ -1,5 +1,7 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
@@ -11,18 +13,33 @@ import io.github.quillraven.foxventure.tiled.TiledService
 
 class ProjectileRemovalSystem(
     private val tiledService: TiledService = inject(),
+    private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
     family = family { all(EntityTag.PROJECTILE) }
 ) {
     override fun onTickEntity(entity: Entity) {
-        val (position) = entity[Transform]
+        val (position, size) = entity[Transform]
 
-        if (position.x < 0f || position.x > tiledService.mapWidth) {
+        when {
             // out of map boundaries -> remove it
-            entity.remove()
-        } else if (entity[Velocity].current.x == 0f) {
+            position.x + size.x < 0f || position.x > tiledService.mapWidth -> entity.remove()
             // colliding with solid -> remove it
-            entity.remove()
+            entity[Velocity].current.x == 0f -> entity.remove()
+            // out of visible camera bounds -> remove it
+            isOutsideCamera(position, size) -> entity.remove()
         }
+    }
+
+    private fun isOutsideCamera(position: Vector2, size: Vector2): Boolean {
+        val camera = gameViewport.camera
+        val halfW = gameViewport.worldWidth * 0.5f
+        val halfH = gameViewport.worldHeight * 0.5f
+        val camX = camera.position.x
+        val camY = camera.position.y
+
+        return position.x + size.x < camX - halfW
+                || position.x > camX + halfW
+                || position.y + size.y < camY - halfH
+                || position.y > camY + halfH
     }
 }
