@@ -136,7 +136,7 @@ i:b:/maps/foxventure.tiled-project:4334:1
 i:b:/maps/objects.tsx:4655:1
 i:b:/maps/sunny_land.tsx:4077:1
 i:b:/maps/props.tsx:1594:1
-i:b:/maps/tutorial.tmx:3078:1
+i:b:/maps/tutorial.tmx:3009:1
 c:b:/com/badlogic/gdx/utils/lsans-15.png:10270:1
 c:b:/com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:9096:1
 c:b:/com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:820:1
