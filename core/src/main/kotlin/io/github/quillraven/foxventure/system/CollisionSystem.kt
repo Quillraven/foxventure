@@ -1,14 +1,12 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntity
-import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
@@ -36,12 +34,11 @@ class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val audioService: AudioService = inject(),
     private val gameViewModel: GameViewModel = inject(),
-    assets: AssetManager = inject(),
+    objectsAtlas: TextureAtlas = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Collision, EntityTag.ACTIVE) },
     comparator = compareEntity { e1, e2 -> e1.id.compareTo(e2.id) }
 ) {
-    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val pickupAnimation: GdxAnimation
 
     init {

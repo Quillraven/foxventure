@@ -1,7 +1,7 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.MapProperties
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
@@ -9,8 +9,6 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.EntityCreateContext
 import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
@@ -57,11 +55,10 @@ import ktx.tiled.width
  * Spawns entities from Tiled map objects including players, enemies, and collectibles.
  */
 class SpawnSystem(
-    assets: AssetManager = inject(),
+    private val objectsAtlas: TextureAtlas = inject(),
     private val gameViewModel: GameViewModel = inject(),
     private val tiledService: TiledService = inject(),
 ) : IntervalSystem(enabled = false), LoadTileObjectListener {
-    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val animationCache = mutableMapOf<String, Map<AnimationType, GdxAnimation>>()
 
     override fun onTick() = Unit

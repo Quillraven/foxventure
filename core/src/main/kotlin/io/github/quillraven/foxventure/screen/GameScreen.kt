@@ -2,17 +2,14 @@ package io.github.quillraven.foxventure.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
-import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.github.quillraven.fleks.World
 import com.github.quillraven.fleks.configureWorld
-import io.github.quillraven.foxventure.Asset.Companion.get
 import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
-import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.PhysicsTimer
-import io.github.quillraven.foxventure.SkinAsset
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
@@ -62,23 +59,23 @@ import ktx.collections.gdxArrayOf
 class GameScreen(
     private val game: GdxGame,
     private val renderContext: RenderContext = game.serviceLocator.renderContext,
-    private val assets: AssetManager = game.serviceLocator.assets,
     private val stage: Stage = game.stage,
     private val tiledService: TiledService = game.serviceLocator.tiledService,
     private val audioService: AudioService = game.serviceLocator.audioService,
     private val shaderService: ShaderService = game.serviceLocator.shaderService,
+    private val skin: Skin = game.skin,
 ) : KtxScreen {
+    private val objectsAtlas = TextureAtlas(game.serviceLocator.fileHandleResolver.resolve("graphics/objects.atlas"))
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
     private val gameViewModel = GameViewModel()
     private val world: World = ecsWorld()
-    private val skin: Skin = assets[SkinAsset.UI]
 
     private fun ecsWorld() = configureWorld {
         injectables {
             add(renderContext)
             add(renderContext.gameViewport)
             add(stage)
-            add(assets)
+            add(objectsAtlas)
             add(tiledService)
             add(physicsTimer)
             add(audioService)
@@ -138,7 +135,7 @@ class GameScreen(
         Gdx.input.inputProcessor = InputMultiplexer(stage, controllerSystem)
         // tile map initialisation
         registerTiledListeners()
-        tiledService.setMap(MapAsset.TUTORIAL)
+        tiledService.setMap("tutorial.tmx")
         // fade in effect
         controllerSystem.enabled = false
         val transitionEntity = world.entity {
@@ -183,5 +180,6 @@ class GameScreen(
 
     override fun dispose() {
         world.dispose()
+        objectsAtlas.dispose()
     }
 }

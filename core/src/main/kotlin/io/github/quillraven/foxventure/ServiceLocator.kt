@@ -1,22 +1,21 @@
 package io.github.quillraven.foxventure
 
-import com.badlogic.gdx.assets.AssetManager
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
+import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.utils.Disposable
 import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.graphic.ShaderService
 import io.github.quillraven.foxventure.tiled.TiledService
 
 class ServiceLocator(
+    val fileHandleResolver: FileHandleResolver,
     val renderContext: RenderContext = RenderContext(),
-    val assets: AssetManager = AssetManager(InternalFileHandleResolver()),
-    val tiledService: TiledService = TiledService(assets),
+    val tiledService: TiledService = TiledService(fileHandleResolver),
     val audioService: AudioService = AudioService(),
     val shaderService: ShaderService = ShaderService(),
 ) : Disposable {
     override fun dispose() {
         renderContext.dispose()
-        assets.dispose()
+        tiledService.dispose()
         audioService.dispose()
         shaderService.dispose()
     }

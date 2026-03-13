@@ -1,12 +1,10 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Animation.Companion.getGdxAnimation
 import io.github.quillraven.foxventure.component.AnimationType
@@ -22,12 +20,10 @@ import io.github.quillraven.foxventure.component.Velocity
 import ktx.math.vec2
 
 class ProjectileRequestSystem(
-    assets: AssetManager = inject(),
+    private val objectsAtlas: TextureAtlas = inject(),
 ) : IteratingSystem(
     family = family { all(ProjectileRequest) }
 ) {
-    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
-
     override fun onTickEntity(entity: Entity) {
         val (source, target, damage, spawnOffset, atlasKey, projectileSize, collisionRect, speed, playMode) = entity[ProjectileRequest]
         if (source.wasRemoved() || target.wasRemoved() || target hasNo Collision) {
