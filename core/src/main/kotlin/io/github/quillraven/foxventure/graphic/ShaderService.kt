@@ -1,5 +1,6 @@
 package io.github.quillraven.foxventure.graphic
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.utils.Disposable
@@ -15,6 +16,12 @@ class ShaderService : Disposable {
 
     private val grayScaleShader = shader(fragmentName = "grayscale.frag")
     private val grayScaleUlDesaturation = grayScaleShader.getUniformLocation("u_desaturation")
+
+    private val circleCropShader = shader(fragmentName = "circle_crop.frag")
+    private val circleCropUlProgress = circleCropShader.getUniformLocation("u_progress")
+    private val circleCropUlRatio = circleCropShader.getUniformLocation("u_ratio")
+    private val circleCropUlBgColor = circleCropShader.getUniformLocation("u_bgcolor")
+    private val circleCropUlCenter = circleCropShader.getUniformLocation("u_center")
 
     private fun shader(vertexName: String = "default.vert", fragmentName: String) =
         ShaderProgram(
@@ -45,8 +52,26 @@ class ShaderService : Disposable {
         }
     }
 
+    fun applyCircleCropShader(
+        batch: Batch,
+        progress: Float,
+        aspectRatio: Float,
+        centerX: Float,
+        centerY: Float,
+        bgColor: Color,
+    ) {
+        batch.shader = circleCropShader
+        circleCropShader.use {
+            circleCropShader.setUniformf(circleCropUlProgress, progress)
+            circleCropShader.setUniformf(circleCropUlRatio, aspectRatio)
+            circleCropShader.setUniformf(circleCropUlBgColor, bgColor.r, bgColor.g, bgColor.b, bgColor.a)
+            circleCropShader.setUniformf(circleCropUlCenter, centerX, centerY)
+        }
+    }
+
     override fun dispose() {
         pixelShader.dispose()
         grayScaleShader.dispose()
+        circleCropShader.dispose()
     }
 }
