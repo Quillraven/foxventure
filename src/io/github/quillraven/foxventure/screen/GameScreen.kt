@@ -11,6 +11,8 @@ import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.DelayAction
+import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.graphic.RenderContext
@@ -139,9 +141,12 @@ class GameScreen(
         // fade in effect
         controllerSystem.enabled = false
         val transitionEntity = world.entity {
+            val player = world.family { all(Player) }.single()
             it += Transition(
-                effects = gdxArrayOf(TransitionEffect(TransitionType.PIXELIZE, duration = 1.25f, reversed = true))
+                effects = gdxArrayOf(TransitionEffect(TransitionType.CIRCLE_CROP, duration = 2.5f, reversed = false))
             )
+            // transform to set circle crop shader circle center position
+            it += player[Transform]
         }
         world.entity {
             it += DelayAction(delay = 1.5f) {

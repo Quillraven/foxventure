@@ -1,22 +1,25 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.graphic.ShaderService
 import ktx.graphics.use
+import ktx.math.vec2
 
 /**
  * Types of screen transition effects.
  */
 enum class TransitionType {
-    PIXELIZE, GRAYSCALE
+    PIXELIZE, GRAYSCALE, CIRCLE_CROP
 }
 
 /**
@@ -28,6 +31,8 @@ class PostRenderSystem(
     private val gameViewport: Viewport = inject(),
     private val shaderService: ShaderService = inject(),
 ) : IteratingSystem(family { all(Transition) }) {
+    private val tmpVec = vec2()
+
     override fun onTick() {
         if (family.isEmpty) {
             // no transition effects -> render primary FBO
@@ -52,14 +57,14 @@ class PostRenderSystem(
         if (transition.effects.size == 1) {
             // render directly to screen for a single effect
             renderContext.activeFbo = renderContext.fbo1
-            applyShader(transition.effects.first())
+            applyShader(entity, transition.effects.first())
             return
         }
 
         // multiple effects -> render to different FBOs via Ping-Pong approach
         transition.effects.forEach { effect ->
             // render to active FBO
-            applyShader(effect)
+            applyShader(entity, effect)
             val prevActiveFbo = renderContext.activeFbo
             renderContext.swapActiveFbo()
             renderContext.activeFbo.use {
@@ -70,7 +75,7 @@ class PostRenderSystem(
         }
     }
 
-    private fun applyShader(effect: TransitionEffect) {
+    private fun applyShader(entity: Entity, effect: TransitionEffect) {
         if (effect.delay > 0f) {
             effect.delay -= deltaTime
             batch.shader = null
@@ -93,6 +98,21 @@ class PostRenderSystem(
             TransitionType.GRAYSCALE -> {
                 val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
                 shaderService.applyGrayScaleShader(batch, progress)
+            }
+
+            TransitionType.CIRCLE_CROP -> {
+                val progress = if (effect.reversed) (1f - easedProgress) else easedProgress
+                val aspectRatio = gameViewport.worldWidth / gameViewport.worldHeight
+                // calculate the center of the circle (default is center of screen)
+                var centerX = 0.5f
+                var centerY = 0.5f
+                entity.getOrNull(Transform)?.let { (position, size) ->
+                    tmpVec.set(position.x + size.x / 2f, position.y + size.y / 2f)
+                    val screenCoords = gameViewport.project(tmpVec)
+                    centerX = (screenCoords.x - gameViewport.screenX) / gameViewport.screenWidth
+                    centerY = (screenCoords.y - gameViewport.screenY) / gameViewport.screenHeight
+                }
+                shaderService.applyCircleCropShader(batch, progress, aspectRatio, centerX, centerY, Color.BLACK)
             }
         }
 

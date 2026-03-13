@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-up" width="75" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="74">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-up" width="75" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="74">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
@@ -11,17 +11,17 @@
  </imagelayer>
  <layer id="7" name="bgd" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt07EJAEAMAzFn/7l+r5AV0jwBqXNruAQAAHZeeQ5+9TZbg5DTGoNqAxk=
+   eJzt06ERADAIBEHSf130xWAjMUwmu+7dm4sAAICZPNsP4B93b701CG8rg2oDGQ==
   </data>
  </layer>
  <layer id="1" name="ground" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzdltFKFVEUhr+19QXsRsPEC/VxRKSoV+gViiTEN/DgnaCod4VdDaeuIkq8qiik94iDojcqmzNLlru9Z++ZBJs2/DAz57CH9fH//x64v/VC4KXAicCewL7AUYG2pN3eJf/vw9KZvgp8E/hewOpQ4F3B/IMWbPuydKYmeX84BxMOJl0Zr0FLtn1npdk8EJh18MjBnINXAmuFrKr/iNeg9k2K17a5ft4iV4Mg233P4huBt5n8VeZ6vbCvY/v2mVVsnkuBKz+Tg1+Jzj/OZEr3tf3W595K+WnawYyDh/V8MXlWTuAj8Cmiz4yzavvtpvOAuQ6a/4fPPu2lJla/gSEwMqqAU8ZZtWeo77ynwDNgxagK7mPy71ilO+e/5Z5jtZ45F5XVKCLPKtV5y2b+FJtzgQu5/cyzWs6wbdqzCrh3+QY9KvxeUH8cB74KPRVjZTtPWVmdBVymHDxwt2dUViVscl5ty2pT/vTWjsBu5HvBdnTISvlYPQaeBLwWgEVgKeOL1JyWVZN/Sry22rHb7bn3XuBDJDu2oy2rBRl7wnIa1r46SXgz5qsSxXyV8lAui5rx0vWlzpQ9934I/ExkR/ffrqX3mkPb8fpbyElZ6Xyec84jQ8PqtT8z7kBTdcb9+8MzvPRZk3T/8N57aylQ+F/7zq7zbgDXURNbIQ==
+   eJzdlt8rBFEUx+8M/wAviM3D2j9nk4h/Yf8FIm3+A5O3KcIb8TQtT9rQPiGS/0Mb8YLvbffozHF/zRKNW5927p3pzp5P55w7Sv3dWI6UWgH3YBfsgcsAtqJie4c8X4ZBMV2Ba3AT4OoIHAfEnxRwW5aRBPjR+RHHSg2B4TjMV1LQbRmGyxXV5j6YhKMpUAGrmK8Fusr+ka+knzc2Xym7bhSoq0TUdtlr8QD//9BTfxm7bgb2a9O+ZXZliucNvOuYUGcPlp7f8dQU7cv7W5n7li2fxhDXOJiI7XmmXcXgDPu0DZyrXq3y/vbZ83CvMgDTv2onP3xnX8Nxj1w9Yp8W6DIy8KR6tcrPUN3zFrG+BGYZmZib0O+YU4N7/q53n6umZZ3ORXLVNaBd2XpencVvc/OC516j/Jp2Vfe4de2Zqbz3IoO+QV2++PcC5UdH5JXMKZMr3vPIFedZeBlBzY7G+RjJVYgbX64WdbUZfc2tbbAj1lLRo6Ur8sOZBwvCVxXzGVBzxNByxMldufInJNeKuqLezs+9E/yeGmqH92juqhr1coJ70v9N5xV9r8ncNOVVCKa8suWQrxapxkPHRb+m+Ll3i/mdpXZo/7QPzakOeY+ne9ITuaL4tGdfjtB97WodNH8AqnH9/rbKE7rmgvaXc51bNYF8lr9z0Hg3wAdRE1sh
   </data>
  </layer>
  <layer id="3" name="props" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt1TEOACAIQ9HGq3liwmS8nCcwLMSA+W8tU4ciAQDwzqLskizIXT3tIp164i0A4C+33Z8j/s9QewdGcQdK
+   eJzt1TEKACAIhWHpap04mqLLtTYUjyCU4v9WBR8OagYAgJ8WHQBLRdSrS4r7euDseadqfye9AIC/7O5+Tvo/430DRnEHSg==
   </data>
  </layer>
  <objectgroup id="4" name="objects">
@@ -57,6 +57,10 @@
   <object id="65" gid="588" x="992" y="64" width="15" height="13"/>
   <object id="70" gid="577" x="-11" y="144" width="79" height="176"/>
   <object id="71" gid="589" x="896" y="225" width="41" height="30"/>
-  <object id="72" gid="583" x="832" y="112" width="18" height="20"/>
+  <object id="72" gid="583" x="832" y="115" width="18" height="20">
+   <properties>
+    <property name="z" type="int" value="200"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

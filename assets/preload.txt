@@ -11,6 +11,7 @@ i:b:/ui/ui.png:1272:1
 i:b:/ui/ui.atlas:723:1
 i:b:/shader/default.vert:315:1
 i:b:/shader/grayscale.frag:420:1
+i:b:/shader/circle_crop.frag:1274:1
 i:b:/shader/pixelize.frag:694:1
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
@@ -139,7 +140,7 @@ i:b:/maps/objects.tsx:4655:1
 i:b:/maps/sunny_land.tsx:4815:1
 i:b:/maps/playground.tmx:3009:1
 i:b:/maps/props.tsx:1818:1
-i:b:/maps/tutorial.tmx:3772:1
+i:b:/maps/tutorial.tmx:3888:1
 c:b:/com/badlogic/gdx/utils/lsans-15.png:10270:1
 c:b:/com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:9096:1
 c:b:/com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:820:1
