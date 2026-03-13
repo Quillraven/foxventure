@@ -33,7 +33,8 @@ class WanderSystem(
             return
         }
 
-        if (wander.moveDirection == 0f) {
+        val wanderDirection = wander.moveDirection
+        if (wanderDirection == 0f) {
             // no move direction set yet -> pick a random direction
             wander.moveDirection = if (MathUtils.randomBoolean()) 1f else -1f
             return
@@ -45,14 +46,27 @@ class WanderSystem(
         val centerX = position.x + collisionBox.x + collisionBox.width / 2f
         val distance = wander.originX - centerX
         // ... and if yes -> turn around
-        if (abs(distance) >= wander.distance && sign(distance) != sign(wander.moveDirection)) {
-            wander.moveDirection = -wander.moveDirection
+        if (abs(distance) >= wander.distance && sign(distance) != sign(wanderDirection)) {
+            wander.moveDirection = -wanderDirection
             return
         }
 
-        // ... and if no -> continue moving unless stopping at a cliff is desired
-        if (wander.stopAtCliff && !tiledService.isGroundAhead(position, collisionBox, wander.moveDirection)) {
-            wander.moveDirection = -wander.moveDirection
+        // ... and if no -> continue moving unless stopping at a wall ...
+        val wallCheckTolerance = 0.1f
+        val wallCheckDistance = when {
+            wander.moveDirection > 0 -> (collisionBox.width + wallCheckTolerance)
+            else -> -wallCheckTolerance
+        }
+        val checkX = (position.x + collisionBox.x + wallCheckDistance).toInt()
+        val checkY = (position.y + collisionBox.y + collisionBox.height / 2f).toInt()
+        val hasWall = tiledService.getCollisionRect(checkX, checkY, includeSemiSolid = false) != null
+        if (hasWall) {
+            wander.moveDirection = -wanderDirection
+            return
+        }
+        // ... or a cliff if desired
+        if (wander.stopAtCliff && !tiledService.isGroundAhead(position, collisionBox, wanderDirection)) {
+            wander.moveDirection = -wanderDirection
             return
         }
     }
