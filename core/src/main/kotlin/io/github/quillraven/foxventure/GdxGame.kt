@@ -9,11 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.ScreenUtils
 import com.ray3k.stripe.FreeTypeSkin
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.screen.WebStartScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
-class GdxGame : KtxGame<KtxScreen>() {
+class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator(InternalFileHandleResolver()) }
     val stage: Stage by lazy { Stage(serviceLocator.renderContext.uiViewport, serviceLocator.renderContext.batch) }
     val skin: Skin by lazy {
@@ -24,8 +25,14 @@ class GdxGame : KtxGame<KtxScreen>() {
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
-        addScreen(WebStartScreen(this))
-        setScreen<WebStartScreen>()
+
+        if (isWeb) {
+            addScreen(WebStartScreen(this))
+            setScreen<WebStartScreen>()
+        } else {
+            addScreen(GameScreen(this))
+            setScreen<GameScreen>()
+        }
     }
 
     override fun resize(width: Int, height: Int) {

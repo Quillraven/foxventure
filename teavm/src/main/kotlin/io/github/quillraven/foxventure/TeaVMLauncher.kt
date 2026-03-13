@@ -16,5 +16,5 @@ fun main() {
         // needed for freetype support
         preloadListener = WebAssetPreloadListener { assetLoader -> assetLoader.loadScript("freetype.js") }
     }
-    WebApplication(GdxGame(), config)
+    WebApplication(GdxGame(isWeb = true), config)
 }

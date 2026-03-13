@@ -4,7 +4,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 
 fun main() {
-    Lwjgl3Application(GdxGame(), Lwjgl3ApplicationConfiguration().apply {
+    Lwjgl3Application(GdxGame(isWeb = false), Lwjgl3ApplicationConfiguration().apply {
         setTitle("GdxGame")
         val displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode()
         setWindowedMode(displayMode.width, displayMode.height)
