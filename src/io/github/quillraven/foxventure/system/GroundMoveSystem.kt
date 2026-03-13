@@ -1,14 +1,12 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
@@ -35,11 +33,10 @@ import kotlin.math.sign
 class GroundMoveSystem(
     private val tiledService: TiledService = inject(),
     private val physicsTimer: PhysicsTimer = inject(),
-    assets: AssetManager = inject(),
+    objectsAtlas: TextureAtlas = inject(),
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING, EntityTag.ROOT) },
 ) {
-    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val runDustAnimation: GdxAnimation
 
     init {

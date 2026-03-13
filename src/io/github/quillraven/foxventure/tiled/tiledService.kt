@@ -1,20 +1,21 @@
 package io.github.quillraven.foxventure.tiled
 
-import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.graphics.glutils.FileTextureData
 import com.badlogic.gdx.maps.objects.PointMapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.BaseTiledMapLoader
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTile
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
+import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Disposable
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
-import io.github.quillraven.foxventure.MapAsset
 import io.github.quillraven.foxventure.component.Rect
 import ktx.app.gdxError
-import ktx.assets.loadAsset
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 import ktx.tiled.height
@@ -41,30 +42,32 @@ data class GroundTile(val type: String, val rect: Rect) {
     val isSemiSolid get() = type == "semisolid"
 }
 
-class TiledService(
-    private val assets: AssetManager,
-) {
+class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
     private var currentMap: TiledMap = TiledMap()
     private val groundTiles = GdxArray<GroundTile>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
+    private val tiledLoader = TmxMapLoader(fileHandleResolver)
 
     val mapWidth: Int get() = currentMap.width
 
     val mapHeight: Int get() = currentMap.height
 
-    fun setMap(asset: MapAsset) {
-        // unload the previous map from memory
-        val mapPath = currentMap.property("gdxFilePath", "")
-        if (mapPath.isNotBlank()) {
-            assets.unload(mapPath)
+    private fun loadMap(mapName: String): TiledMap {
+        val defaultParams = BaseTiledMapLoader.Parameters().apply {
+            projectFilePath = "maps/foxventure.tiled-project"
         }
 
+        val path = "maps/$mapName"
+        return tiledLoader.load(path, defaultParams)
+    }
+
+    fun setMap(mapName: String) {
+        // unload the previous map from memory
+        currentMap.dispose()
+
         // load the new map and set a special 'gdxFilePath' property for unloading
-        val tiledMapAsset = assets.loadAsset(asset.descriptor)
-        tiledMapAsset.finishLoading()
-        currentMap = tiledMapAsset.asset
-        currentMap.properties.put("gdxFilePath", asset.descriptor.fileName)
+        currentMap = loadMap(mapName)
 
         // load ground collision information
         loadGroundCollisionInfo()
@@ -334,5 +337,9 @@ class TiledService(
         fun TiledMapTile.pointObject(name: String): PointMapObject {
             return this.objects.single { it.name == name } as PointMapObject
         }
+    }
+
+    override fun dispose() {
+        currentMap.dispose()
     }
 }

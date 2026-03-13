@@ -1,13 +1,11 @@
 package io.github.quillraven.foxventure.system
 
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
-import io.github.quillraven.foxventure.Asset.Companion.get
-import io.github.quillraven.foxventure.AtlasAsset
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
@@ -23,12 +21,11 @@ import kotlin.math.min
  * Manages entity health, healing, and death including visual effects and player death handling.
  */
 class LifeSystem(
-    assets: AssetManager = inject(),
     private val gameViewModel: GameViewModel = inject(),
+    objectsAtlas: TextureAtlas = inject(),
 ) : IteratingSystem(
     family = family { all(Life, EntityTag.ACTIVE) }
 ) {
-    private val objectsAtlas = assets[AtlasAsset.OBJECTS]
     private val deathAnimation: GdxAnimation
 
     init {

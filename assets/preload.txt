@@ -14,8 +14,8 @@ i:b:/shader/grayscale.frag:420:1
 i:b:/shader/pixelize.frag:694:1
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
-i:b:/graphics/objects.atlas:11512:1
-i:b:/graphics/objects.png:48540:1
+i:b:/graphics/objects.atlas:11737:1
+i:b:/graphics/objects.png:59689:1
 i:b:/graphics/sprites/sfx/dust1/idle_1.png:422:1
 i:b:/graphics/sprites/sfx/dust1/idle_0.png:347:1
 i:b:/graphics/sprites/sfx/dust1/idle_4.png:367:1
@@ -48,10 +48,12 @@ i:b:/graphics/sprites/props/palm.png:1724:1
 i:b:/graphics/sprites/props/rock2.png:2089:1
 i:b:/graphics/sprites/props/bush.png:1802:1
 i:b:/graphics/sprites/props/skulls.png:1191:1
+i:b:/graphics/sprites/props/wooden-house.png:4829:1
 i:b:/graphics/sprites/props/spike-skull.png:1257:1
 i:b:/graphics/sprites/props/shrooms.png:1240:1
 i:b:/graphics/sprites/props/sign.png:1183:1
 i:b:/graphics/sprites/props/spikes.png:1140:1
+i:b:/graphics/sprites/props/tree-house.png:6073:1
 i:b:/graphics/sprites/objects/eagle/idle_1.png:723:1
 i:b:/graphics/sprites/objects/eagle/idle_0.png:794:1
 i:b:/graphics/sprites/objects/eagle/idle_2.png:615:1
@@ -134,9 +136,10 @@ i:b:/music/hurt_and_heart.ogg:1976209:1
 i:b:/music/overdrive_loop.mp3:813792:1
 i:b:/maps/foxventure.tiled-project:4334:1
 i:b:/maps/objects.tsx:4655:1
-i:b:/maps/sunny_land.tsx:4077:1
-i:b:/maps/props.tsx:1594:1
-i:b:/maps/tutorial.tmx:3009:1
+i:b:/maps/sunny_land.tsx:4815:1
+i:b:/maps/playground.tmx:3009:1
+i:b:/maps/props.tsx:1818:1
+i:b:/maps/tutorial.tmx:3772:1
 c:b:/com/badlogic/gdx/utils/lsans-15.png:10270:1
 c:b:/com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl:9096:1
 c:b:/com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:820:1
