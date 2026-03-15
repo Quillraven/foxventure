@@ -6,21 +6,21 @@ filter: Nearest, Nearest
 repeat: none
 objects/acorn/idle
   rotate: false
-  xy: 435, 104
+  xy: 930, 101
   size: 16, 14
   orig: 16, 14
   offset: 0, 0
   index: 0
 objects/acorn/idle
   rotate: false
-  xy: 930, 101
+  xy: 438, 84
   size: 16, 14
   orig: 16, 14
   offset: 0, 0
   index: 1
 objects/acorn/idle
   rotate: false
-  xy: 471, 136
+  xy: 438, 68
   size: 16, 14
   orig: 16, 14
   offset: 0, 0
@@ -48,28 +48,28 @@ objects/cherry-gold/idle
   index: 2
 objects/cherry-gold/idle
   rotate: false
-  xy: 289, 8
+  xy: 292, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 3
 objects/cherry-gold/idle
   rotate: false
-  xy: 335, 8
+  xy: 338, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 4
 objects/cherry-gold/idle
   rotate: false
-  xy: 381, 8
+  xy: 384, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 5
 objects/cherry-gold/idle
   rotate: false
-  xy: 427, 8
+  xy: 430, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
@@ -97,28 +97,28 @@ objects/cherry/idle
   index: 2
 objects/cherry/idle
   rotate: false
-  xy: 266, 8
+  xy: 269, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 3
 objects/cherry/idle
   rotate: false
-  xy: 312, 8
+  xy: 315, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 4
 objects/cherry/idle
   rotate: false
-  xy: 358, 8
+  xy: 361, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
   index: 5
 objects/cherry/idle
   rotate: false
-  xy: 404, 8
+  xy: 407, 8
   size: 21, 21
   orig: 21, 21
   offset: 0, 0
@@ -335,35 +335,35 @@ objects/fox/run
   index: 5
 objects/gem/idle
   rotate: false
-  xy: 507, 135
+  xy: 438, 53
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 0
 objects/gem/idle
   rotate: false
-  xy: 524, 135
+  xy: 438, 38
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 1
 objects/gem/idle
   rotate: false
-  xy: 541, 135
+  xy: 489, 137
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 2
 objects/gem/idle
   rotate: false
-  xy: 558, 135
+  xy: 506, 135
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: 3
 objects/gem/idle
   rotate: false
-  xy: 984, 83
+  xy: 523, 135
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
@@ -524,21 +524,21 @@ objects/piranha-ball/idle
   index: 0
 objects/piranha-ball/idle
   rotate: false
-  xy: 248, 9
+  xy: 948, 96
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 objects/piranha-ball/idle
   rotate: false
-  xy: 948, 96
+  xy: 966, 96
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 objects/piranha-ball/idle
   rotate: false
-  xy: 966, 96
+  xy: 420, 82
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -601,7 +601,7 @@ props/rock2
   index: -1
 props/shrooms
   rotate: false
-  xy: 489, 135
+  xy: 420, 65
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
@@ -615,7 +615,7 @@ props/sign
   index: -1
 props/skulls
   rotate: false
-  xy: 966, 84
+  xy: 471, 140
   size: 16, 10
   orig: 16, 10
   offset: 0, 0
@@ -629,7 +629,7 @@ props/spike-skull
   index: -1
 props/spikes
   rotate: false
-  xy: 1001, 86
+  xy: 540, 138
   size: 15, 10
   orig: 15, 10
   offset: 0, 0
@@ -844,3 +844,17 @@ sfx/item-feedback/idle
   orig: 32, 32
   offset: 0, 0
   index: 3
+sfx/stun/idle
+  rotate: false
+  xy: 248, 7
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: 0
+sfx/stun/idle
+  rotate: false
+  xy: 435, 100
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: 1

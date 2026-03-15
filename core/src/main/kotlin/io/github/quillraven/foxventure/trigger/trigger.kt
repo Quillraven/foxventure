@@ -4,6 +4,7 @@ import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 
@@ -40,6 +41,7 @@ annotation class TriggerDsl
 @TriggerDsl
 class TriggerActionBuilder(world: World) {
     val audioService: AudioService = world.inject()
+    val gameViewModel: GameViewModel = world.inject()
 
     var onStart: World.() -> Unit = {}
     var onUpdate: World.() -> Boolean = { true }

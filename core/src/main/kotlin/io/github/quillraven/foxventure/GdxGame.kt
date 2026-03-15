@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.ScreenUtils
-import com.ray3k.stripe.FreeTypeSkin
+import com.github.tommyettinger.freetypist.FreeTypistSkin
+import com.github.tommyettinger.textra.TypingConfig
 import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.screen.WebStartScreen
 import ktx.app.KtxGame
@@ -18,9 +19,11 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
     val serviceLocator: ServiceLocator by lazy { ServiceLocator(InternalFileHandleResolver()) }
     val stage: Stage by lazy { Stage(serviceLocator.renderContext.uiViewport, serviceLocator.renderContext.batch) }
     val skin: Skin by lazy {
+        TypingConfig.DEFAULT_SPEED_PER_CHAR = 0.07f
+
         val resolver = serviceLocator.fileHandleResolver
         val atlas = TextureAtlas(resolver.resolve("ui/ui.atlas"))
-        FreeTypeSkin(resolver.resolve("ui/ui.json"), atlas)
+        FreeTypistSkin(resolver.resolve("ui/ui.json"), atlas)
     }
 
     override fun create() {

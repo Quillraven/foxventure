@@ -142,6 +142,46 @@ atlasData: {
 			type: TEXTURE
 			hidden: false
 		}
+		{
+			file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/label-bgd.9.png"
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: label-bgd
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: NINE_PATCH
+			hidden: false
+		}
+		{
+			file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/box.9.png"
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: box
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: NINE_PATCH
+			hidden: false
+		}
 	]
 	fontDrawables: []
 }
@@ -172,12 +212,41 @@ jsonData: {
 	freeTypeFonts: [
 		{
 			class: com.ray3k.skincomposer.data.FreeTypeFontData
+			name: default
+			file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/PressStart2P-Regular.ttf"
+			previewTTF: PressStart2P-Regular
+			useCustomSerializer: true
+			size: 16
+			mono: true
+			hinting: Medium
+			color: white
+			gamma: 1.8
+			renderCount: 2
+			borderWidth: 0
+			borderColor: null
+			borderStraight: false
+			borderGamma: 1.8
+			shadowOffsetX: 0
+			shadowOffsetY: 0
+			shadowColor: null
+			spaceX: 0
+			spaceY: 0
+			characters: ""
+			kerning: true
+			flip: false
+			genMipMaps: false
+			minFilter: Nearest
+			magFilter: Nearest
+			incremental: false
+		}
+		{
+			class: com.ray3k.skincomposer.data.FreeTypeFontData
 			name: small_border
 			file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/PressStart2P-Regular.ttf"
 			previewTTF: PressStart2P-Regular
 			useCustomSerializer: true
 			size: 8
-			mono: false
+			mono: true
 			hinting: Medium
 			color: white
 			gamma: 0.1
@@ -1119,7 +1188,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: default
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -1841,5 +1910,204 @@ preferences: {
 }
 saveFile: "/home/simon/IdeaProjects/foxventure/skin_composer.scmp"
 version: 58
-sceneComposer: null
+sceneComposer: {
+	children: [
+		{
+			class: com.ray3k.skincomposer.dialog.scenecomposer.DialogSceneComposerModel$SimTable
+			cells: [
+				{
+					child: {
+						class: com.ray3k.skincomposer.dialog.scenecomposer.DialogSceneComposerModel$SimStack
+						name: null
+						children: [
+							{
+								class: com.ray3k.skincomposer.dialog.scenecomposer.DialogSceneComposerModel$SimImage
+								name: null
+								drawable: {
+									file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/box.9.png"
+									bgColor: {
+										r: 1
+										g: 1
+										b: 1
+										a: 1
+									}
+									tint: null
+									tintName: null
+									name: box
+									tiled: false
+									minWidth: -1
+									minHeight: -1
+									customized: false
+									tenPatchData: null
+									tvgData: null
+									type: NINE_PATCH
+									hidden: false
+								}
+								scaling: fit
+								touchable: enabled
+								visible: true
+							}
+							{
+								class: com.ray3k.skincomposer.dialog.scenecomposer.DialogSceneComposerModel$SimImage
+								name: null
+								drawable: {
+									file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/avatar-fox.png"
+									bgColor: {
+										r: 1
+										g: 1
+										b: 1
+										a: 1
+									}
+									tint: null
+									tintName: null
+									name: avatar-fox
+									tiled: false
+									minWidth: -1
+									minHeight: -1
+									customized: false
+									tenPatchData: null
+									tvgData: null
+									type: TEXTURE
+									hidden: false
+								}
+								scaling: fit
+								touchable: enabled
+								visible: true
+							}
+						]
+						touchable: enabled
+						visible: true
+					}
+					row: 0
+					column: 0
+					padLeft: 20
+					padRight: 20
+					padTop: 20
+					padBottom: 20
+					spaceLeft: 0
+					spaceRight: 0
+					spaceTop: 0
+					spaceBottom: 0
+					expandX: false
+					expandY: false
+					fillX: false
+					fillY: false
+					growX: false
+					growY: false
+					alignment: 10
+					minWidth: 64
+					minHeight: 64
+					maxWidth: -1
+					maxHeight: -1
+					preferredWidth: -1
+					preferredHeight: -1
+					uniformX: false
+					uniformY: false
+					colSpan: 1
+				}
+				{
+					child: {
+						class: com.ray3k.skincomposer.dialog.scenecomposer.DialogSceneComposerModel$SimLabel
+						name: null
+						style: {
+							name: default
+							clazz: com.badlogic.gdx.scenes.scene2d.ui.Label
+							properties: {
+								font: {
+									type: com.badlogic.gdx.graphics.g2d.BitmapFont
+									name: font
+									optional: false
+									value: default
+								}
+								fontColor: {
+									type: com.badlogic.gdx.graphics.Color
+									name: fontColor
+									optional: true
+									value: null
+								}
+								background: {
+									type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+									name: background
+									optional: true
+									value: null
+								}
+							}
+							deletable: false
+							parent: null
+						}
+						text: Ouch! That hurt ... I need to get back to my house. My wife is waiting!
+						textAlignment: 10
+						ellipsis: false
+						ellipsisString: ...
+						wrap: true
+						color: null
+						touchable: enabled
+						visible: true
+					}
+					row: 0
+					column: 1
+					padLeft: 20
+					padRight: 0
+					padTop: 20
+					padBottom: 0
+					spaceLeft: 0
+					spaceRight: 0
+					spaceTop: 0
+					spaceBottom: 0
+					expandX: true
+					expandY: true
+					fillX: true
+					fillY: true
+					growX: true
+					growY: true
+					alignment: 10
+					minWidth: -1
+					minHeight: -1
+					maxWidth: -1
+					maxHeight: -1
+					preferredWidth: -1
+					preferredHeight: -1
+					uniformX: false
+					uniformY: false
+					colSpan: 1
+				}
+			]
+			name: null
+			background: {
+				file: "/home/simon/IdeaProjects/foxventure/skin_composer_data/label-bgd.9.png"
+				bgColor: {
+					r: 1
+					g: 1
+					b: 1
+					a: 1
+				}
+				tint: null
+				tintName: null
+				name: label-bgd
+				tiled: false
+				minWidth: -1
+				minHeight: -1
+				customized: false
+				tenPatchData: null
+				tvgData: null
+				type: NINE_PATCH
+				hidden: false
+			}
+			color: null
+			padLeft: 0
+			padRight: 0
+			padTop: 0
+			padBottom: 0
+			paddingEnabled: false
+			alignment: 1
+			fillParent: true
+			touchable: childrenOnly
+			visible: true
+		}
+	]
+	backgroundColor: null
+	skinPath: skin.json
+	packageString: com.mygdx.game
+	classString: Core
+}
 }
