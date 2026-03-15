@@ -34,21 +34,27 @@ class Trigger(private val actions: GdxArray<TriggerAction>) {
     }
 }
 
-class TriggerActionBuilder {
+@DslMarker
+annotation class TriggerDsl
+
+@TriggerDsl
+class TriggerActionBuilder(world: World) {
+    val audioService: AudioService = world.inject()
+
     var onStart: World.() -> Unit = {}
     var onUpdate: World.() -> Boolean = { true }
+
+    fun World.player() = family { all(Player) }.single()
 }
 
+@TriggerDsl
 class TriggerBuilder(
     val world: World,
-    val audioService: AudioService = world.inject(),
 ) {
     val actions = gdxArrayOf<TriggerAction>()
 
-    fun World.player() = family { all(Player) }.single()
-
     fun action(block: TriggerActionBuilder.() -> Unit) {
-        val actionBuilder = TriggerActionBuilder().apply(block)
+        val actionBuilder = TriggerActionBuilder(world).apply(block)
         actions.add(TriggerAction(onStart = actionBuilder.onStart, onUpdate = actionBuilder.onUpdate))
     }
 }
