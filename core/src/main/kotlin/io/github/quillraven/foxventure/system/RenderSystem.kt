@@ -95,7 +95,7 @@ class RenderSystem(
         batch.color = prevColor
     }
 
-    override fun onMapChanged(tiledMap: TiledMap) {
+    override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         mapRenderer.map = tiledMap
 
         bgdLayers.clear()

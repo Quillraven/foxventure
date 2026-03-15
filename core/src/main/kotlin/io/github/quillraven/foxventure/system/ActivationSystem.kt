@@ -147,7 +147,7 @@ class ActivationSystem(private val gameViewport: Viewport) : IteratingSystem(
         return chunk
     }
 
-    override fun onMapChanged(tiledMap: TiledMap) {
+    override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         chunks.clear()
         entityToChunk.clear()
 
