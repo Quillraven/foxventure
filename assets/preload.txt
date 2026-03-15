@@ -15,8 +15,8 @@ i:b:/shader/circle_crop.frag:1274:1
 i:b:/shader/pixelize.frag:694:1
 i:b:/graphics/sunny_land.png:35058:1
 i:b:/graphics/sky.png:8230:1
-i:b:/graphics/objects.atlas:11737:1
-i:b:/graphics/objects.png:59689:1
+i:b:/graphics/objects.atlas:12788:1
+i:b:/graphics/objects.png:62647:1
 i:b:/graphics/sprites/sfx/dust1/idle_1.png:422:1
 i:b:/graphics/sprites/sfx/dust1/idle_0.png:347:1
 i:b:/graphics/sprites/sfx/dust1/idle_4.png:367:1
@@ -63,8 +63,13 @@ i:b:/graphics/sprites/objects/eagle/attack_1.png:427:1
 i:b:/graphics/sprites/objects/eagle/idle_3.png:635:1
 i:b:/graphics/sprites/objects/fox/idle_1.png:1297:1
 i:b:/graphics/sprites/objects/fox/run_4.png:1231:1
+i:b:/graphics/sprites/objects/fox/dizzy_4.png:285:1
 i:b:/graphics/sprites/objects/fox/idle_0.png:1312:1
 i:b:/graphics/sprites/objects/fox/climb_1.png:1239:1
+i:b:/graphics/sprites/objects/fox/dizzy_2.png:273:1
+i:b:/graphics/sprites/objects/fox/dizzy_1.png:284:1
+i:b:/graphics/sprites/objects/fox/dizzy_0.png:321:1
+i:b:/graphics/sprites/objects/fox/dizzy_5.png:272:1
 i:b:/graphics/sprites/objects/fox/hurt_1.png:1325:1
 i:b:/graphics/sprites/objects/fox/fall_0.png:1276:1
 i:b:/graphics/sprites/objects/fox/hurt_0.png:1332:1
@@ -75,6 +80,8 @@ i:b:/graphics/sprites/objects/fox/idle_2.png:1294:1
 i:b:/graphics/sprites/objects/fox/run_3.png:1241:1
 i:b:/graphics/sprites/objects/fox/run_0.png:1312:1
 i:b:/graphics/sprites/objects/fox/run_5.png:1260:1
+i:b:/graphics/sprites/objects/fox/dizzy_3.png:312:1
+i:b:/graphics/sprites/objects/fox/look-up.png:281:1
 i:b:/graphics/sprites/objects/fox/climb_2.png:1230:1
 i:b:/graphics/sprites/objects/fox/run_1.png:1271:1
 i:b:/graphics/sprites/objects/fox/idle_3.png:1297:1
@@ -83,6 +90,9 @@ i:b:/graphics/sprites/objects/piranha/attack_3.png:461:1
 i:b:/graphics/sprites/objects/piranha/idle_0.png:475:1
 i:b:/graphics/sprites/objects/piranha/attack_0.png:475:1
 i:b:/graphics/sprites/objects/piranha/attack_1.png:463:1
+i:b:/graphics/sprites/objects/acorn/idle_1.png:1088:1
+i:b:/graphics/sprites/objects/acorn/idle_0.png:1121:1
+i:b:/graphics/sprites/objects/acorn/idle_2.png:1097:1
 i:b:/graphics/sprites/objects/piranha-ball/idle_1.png:292:1
 i:b:/graphics/sprites/objects/piranha-ball/idle_0.png:292:1
 i:b:/graphics/sprites/objects/piranha-ball/idle_2.png:283:1

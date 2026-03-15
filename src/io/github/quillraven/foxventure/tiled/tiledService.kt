@@ -28,7 +28,7 @@ import ktx.tiled.y
 import kotlin.math.abs
 
 interface MapChangeListener {
-    fun onMapChanged(tiledMap: TiledMap)
+    fun onMapChanged(mapName:String, tiledMap: TiledMap)
 }
 
 interface LoadTileObjectListener {
@@ -76,7 +76,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
         loadObjects()
 
         // notify listeners
-        mapChangeListeners.forEach { it.onMapChanged(currentMap) }
+        mapChangeListeners.forEach { it.onMapChanged(mapName, currentMap) }
     }
 
     private fun loadGroundCollisionInfo() {

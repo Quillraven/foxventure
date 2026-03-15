@@ -48,6 +48,7 @@ import io.github.quillraven.foxventure.system.RenderSystem
 import io.github.quillraven.foxventure.system.SpawnSystem
 import io.github.quillraven.foxventure.system.StunSystem
 import io.github.quillraven.foxventure.system.TransitionType
+import io.github.quillraven.foxventure.system.TriggerSystem
 import io.github.quillraven.foxventure.system.UiRenderSystem
 import io.github.quillraven.foxventure.system.WanderSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
@@ -90,6 +91,7 @@ class GameScreen(
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
+            add(TriggerSystem())
             add(activationSystem)
             add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
             add(ProximityDetectorSystem())

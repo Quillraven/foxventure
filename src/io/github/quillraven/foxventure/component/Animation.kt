@@ -13,9 +13,9 @@ typealias GdxAnimation = com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>
  * Animation types mapped to their atlas keys.
  */
 enum class AnimationType {
-    IDLE, RUN, JUMP, FALL, CLIMB, ATTACK, HURT;
+    IDLE, RUN, JUMP, FALL, CLIMB, ATTACK, HURT, DIZZY, LOOK_UP;
 
-    val atlasKey: String = name.lowercase()
+    val atlasKey: String = name.lowercase().replace("_", "-")
 
     companion object {
         fun byAtlasKey(key: String): AnimationType {
