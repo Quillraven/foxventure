@@ -32,8 +32,8 @@
    </properties>
   </object>
   <object id="44" gid="587" x="16" y="66" width="33" height="32"/>
-  <object id="45" gid="588" x="400" y="160" width="15" height="13"/>
-  <object id="46" gid="588" x="448" y="160" width="15" height="13"/>
+  <object id="45" gid="588" x="432" y="160" width="15" height="13"/>
+  <object id="46" gid="588" x="480" y="160" width="15" height="13"/>
   <object id="47" gid="588" x="656" y="64" width="15" height="13"/>
   <object id="48" gid="588" x="624" y="80" width="15" height="13"/>
   <object id="49" gid="588" x="608" y="112" width="15" height="13"/>
@@ -65,6 +65,6 @@
  </objectgroup>
  <objectgroup color="#5500ff" id="9" name="trigger">
   <object id="74" name="tutorial-1" x="304" y="192" width="177" height="32"/>
-  <object id="75" name="tutorial-2" x="673" y="112" width="31" height="111"/>
+  <object id="75" name="tutorial-2" x="699" y="113" width="31" height="111"/>
  </objectgroup>
 </map>

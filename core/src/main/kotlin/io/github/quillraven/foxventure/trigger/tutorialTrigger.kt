@@ -81,14 +81,14 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
     }
 
-    timedAction(13f) {
+    timedAction(15f) {
         onStart = {
             player()[Animation].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
                 "avatar-fox",
-                "{SHAKE}Oof!{WAIT=0.8}{RESET} My head... is it still attached?\n" +
-                        "Everything is a blur. I know I have legs... but " +
-                        "I've forgotten how to use them for anything but walking."
+                "{SHAKE}Yip!{WAIT=1.0}{RESET} My ears are ringing... and my tail is all dusty!\n" +
+                        "Everything's a blur. I've got my four paws under me, " +
+                        "but I can't remember anything beyond a basic trot."
             )
         }
     }
@@ -97,7 +97,8 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Move the fox by pressing A/D or LEFT/RIGHT arrow keys."
+                "Move the fox by pressing {COLOR=#87ceebff}A/D{RESET} " +
+                        "or {COLOR=#87ceebff}LEFT/RIGHT{RESET} arrow keys."
             )
         }
     }
@@ -123,13 +124,13 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
         }
     }
 
-    timedAction(13f) {
+    timedAction(15f) {
         onStart = {
             gameViewModel.onShowMessage(
                 "avatar-fox",
-                "{SHAKE}Geronim-oh-nooo!{WAIT=1.0}{RESET} That was a long way down.\n" +
-                        "Wait! A spark of brilliance! I used to defy gravity once, didn't I?\n" +
-                        "How did I... launch myself upwards?"
+                "{SHAKE}Ruff!{WAIT=1.0}{RESET} That fall nearly ruffled my fur for good!\n" +
+                        "Wait... I feel a spring in my paws. I used to be able to catch some air, didn't I?\n" +
+                        "How did I... pounce?"
             )
         }
     }
@@ -138,7 +139,7 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Press SPACE to jump."
+                "Press {COLOR=#87ceebff}SPACE{RESET} to jump."
             )
         }
     }
@@ -156,5 +157,45 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
 }
 
 fun IntervalSystem.tutorialTrigger2() = trigger {
+    timedAction(0.5f) {
+        onStart = {
+            player().run {
+                configure {
+                    it += EntityTag.ROOT
+                    it -= Controller
+                }
+                this[Velocity].current.setZero()
+            }
+        }
+    }
 
+    timedAction(13f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "avatar-fox",
+                "A ladder? Really? {WAIT=0.5}Talk about a workout.\n" +
+                        "I used to be a master of the vertical scramble.\n" +
+                        "Let's see if I can still climb without falling on my tail!"
+            )
+        }
+    }
+
+    timedAction(5f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "",
+                "Press {COLOR=#87ceebff}W/D{RESET} or {COLOR=#87ceebff}UP/DOWN{RESET} arrow keys to climb ladders."
+            )
+        }
+    }
+
+    action {
+        onStart = {
+            gameViewModel.onHideMessage()
+            player().configure {
+                it += Controller()
+                it -= EntityTag.ROOT
+            }
+        }
+    }
 }

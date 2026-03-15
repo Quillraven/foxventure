@@ -52,7 +52,7 @@ class GameView(
         // message box
         messageBox = MessageBox(skin)
         messageBox.isVisible = false
-        add(messageBox).grow().height(125f).padLeft(160f).padRight(160f).padBottom(150f)
+        add(messageBox).grow().height(150f).padLeft(160f).padRight(160f).padBottom(150f)
 
         viewModel.onLifeChanged = this::onLifeChanged
         viewModel.onGemsChanged = { gems -> gemLabel.setText("x$gems") }
