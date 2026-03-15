@@ -6,49 +6,65 @@ filter: Nearest, Nearest
 repeat: none
 avatar-fox
   rotate: false
-  xy: 19, 3
+  xy: 37, 29
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
+box
+  rotate: false
+  xy: 1, 1
+  size: 9, 9
+  split: 3, 3, 3, 3
+  orig: 9, 9
+  offset: 0, 0
+  index: -1
 gem
   rotate: false
-  xy: 37, 40
+  xy: 19, 12
   size: 15, 13
   orig: 15, 13
   offset: 0, 0
   index: -1
+label-bgd
+  rotate: false
+  xy: 1, 48
+  size: 24, 13
+  split: 2, 2, 2, 2
+  orig: 24, 13
+  offset: 0, 0
+  index: -1
 life-0
   rotate: false
-  xy: 1, 37
+  xy: 1, 30
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 life-1
   rotate: false
-  xy: 1, 19
+  xy: 1, 12
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 life-2
   rotate: false
-  xy: 19, 37
+  xy: 27, 45
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 life-3
   rotate: false
-  xy: 1, 1
+  xy: 45, 45
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 life-4
   rotate: false
-  xy: 19, 19
+  xy: 19, 27
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

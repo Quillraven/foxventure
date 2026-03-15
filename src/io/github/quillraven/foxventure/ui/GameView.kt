@@ -4,8 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Scaling
+import io.github.quillraven.foxventure.ui.widget.MessageBox
 import ktx.collections.gdxArrayOf
 
 class GameView(
@@ -22,30 +22,46 @@ class GameView(
     private val lifeGroup: Table
     private val gemLabel: Label
     private val creditsLabel: Label
+    private val messageBox: MessageBox
 
     init {
         setFillParent(true)
         top().left()
 
+        // HUD row — all items in a nested table so they stay grouped at top-left
+        val hud = Table(skin).also { it.top().left() }
+
         // credits
-        val creditsImage = Image(TextureRegionDrawable(skin.atlas.findRegion("avatar-fox")), Scaling.fit)
-        add(creditsImage).padLeft(2f)
+        val avatarImage = Image(skin.getDrawable("avatar-fox"), Scaling.fit)
+        hud.add(avatarImage).padLeft(2f)
         creditsLabel = Label("x0", skin, "small_border")
-        add(creditsLabel).padLeft(2f).fillX().bottom().padBottom(2f)
+        hud.add(creditsLabel).padLeft(2f).bottom().padBottom(2f)
 
         // gems
-        val gemImage = Image(TextureRegionDrawable(skin.atlas.findRegion("gem")), Scaling.fit)
-        add(gemImage).padLeft(10f)
+        val gemImage = Image(skin.getDrawable("gem"), Scaling.fit)
+        hud.add(gemImage).padLeft(10f)
         gemLabel = Label("x0", skin, "small_border")
-        add(gemLabel).padLeft(2f).fillX().bottom().padBottom(2f)
+        hud.add(gemLabel).padLeft(2f).bottom().padBottom(2f)
 
         // life
-        lifeGroup = Table(skin).also { it.top() }
-        add(lifeGroup).padLeft(20f)
+        lifeGroup = Table(skin).also { it.top().left() }
+        hud.add(lifeGroup).padLeft(20f)
+
+        add(hud).left().row()
+
+        // message box
+        messageBox = MessageBox(skin)
+        messageBox.isVisible = false
+        add(messageBox).grow().height(125f).padLeft(160f).padRight(160f).padBottom(150f)
 
         viewModel.onLifeChanged = this::onLifeChanged
         viewModel.onGemsChanged = { gems -> gemLabel.setText("x$gems") }
         viewModel.onCreditsChanged = { credits -> creditsLabel.setText("x$credits") }
+        viewModel.onShowMessage = { drawableName, text ->
+            messageBox.isVisible = true
+            messageBox.setMessage(drawableName, text)
+        }
+        viewModel.onHideMessage = { messageBox.isVisible = false }
     }
 
     private fun onLifeChanged(life: Float, maxLife: Int) {
