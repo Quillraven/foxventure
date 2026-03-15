@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-up" width="75" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="74">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="75" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="76">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
@@ -11,34 +11,34 @@
  </imagelayer>
  <layer id="7" name="bgd" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt06ERADAIBEHSf130xWAjMUwmu+7dm4sAAICZPNsP4B93b701CG8rg2oDGQ==
+   eJzt07EJAEAMAzFn/7l+r5AV0jwBqXNruAQAAHZeeQ5+9TZbg5DTGoNqAxk=
   </data>
  </layer>
  <layer id="1" name="ground" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzdlt8rBFEUx+8M/wAviM3D2j9nk4h/Yf8FIm3+A5O3KcIb8TQtT9rQPiGS/0Mb8YLvbffozHF/zRKNW5927p3pzp5P55w7Sv3dWI6UWgH3YBfsgcsAtqJie4c8X4ZBMV2Ba3AT4OoIHAfEnxRwW5aRBPjR+RHHSg2B4TjMV1LQbRmGyxXV5j6YhKMpUAGrmK8Fusr+ka+knzc2Xym7bhSoq0TUdtlr8QD//9BTfxm7bgb2a9O+ZXZliucNvOuYUGcPlp7f8dQU7cv7W5n7li2fxhDXOJiI7XmmXcXgDPu0DZyrXq3y/vbZ83CvMgDTv2onP3xnX8Nxj1w9Yp8W6DIy8KR6tcrPUN3zFrG+BGYZmZib0O+YU4N7/q53n6umZZ3ORXLVNaBd2XpencVvc/OC516j/Jp2Vfe4de2Zqbz3IoO+QV2++PcC5UdH5JXMKZMr3vPIFedZeBlBzY7G+RjJVYgbX64WdbUZfc2tbbAj1lLRo6Ur8sOZBwvCVxXzGVBzxNByxMldufInJNeKuqLezs+9E/yeGmqH92juqhr1coJ70v9N5xV9r8ncNOVVCKa8suWQrxapxkPHRb+m+Ll3i/mdpXZo/7QPzakOeY+ne9ITuaL4tGdfjtB97WodNH8AqnH9/rbKE7rmgvaXc51bNYF8lr9z0Hg3wAdRE1sh
+   eJzVlkFKHEEUhr9X5gK6ScRIFupxhiCKXiFXiCQEyQ0cshOU6E7RVTNxJSERV0YM4j1kMOgmCcX0k0dZ1V3d0yBT8JjumaZq3tf//1fB8433AhsC1wJfBfYEzjLqizSbO+f5SRja04XAL4HLDFZHAscZ/fcbsJ2UoT1VldeHczDl4IXL49VvyHbSWak39wXmHLx2MO/gg8DHTFZFR7zmgPkO6s0Y/6Ff6ibFa9tcv2vgq37g7XG92AMK4G2iBhW/FeaZ5ZbrHwgc1vivMNebmXkdm7cLVjlsUjz/yOizDatYP38F/vmeHNwkMv+8xlM6r823LnIrZJVTMW7LHenppYNXDmbL/mLlWTmBU+B7pH4w8qrNt8fMGyNjeoE+2lQbD9btfZpLVaxuy7WHpvx7vGPkVbuH+sxbA9Yz/RLrr0pX9wIPmQy7ZrVZsy8qq2GkPKtU5vUycjjWdx2raQczLv0OBmOw0jPoWeZ5QfVxHugq1FSMlc28WL+hp2zfRSarJtWU1ZY81daOwG7kvGAzOmSlfGytAKsBrwVgEViq8VrKk5ZVlSZjc3aV7Xbf+yZwEvGOzWjLakFGmrCcBqWurhPabKuNlK6KFucs9Xju+Fl6yu57VwK/E97R+bfL0nv1oc14/S3kpKy0P8+5TiMDw+qT3zM6qOnS4379cA/P/a6qdP7w3mtrKajwWbtm234/A/8B8kB8PA==
   </data>
  </layer>
  <layer id="3" name="props" width="75" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt1TEKACAIhWHpap04mqLLtTYUjyCU4v9WBR8OagYAgJ8WHQBLRdSrS4r7euDseadqfye9AIC/7O5+Tvo/430DRnEHSg==
+   eJzt1TEKACAMQ9Hg1TyxOImXc3UQCiLEwn9Thw6ZEgmAW9vu/vAX+NFwB0DYLSdZ+2a6AwAAcLmxtcT7DKW3AJNBB0o=
   </data>
  </layer>
- <objectgroup id="4" name="objects">
-  <object id="42" gid="577" x="57" y="144" width="79" height="176"/>
-  <object id="43" gid="577" x="176" y="146" width="79" height="176">
+ <objectgroup id="4" name="object">
+  <object id="42" gid="577" x="57" y="64" width="79" height="176"/>
+  <object id="43" gid="577" x="176" y="66" width="79" height="176">
    <properties>
     <property name="z" type="int" value="200"/>
    </properties>
   </object>
-  <object id="44" gid="587" x="16" y="146" width="33" height="32"/>
+  <object id="44" gid="587" x="16" y="66" width="33" height="32"/>
   <object id="45" gid="588" x="400" y="160" width="15" height="13"/>
   <object id="46" gid="588" x="448" y="160" width="15" height="13"/>
   <object id="47" gid="588" x="656" y="64" width="15" height="13"/>
   <object id="48" gid="588" x="624" y="80" width="15" height="13"/>
   <object id="49" gid="588" x="608" y="112" width="15" height="13"/>
   <object id="51" gid="582" x="304" y="209" width="17" height="12"/>
-  <object id="52" gid="576" x="112" y="144" width="46" height="28"/>
+  <object id="52" gid="576" x="112" y="64" width="46" height="28"/>
   <object id="53" gid="576" x="784" y="115" width="46" height="28">
    <properties>
     <property name="z" type="int" value="100"/>
@@ -55,12 +55,16 @@
   <object id="63" gid="588" x="944" y="128" width="15" height="13"/>
   <object id="64" gid="588" x="944" y="224" width="15" height="13"/>
   <object id="65" gid="588" x="992" y="64" width="15" height="13"/>
-  <object id="70" gid="577" x="-11" y="144" width="79" height="176"/>
+  <object id="70" gid="577" x="-11" y="64" width="79" height="176"/>
   <object id="71" gid="589" x="896" y="225" width="41" height="30"/>
   <object id="72" gid="583" x="832" y="115" width="18" height="20">
    <properties>
     <property name="z" type="int" value="200"/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup color="#5500ff" id="9" name="trigger">
+  <object id="74" name="tutorial-1" x="304" y="192" width="177" height="32"/>
+  <object id="75" name="tutorial-2" x="673" y="112" width="31" height="111"/>
  </objectgroup>
 </map>

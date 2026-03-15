@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="props" tilewidth="119" tileheight="176" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.12.0" name="props" tilewidth="119" tileheight="176" tilecount="11" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image source="../graphics/sprites/props/bush.png" width="46" height="28"/>
@@ -40,10 +40,16 @@
  <tile id="8">
   <image source="../graphics/sprites/props/shrooms.png" width="16" height="15"/>
  </tile>
- <tile id="9">
+ <tile id="9" type="house">
   <image source="../graphics/sprites/props/tree-house.png" width="119" height="144"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="3" y="10" width="114" height="134"/>
+  </objectgroup>
  </tile>
- <tile id="10">
+ <tile id="10" type="house">
   <image source="../graphics/sprites/props/wooden-house.png" width="112" height="98"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="1" width="107" height="97"/>
+  </objectgroup>
  </tile>
 </tileset>

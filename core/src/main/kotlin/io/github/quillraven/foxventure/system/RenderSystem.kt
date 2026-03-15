@@ -102,7 +102,7 @@ class RenderSystem(
         fgdLayers.clear()
         var currentLayers = bgdLayers
         tiledMap.layers.forEach { layer ->
-            if ("objects" == layer.name) {
+            if ("object" == layer.name) {
                 currentLayers = fgdLayers
                 return@forEach
             }

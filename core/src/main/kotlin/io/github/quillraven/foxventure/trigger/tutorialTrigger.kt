@@ -17,11 +17,11 @@ import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.MoveToPoint
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
+import io.github.quillraven.foxventure.component.Velocity
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
 fun IntervalSystem.tutorialCutscene() = trigger {
-
     action {
         onStart = {
             player().configure {
@@ -81,13 +81,14 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
     }
 
-    timedAction(9f) {
+    timedAction(13f) {
         onStart = {
             player()[Animation].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
                 "avatar-fox",
-                "{SHAKE}Ouch{WAIT=1.0}{RESET} - that hurt!\n" +
-                        "Darn it ... I think I lost my memory. I can only remember how to move."
+                "{SHAKE}Oof!{WAIT=0.8}{RESET} My head... is it still attached?\n" +
+                        "Everything is a blur. I know I have legs... but " +
+                        "I've forgotten how to use them for anything but walking."
             )
         }
     }
@@ -107,4 +108,53 @@ fun IntervalSystem.tutorialCutscene() = trigger {
             player().configure { it += Controller() }
         }
     }
+}
+
+fun IntervalSystem.tutorialTrigger1() = trigger {
+    timedAction(0.5f) {
+        onStart = {
+            player().run {
+                configure {
+                    it += EntityTag.ROOT
+                    it -= Controller
+                }
+                this[Velocity].current.setZero()
+            }
+        }
+    }
+
+    timedAction(13f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "avatar-fox",
+                "{SHAKE}Geronim-oh-nooo!{WAIT=1.0}{RESET} That was a long way down.\n" +
+                        "Wait! A spark of brilliance! I used to defy gravity once, didn't I?\n" +
+                        "How did I... launch myself upwards?"
+            )
+        }
+    }
+
+    timedAction(4f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "",
+                "Press SPACE to jump."
+            )
+        }
+    }
+
+    action {
+        onStart = {
+            gameViewModel.onHideMessage()
+            player().configure {
+                it += Controller()
+                it += JumpControl()
+                it -= EntityTag.ROOT
+            }
+        }
+    }
+}
+
+fun IntervalSystem.tutorialTrigger2() = trigger {
+
 }
