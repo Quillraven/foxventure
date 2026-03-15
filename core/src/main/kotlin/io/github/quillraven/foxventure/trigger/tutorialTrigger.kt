@@ -61,9 +61,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
     }
 
-    action {
-        var timer = 2.5f
-
+    timedAction(2.5f) {
         onStart = {
             audioService.playSound("hurt2.wav")
             player()[Animation].changeTo(AnimationType.DIZZY)
@@ -77,20 +75,13 @@ fun IntervalSystem.tutorialCutscene() = trigger {
                 it += Transform(position = playerPosition.cpy().add(0.3f, 0.9f), size = size, z = Z_SFX)
                 it += Graphic(stunFrame)
                 it += Animation("objects/acorn", stunAnimation, emptyMap(), 1f)
-                it += DelayRemoval(timer)
+                it += DelayRemoval(2.5f)
                 it += EntityTag.ACTIVE
             }
         }
-
-        onUpdate = {
-            timer -= deltaTime
-            timer <= 0f
-        }
     }
 
-    action {
-        var timer = 9f
-
+    timedAction(9f) {
         onStart = {
             player()[Animation].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
@@ -99,26 +90,14 @@ fun IntervalSystem.tutorialCutscene() = trigger {
                         "Darn it ... I think I lost my memory. I can only remember how to move."
             )
         }
-
-        onUpdate = {
-            timer -= deltaTime
-            timer <= 0f
-        }
     }
 
-    action {
-        var timer = 6f
-
+    timedAction(6f) {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
                 "Move the fox by pressing A/D or LEFT/RIGHT arrow keys."
             )
-        }
-
-        onUpdate = {
-            timer -= deltaTime
-            timer <= 0f
         }
     }
 

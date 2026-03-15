@@ -59,6 +59,18 @@ class TriggerBuilder(
         val actionBuilder = TriggerActionBuilder(world).apply(block)
         actions.add(TriggerAction(onStart = actionBuilder.onStart, onUpdate = actionBuilder.onUpdate))
     }
+
+    fun timedAction(duration: Float, block: TriggerActionBuilder.() -> Unit) {
+        action {
+            var timer = duration
+            block()
+            val customUpdate = onUpdate
+            onUpdate = {
+                timer -= deltaTime
+                customUpdate() && timer <= 0f
+            }
+        }
+    }
 }
 
 fun IntervalSystem.trigger(block: TriggerBuilder.() -> Unit): Trigger =
