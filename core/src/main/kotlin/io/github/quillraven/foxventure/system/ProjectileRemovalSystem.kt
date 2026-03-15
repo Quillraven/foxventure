@@ -16,7 +16,7 @@ class ProjectileRemovalSystem(
     private val tiledService: TiledService = inject(),
     private val gameViewport: Viewport = inject(),
 ) : IteratingSystem(
-    family = family { all(EntityTag.PROJECTILE) },
+    family = family { all(Velocity, EntityTag.PROJECTILE) },
     interval = Fixed(1 / 20f),
 ) {
     override fun onTickEntity(entity: Entity) {
