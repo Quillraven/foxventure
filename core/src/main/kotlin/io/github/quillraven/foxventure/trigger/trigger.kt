@@ -1,6 +1,9 @@
 package io.github.quillraven.foxventure.trigger
 
+import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World
+import io.github.quillraven.foxventure.AudioService
+import io.github.quillraven.foxventure.component.Player
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
 
@@ -36,8 +39,13 @@ class TriggerActionBuilder {
     var onUpdate: World.() -> Boolean = { true }
 }
 
-class TriggerBuilder {
+class TriggerBuilder(
+    val world: World,
+    val audioService: AudioService = world.inject(),
+) {
     val actions = gdxArrayOf<TriggerAction>()
+
+    fun World.player() = family { all(Player) }.single()
 
     fun action(block: TriggerActionBuilder.() -> Unit) {
         val actionBuilder = TriggerActionBuilder().apply(block)
@@ -45,5 +53,5 @@ class TriggerBuilder {
     }
 }
 
-fun trigger(block: TriggerBuilder.() -> Unit): Trigger =
-    Trigger(TriggerBuilder().apply(block).actions)
+fun IntervalSystem.trigger(block: TriggerBuilder.() -> Unit): Trigger =
+    Trigger(TriggerBuilder(world).apply(block).actions)
