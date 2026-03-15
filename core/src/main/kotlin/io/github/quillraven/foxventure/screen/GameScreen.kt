@@ -38,6 +38,7 @@ import io.github.quillraven.foxventure.system.InvulnerabilitySystem
 import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.MoveToSystem
 import io.github.quillraven.foxventure.system.PlayerDeathSystem
+import io.github.quillraven.foxventure.system.PlayerVictorySystem
 import io.github.quillraven.foxventure.system.PostInterpolationSystem
 import io.github.quillraven.foxventure.system.PostRenderSystem
 import io.github.quillraven.foxventure.system.PreInterpolationSystem
@@ -104,6 +105,7 @@ class GameScreen(
             add(AerialMoveSystem())
             add(GroundMoveSystem())
             add(CollisionSystem())
+            add(PlayerVictorySystem())
             add(DamagedSystem())
             add(InvulnerabilitySystem())
             add(StunSystem())

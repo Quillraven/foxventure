@@ -14,7 +14,6 @@ import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.tiled.LoadTriggerListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.Trigger
-import io.github.quillraven.foxventure.trigger.tutorialCutscene
 import io.github.quillraven.foxventure.trigger.tutorialTrigger1
 import io.github.quillraven.foxventure.trigger.tutorialTrigger2
 import ktx.app.gdxError
@@ -28,7 +27,7 @@ class TriggerSystem(
     private val physicsTimer: PhysicsTimer = inject(),
 ) :
     IteratingSystem(
-        family = family { all(TriggerRef, Transform) },
+        family = family { all(TriggerRef) },
     ), MapChangeListener, LoadTriggerListener {
 
     private val playerFamily = family { all(Transform, Player) }
@@ -44,6 +43,13 @@ class TriggerSystem(
 
         val (playerPosition, playerSize) = playerFamily.single()[Transform]
         family.forEach { entity ->
+            val transform = entity.getOrNull(Transform)
+            if (transform == null) {
+                activeTriggers += entity[TriggerRef].trigger
+                entity.remove()
+                return@forEach
+            }
+
             val (position, size) = entity[Transform]
 
             val playerOverlapping = position.x < playerPosition.x + playerSize.x

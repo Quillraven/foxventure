@@ -22,10 +22,13 @@ import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.component.Victory
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.system.DamagedSystem.Companion.damageEntity
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.ui.GameViewModel
+import ktx.app.gdxError
+import ktx.math.vec2
 
 /**
  * Detects collisions between entities and handles damage, pickups, and collision responses.
@@ -114,6 +117,8 @@ class CollisionSystem(
             "damage" -> onPlayerDamageCollision(player, other)
             "spike" -> onPlayerSpikeCollision(player, other, otherCollision)
             "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollision, otherTransform, otherCollision)
+            "house" -> onPlayerHouseCollision(player, other, playerTransform, otherTransform, otherCollision)
+            else -> gdxError("Unsupported player collision with entity $otherType")
         }
     }
 
@@ -236,6 +241,20 @@ class CollisionSystem(
         spawnPickupSfx(transform, scale = 1f)
 
         other.remove()
+    }
+
+    private fun onPlayerHouseCollision(
+        player: Entity,
+        house: Entity,
+        playerTransform: Transform,
+        houseTransform: Transform,
+        houseCollision: Collision,
+    ) {
+        val (otherPosition) = houseTransform
+        val houseX = otherPosition.x + houseCollision.box.x + houseCollision.box.width / 2f - playerTransform.size.x
+        val houseY = otherPosition.y + houseCollision.box.y
+        player.configure { it += Victory(housePosition = vec2(houseX, houseY)) }
+        house.configure { it -= Collision }
     }
 
     private fun spawnPickupSfx(transform: Transform, scale: Float) {
