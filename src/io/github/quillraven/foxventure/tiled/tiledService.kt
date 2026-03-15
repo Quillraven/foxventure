@@ -35,6 +35,10 @@ interface LoadTileObjectListener {
     fun onLoadTileObject(x: Float, y: Float, mapObject: TiledMapTileMapObject, tile: TiledMapTile)
 }
 
+interface LoadTriggerListener {
+    fun onLoadTrigger(mapObject: RectangleMapObject)
+}
+
 data class GroundTile(val type: String, val rect: Rect) {
     val isSolid get() = type == ""
     val isLadder get() = type == "ladder" || type == "ladder_top"
@@ -47,6 +51,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
     private val groundTiles = GdxArray<GroundTile>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
+    private val loadTriggerListener = gdxArrayOf<LoadTriggerListener>()
     private val tiledLoader = TmxMapLoader(fileHandleResolver)
 
     val mapWidth: Int get() = currentMap.width
@@ -74,6 +79,9 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
 
         // load objects
         loadObjects()
+
+        // load triggers
+        loadTriggers()
 
         // notify listeners
         mapChangeListeners.forEach { it.onMapChanged(mapName, currentMap) }
@@ -132,13 +140,23 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
     }
 
     private fun loadObjects() {
-        currentMap.layer("objects").objects.forEach { mapObject ->
+        currentMap.layer("object").objects.forEach { mapObject ->
             val x = mapObject.x.toWorldUnits()
             val y = mapObject.y.toWorldUnits()
             if (mapObject is TiledMapTileMapObject) {
                 loadTileObjectListeners.forEach { it.onLoadTileObject(x, y, mapObject, mapObject.tile) }
             } else {
                 gdxError("Unsupported map object $mapObject")
+            }
+        }
+    }
+
+    private fun loadTriggers() {
+        currentMap.layers.get("trigger")?.objects?.forEach { triggerObject ->
+            if (triggerObject is RectangleMapObject) {
+                loadTriggerListener.forEach { it.onLoadTrigger(triggerObject) }
+            } else {
+                gdxError("Unsupported trigger map object $triggerObject")
             }
         }
     }
@@ -306,9 +324,16 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
         loadTileObjectListeners.add(listener)
     }
 
+    fun addLoadTriggerListener(listener: LoadTriggerListener) {
+        if (listener in loadTriggerListener) gdxError("LoadTriggerListener $listener is already registered")
+
+        loadTriggerListener.add(listener)
+    }
+
     fun clearAllListener() {
         loadTileObjectListeners.clear()
         mapChangeListeners.clear()
+        loadTriggerListener.clear()
     }
 
     fun tileById(tilesetName: String, id: Int): TiledMapTile {

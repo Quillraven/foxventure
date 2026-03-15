@@ -17,11 +17,11 @@ import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.MoveToPoint
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
+import io.github.quillraven.foxventure.component.Velocity
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
 fun IntervalSystem.tutorialCutscene() = trigger {
-
     action {
         onStart = {
             player().configure {
@@ -81,13 +81,14 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
     }
 
-    timedAction(9f) {
+    timedAction(15f) {
         onStart = {
             player()[Animation].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
                 "avatar-fox",
-                "{SHAKE}Ouch{WAIT=1.0}{RESET} - that hurt!\n" +
-                        "Darn it ... I think I lost my memory. I can only remember how to move."
+                "{SHAKE}Yip!{WAIT=1.0}{RESET} My ears are ringing... and my tail is all dusty!\n" +
+                        "Everything's a blur. I've got my four paws under me, " +
+                        "but I can't remember anything beyond a basic trot."
             )
         }
     }
@@ -96,7 +97,8 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Move the fox by pressing A/D or LEFT/RIGHT arrow keys."
+                "Move the fox by pressing {COLOR=#87ceebff}A/D{RESET} " +
+                        "or {COLOR=#87ceebff}LEFT/RIGHT{RESET} arrow keys."
             )
         }
     }
@@ -105,6 +107,95 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             gameViewModel.onHideMessage()
             player().configure { it += Controller() }
+        }
+    }
+}
+
+fun IntervalSystem.tutorialTrigger1() = trigger {
+    timedAction(0.5f) {
+        onStart = {
+            player().run {
+                configure {
+                    it += EntityTag.ROOT
+                    it -= Controller
+                }
+                this[Velocity].current.setZero()
+            }
+        }
+    }
+
+    timedAction(15f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "avatar-fox",
+                "{SHAKE}Ruff!{WAIT=1.0}{RESET} That fall nearly ruffled my fur for good!\n" +
+                        "Wait... I feel a spring in my paws. I used to be able to catch some air, didn't I?\n" +
+                        "How did I... pounce?"
+            )
+        }
+    }
+
+    timedAction(4f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "",
+                "Press {COLOR=#87ceebff}SPACE{RESET} to jump."
+            )
+        }
+    }
+
+    action {
+        onStart = {
+            gameViewModel.onHideMessage()
+            player().configure {
+                it += Controller()
+                it += JumpControl()
+                it -= EntityTag.ROOT
+            }
+        }
+    }
+}
+
+fun IntervalSystem.tutorialTrigger2() = trigger {
+    timedAction(0.5f) {
+        onStart = {
+            player().run {
+                configure {
+                    it += EntityTag.ROOT
+                    it -= Controller
+                }
+                this[Velocity].current.setZero()
+            }
+        }
+    }
+
+    timedAction(13f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "avatar-fox",
+                "A ladder? Really? {WAIT=0.5}Talk about a workout.\n" +
+                        "I used to be a master of the vertical scramble.\n" +
+                        "Let's see if I can still climb without falling on my tail!"
+            )
+        }
+    }
+
+    timedAction(5f) {
+        onStart = {
+            gameViewModel.onShowMessage(
+                "",
+                "Press {COLOR=#87ceebff}W/D{RESET} or {COLOR=#87ceebff}UP/DOWN{RESET} arrow keys to climb ladders."
+            )
+        }
+    }
+
+    action {
+        onStart = {
+            gameViewModel.onHideMessage()
+            player().configure {
+                it += Controller()
+                it -= EntityTag.ROOT
+            }
         }
     }
 }

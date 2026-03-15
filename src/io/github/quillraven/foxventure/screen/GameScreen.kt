@@ -52,6 +52,7 @@ import io.github.quillraven.foxventure.system.TriggerSystem
 import io.github.quillraven.foxventure.system.UiRenderSystem
 import io.github.quillraven.foxventure.system.WanderSystem
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
+import io.github.quillraven.foxventure.tiled.LoadTriggerListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.tiled.TiledService
 import io.github.quillraven.foxventure.ui.GameView
@@ -180,6 +181,9 @@ class GameScreen(
             }
             if (system is LoadTileObjectListener) {
                 tiledService.addLoadTileObjectListener(system)
+            }
+            if (system is LoadTriggerListener) {
+                tiledService.addLoadTriggerListener(system)
             }
         }
         tiledService.addMapChangeListener(audioService)
