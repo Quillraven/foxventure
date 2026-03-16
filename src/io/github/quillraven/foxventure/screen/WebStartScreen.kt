@@ -29,9 +29,7 @@ class WebStartScreen(
 
         if (Gdx.input.isTouched) {
             dispose()
-            game.removeScreen<WebStartScreen>()
-            game.addScreen(GameScreen(game))
-            game.setScreen<GameScreen>()
+            game.changeToGame("tutorial.tmx")
             return
         }
     }
