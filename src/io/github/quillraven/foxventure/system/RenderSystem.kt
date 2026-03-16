@@ -1,5 +1,6 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.HdpiUtils
@@ -54,8 +55,10 @@ class RenderSystem(
             ScreenUtils.clear(0f, 0f, 0f, 0f, true)
             HdpiUtils.glViewport(0, 0, renderContext.fbo1.width, renderContext.fbo1.height)
             mapRenderer.use(camera) {
+                batch.color = Color.WHITE
                 bgdLayers.forEach(it::renderMapLayer)
                 super.onTick() // render entities
+                batch.color = Color.WHITE
                 fgdLayers.forEach(it::renderMapLayer)
             }
         }
