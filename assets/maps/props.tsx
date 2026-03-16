@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.0" name="props" tilewidth="119" tileheight="176" tilecount="11" columns="0">
+<tileset version="1.10" tiledversion="1.12.0" name="props" tilewidth="119" tileheight="176" tilecount="15" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image source="../graphics/sprites/props/bush.png" width="46" height="28"/>
@@ -51,5 +51,26 @@
   <objectgroup draworder="index" id="2">
    <object id="1" x="1" y="1" width="107" height="97"/>
   </objectgroup>
+ </tile>
+ <tile id="11">
+  <image source="../graphics/sprites/props/face-block.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="32"/>
+  </objectgroup>
+ </tile>
+ <tile id="12">
+  <image source="../graphics/sprites/props/platform-long.png" width="32" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="32" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="13">
+  <image source="../graphics/sprites/props/small-platform.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="14">
+  <image source="../graphics/sprites/props/tree.png" width="119" height="111"/>
  </tile>
 </tileset>
