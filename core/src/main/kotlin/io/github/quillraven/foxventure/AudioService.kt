@@ -67,6 +67,12 @@ class AudioService : MapChangeListener, Disposable {
         }
     }
 
+    fun stopMusic() {
+        currentMusic?.stop()
+        currentMusic?.dispose()
+        currentMusic = null
+    }
+
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         val musicPath = tiledMap.property("music", "").substringAfterLast("/")
         if (musicPath.isBlank()) return

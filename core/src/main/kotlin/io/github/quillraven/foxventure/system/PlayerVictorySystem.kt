@@ -1,5 +1,6 @@
 package io.github.quillraven.foxventure.system
 
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.MathUtils
 import com.github.quillraven.fleks.Entity
@@ -19,11 +20,17 @@ import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Victory
+import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.trigger
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
-class PlayerVictorySystem : IteratingSystem(family { all(Player, Victory, Controller, EntityTag.ACTIVE) }) {
+class PlayerVictorySystem : IteratingSystem(
+    family = family { all(Player, Victory, Controller, EntityTag.ACTIVE) }
+), MapChangeListener {
+    private var victoryText = ""
+    private var victoryTextDuration = 0f
+
     override fun onTickEntity(entity: Entity) {
         entity.configure {
             it -= Controller
@@ -35,6 +42,10 @@ class PlayerVictorySystem : IteratingSystem(family { all(Player, Victory, Contro
 
     private fun victoryTrigger(player: Entity) = trigger {
         timedAction(1f) {
+            onStart = {
+                audioService.stopMusic()
+            }
+
             onUpdate = {
                 MathUtils.isEqual(player[Velocity].current.x, 0f, 0.01f)
             }
@@ -54,13 +65,14 @@ class PlayerVictorySystem : IteratingSystem(family { all(Player, Victory, Contro
 
         timedAction(2f) {
             onStart = {
+                audioService.playMusic("8-bit-on-short.mp3")
                 player[Animation].changeTo(AnimationType.LOOK_UP)
             }
         }
 
-        timedAction(3f) {
+        timedAction(victoryTextDuration) {
             onStart = {
-                gameViewModel.onShowMessage("avatar-fox", "My house is in another area.")
+                gameViewModel.onShowMessage("avatar-fox", victoryText)
             }
         }
 
@@ -83,6 +95,25 @@ class PlayerVictorySystem : IteratingSystem(family { all(Player, Victory, Contro
                     )
                     it += player[Transform]
                 }
+            }
+        }
+    }
+
+    override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
+        when (mapName) {
+            "tutorial.tmx" -> {
+                victoryText = "{SHAKE}Sniff, sniff...{WAIT=0.8}{RESET} Is that... honey-glazed salmon? My favorite!\n" +
+                        "My tail is wagging just thinking about my wife's cooking. I’m almost home!{WAIT=1.0}\n" +
+                        "Wait. {WAIT=0.5}This isn't my den.\n" +
+                        "{COLOR=#87ceebff}Thank you, but my house is in another level.{RESET}"
+                victoryTextDuration = 20f
+            }
+
+            else -> {
+                victoryText = "Haha! I made it! {WAIT=0.5}Honey, I'm ho—{WAIT=0.8}\n" +
+                        "...Oh. {SHAKE}Wrong chimney.{RESET} No wonder the welcome mat looked different.\n" +
+                        "{COLOR=#87ceebff}Thank you, but my house is in another level.{RESET}"
+                victoryTextDuration = 15f
             }
         }
     }
