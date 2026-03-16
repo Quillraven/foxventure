@@ -40,7 +40,7 @@ class AudioService : MapChangeListener, Disposable {
         sound.play(soundVolume)
     }
 
-    fun playMusic(name: String) {
+    fun playMusic(name: String, loop: Boolean = true) {
         // dispose of current music if there is any
         currentMusic?.let { music ->
             music.stop()
@@ -49,7 +49,7 @@ class AudioService : MapChangeListener, Disposable {
 
         // load and play new music
         Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
-            music.isLooping = true
+            music.isLooping = loop
             music.play()
             music.volume = musicVolume
             currentMusic = music

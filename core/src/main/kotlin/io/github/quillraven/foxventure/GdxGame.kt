@@ -36,9 +36,16 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
             addScreen(WebStartScreen(this))
             setScreen<WebStartScreen>()
         } else {
-            addScreen(GameScreen(this))
-            setScreen<GameScreen>()
+            changeToGame("tutorial.tmx")
         }
+    }
+
+    fun changeToGame(mapName: String) {
+        removeScreen<GameScreen>()?.dispose()
+        val gameScreen = GameScreen(this)
+        addScreen(gameScreen)
+        setScreen<GameScreen>()
+        gameScreen.setMap(mapName)
     }
 
     override fun resize(width: Int, height: Int) {

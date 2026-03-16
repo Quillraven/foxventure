@@ -20,7 +20,7 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
         }
     }
 
-    timedAction(15f) {
+    timedAction(14f) {
         onStart = {
             gameViewModel.onShowMessage(
                 "avatar-fox",

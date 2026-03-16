@@ -11,4 +11,6 @@ class GameViewModel {
     var onCreditsChanged: (credits: Int) -> Unit = {}
     var onShowMessage: (drawableName: String, text: String) -> Unit = { _, _ -> }
     var onHideMessage: () -> Unit = {}
+    var onShowLevelComplete: (gems: Int, gemsMax: Int, mapName: String) -> Unit = { _, _, _ -> }
+    var onHideLevelComplete: () -> Unit = {}
 }

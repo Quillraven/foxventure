@@ -1,10 +1,12 @@
 package io.github.quillraven.foxventure.ui
 
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.Scaling
+import io.github.quillraven.foxventure.ui.widget.LevelComplete
 import io.github.quillraven.foxventure.ui.widget.MessageBox
 import ktx.collections.gdxArrayOf
 
@@ -23,13 +25,12 @@ class GameView(
     private val gemLabel: Label
     private val creditsLabel: Label
     private val messageBox: MessageBox
+    private val hud = Table(skin).also { it.top().left() }
+    private val levelComplete = LevelComplete(skin)
 
     init {
         setFillParent(true)
         top().left()
-
-        // HUD row — all items in a nested table so they stay grouped at top-left
-        val hud = Table(skin).also { it.top().left() }
 
         // credits
         val avatarImage = Image(skin.getDrawable("avatar-fox"), Scaling.fit)
@@ -62,6 +63,20 @@ class GameView(
             messageBox.setMessage(drawableName, text)
         }
         viewModel.onHideMessage = { messageBox.isVisible = false }
+        viewModel.onShowLevelComplete = { gems, gemsMax, mapName ->
+            hud.isVisible = false
+            levelComplete.show(gems, gemsMax, mapName)
+        }
+        viewModel.onHideLevelComplete = {
+            hud.isVisible = true
+            levelComplete.isVisible = false
+        }
+    }
+
+    override fun setStage(stage: Stage?) {
+        super.setStage(stage)
+        stage?.addActor(levelComplete)
+        levelComplete.isVisible = false
     }
 
     private fun onLifeChanged(life: Float, maxLife: Int) {

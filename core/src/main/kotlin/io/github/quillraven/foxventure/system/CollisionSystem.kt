@@ -58,7 +58,10 @@ class CollisionSystem(
     override fun onTickEntity(entity: Entity) {
         val entityTransform = entity[Transform]
         val (position) = entityTransform
-        val collision = entity[Collision]
+        // it is possible that we get here a null Collision component because when the player
+        // collides with the house, then the house loses its Collision component in the family.forEach loop below
+        // but is still part of the system's family until the outer system's family loop is finished.
+        val collision = entity.getOrNull(Collision) ?: return
         val collBox = collision.box
         val type = entity.getOrNull(Type)?.type ?: ""
 

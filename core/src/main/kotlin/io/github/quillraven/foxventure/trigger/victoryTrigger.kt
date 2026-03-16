@@ -17,7 +17,13 @@ import io.github.quillraven.foxventure.system.TransitionType
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
-fun IntervalSystem.victoryTrigger(victoryTextDuration: Float, victoryText: String) = trigger {
+fun IntervalSystem.victoryTrigger(
+    victoryTextDuration: Float,
+    victoryText: String,
+    gems: Int,
+    gemsTotal: Int,
+    mapName: String,
+) = trigger {
     timedAction(1f) {
         onStart = {
             audioService.fadeOutMusic(2f)
@@ -44,7 +50,7 @@ fun IntervalSystem.victoryTrigger(victoryTextDuration: Float, victoryText: Strin
 
     timedAction(2f) {
         onStart = {
-            audioService.playMusic("8-bit-on-short.mp3")
+            audioService.playMusic("8-bit-on-short.mp3", loop = false)
             player()[Animation].changeTo(AnimationType.LOOK_UP)
         }
     }
@@ -68,7 +74,7 @@ fun IntervalSystem.victoryTrigger(victoryTextDuration: Float, victoryText: Strin
         }
     }
 
-    action {
+    timedAction(3f) {
         onStart = {
             entity {
                 it += Transition(
@@ -76,6 +82,18 @@ fun IntervalSystem.victoryTrigger(victoryTextDuration: Float, victoryText: Strin
                 )
                 it += player()[Transform]
             }
+        }
+    }
+
+    timedAction(7f) {
+        onStart = {
+            gameViewModel.onShowLevelComplete(gems, gemsTotal, mapName)
+        }
+    }
+
+    action {
+        onStart = {
+            game.changeToGame("playground.tmx")
         }
     }
 }

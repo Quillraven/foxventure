@@ -14,8 +14,9 @@ import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.tiled.LoadTriggerListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.Trigger
-import io.github.quillraven.foxventure.trigger.tutorialTrigger1
-import io.github.quillraven.foxventure.trigger.tutorialTrigger2
+import io.github.quillraven.foxventure.trigger.tutorial.tutorialCutscene
+import io.github.quillraven.foxventure.trigger.tutorial.tutorialTrigger1
+import io.github.quillraven.foxventure.trigger.tutorial.tutorialTrigger2
 import ktx.app.gdxError
 import ktx.math.vec2
 import ktx.tiled.height

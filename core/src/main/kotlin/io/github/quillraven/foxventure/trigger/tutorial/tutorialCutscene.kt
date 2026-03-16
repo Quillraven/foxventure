@@ -88,7 +88,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
     }
 
-    timedAction(15f) {
+    timedAction(14f) {
         onStart = {
             player()[Animation.Companion].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(

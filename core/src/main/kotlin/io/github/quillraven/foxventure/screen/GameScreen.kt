@@ -93,7 +93,6 @@ class GameScreen(
         systems {
             add(ControllerSystem())
             add(SpawnSystem())
-            add(TriggerSystem())
             add(activationSystem)
             add(PreInterpolationSystem()) // run it before any physics system runs (climb, aerial, ground)
             add(ProximityDetectorSystem())
@@ -127,6 +126,7 @@ class GameScreen(
             add(DelayActionSystem())
             add(DelayRemovalSystem())
             add(ProjectileRemovalSystem())
+            add(TriggerSystem())
         }
 
         onRemoveEntity { entity ->
@@ -134,16 +134,10 @@ class GameScreen(
         }
     }
 
-    override fun show() {
-        // UI
-        setupUI()
-        // input
-        val controllerSystem = world.system<ControllerSystem>()
-        Gdx.input.inputProcessor = InputMultiplexer(stage, controllerSystem)
-        // tile map initialisation
-        registerTiledListeners()
-        tiledService.setMap("tutorial.tmx")
+    fun setMap(mapName: String) {
+        tiledService.setMap(mapName)
         // fade in effect
+        val controllerSystem = world.system<ControllerSystem>()
         controllerSystem.enabled = false
         val transitionEntity = world.entity {
             val player = world.family { all(Player) }.single()
@@ -159,6 +153,15 @@ class GameScreen(
                 transitionEntity.remove()
             }
         }
+    }
+
+    override fun show() {
+        // UI
+        setupUI()
+        // input
+        Gdx.input.inputProcessor = InputMultiplexer(stage, world.system<ControllerSystem>())
+        // tile map initialisation
+        registerTiledListeners()
     }
 
     private fun setupUI() {
