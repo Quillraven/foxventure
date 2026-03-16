@@ -43,7 +43,7 @@ class PlayerVictorySystem : IteratingSystem(
     private fun victoryTrigger(player: Entity) = trigger {
         timedAction(1f) {
             onStart = {
-                audioService.stopMusic()
+                audioService.fadeOutMusic(2f)
             }
 
             onUpdate = {
