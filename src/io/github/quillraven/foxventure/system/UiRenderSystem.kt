@@ -17,5 +17,6 @@ class UiRenderSystem(
         stage.viewport.apply()
         stage.act(deltaTime)
         stage.draw()
+        stage.batch.color = Color.WHITE
     }
 }

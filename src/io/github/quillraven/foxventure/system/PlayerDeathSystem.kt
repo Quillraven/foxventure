@@ -17,7 +17,7 @@ import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
-import io.github.quillraven.foxventure.screen.GameScreen
+import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.collections.gdxArrayOf
 import kotlin.math.max
 
@@ -28,6 +28,7 @@ class PlayerDeathSystem(
     private val gameViewport: Viewport = inject(),
     private val game: GdxGame = inject(),
     private val audioService: AudioService = inject(),
+    private val tiledService: TiledService = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, EntityTag.PLAYER_DEATH) }
 ) {
@@ -97,10 +98,7 @@ class PlayerDeathSystem(
         world.entity {
             it += DelayAction(delay = 4f) {
                 transitionEntity.remove()
-                game.getScreen<GameScreen>().dispose()
-                game.removeScreen<GameScreen>()
-                game.addScreen(GameScreen(game))
-                game.setScreen<GameScreen>()
+                game.changeToGame(tiledService.currentMapName)
             }
         }
     }

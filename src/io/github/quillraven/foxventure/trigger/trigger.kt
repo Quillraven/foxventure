@@ -3,6 +3,7 @@ package io.github.quillraven.foxventure.trigger
 import com.github.quillraven.fleks.IntervalSystem
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.AudioService
+import io.github.quillraven.foxventure.GdxGame
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.collections.GdxArray
@@ -41,6 +42,7 @@ annotation class TriggerDsl
 @TriggerDsl
 class TriggerActionBuilder(world: World) {
     val audioService: AudioService = world.inject()
+    val game: GdxGame = world.inject()
     val gameViewModel: GameViewModel = world.inject()
 
     var onStart: World.() -> Unit = {}

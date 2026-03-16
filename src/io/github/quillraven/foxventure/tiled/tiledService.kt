@@ -48,6 +48,9 @@ data class GroundTile(val type: String, val rect: Rect) {
 
 class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
     private var currentMap: TiledMap = TiledMap()
+    var currentMapName: String = ""
+        private set
+
     private val groundTiles = GdxArray<GroundTile>()
     private val mapChangeListeners = gdxArrayOf<MapChangeListener>()
     private val loadTileObjectListeners = gdxArrayOf<LoadTileObjectListener>()
@@ -72,6 +75,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
         currentMap.dispose()
 
         // load the new map and set a special 'gdxFilePath' property for unloading
+        currentMapName = mapName
         currentMap = loadMap(mapName)
 
         // load ground collision information

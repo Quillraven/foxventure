@@ -24,6 +24,9 @@ class AudioService : MapChangeListener, Disposable {
     private var tmpMusic: Music? = null
     private var tmpMusicTimer: Float = 0f
 
+    private var fadeOutTimer: Float = 0f
+    private var fadeOutDuration: Float = 0f
+
     private val soundCache = mutableMapOf<String, Sound>()
 
     fun playSound(name: String) {
@@ -37,7 +40,7 @@ class AudioService : MapChangeListener, Disposable {
         sound.play(soundVolume)
     }
 
-    fun playMusic(name: String) {
+    fun playMusic(name: String, loop: Boolean = true) {
         // dispose of current music if there is any
         currentMusic?.let { music ->
             music.stop()
@@ -46,7 +49,7 @@ class AudioService : MapChangeListener, Disposable {
 
         // load and play new music
         Gdx.audio.newMusic("music/$name".toInternalFile()).also { music ->
-            music.isLooping = true
+            music.isLooping = loop
             music.play()
             music.volume = musicVolume
             currentMusic = music
@@ -67,6 +70,18 @@ class AudioService : MapChangeListener, Disposable {
         }
     }
 
+    fun stopMusic() {
+        currentMusic?.stop()
+        currentMusic?.dispose()
+        currentMusic = null
+    }
+
+    fun fadeOutMusic(duration: Float) {
+        if (currentMusic == null) return
+        fadeOutDuration = duration
+        fadeOutTimer = duration
+    }
+
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         val musicPath = tiledMap.property("music", "").substringAfterLast("/")
         if (musicPath.isBlank()) return
@@ -75,6 +90,15 @@ class AudioService : MapChangeListener, Disposable {
     }
 
     fun update(deltaTime: Float) {
+        if (fadeOutTimer > 0f) {
+            fadeOutTimer -= deltaTime
+            if (fadeOutTimer <= 0f) {
+                stopMusic()
+            } else {
+                currentMusic?.volume = musicVolume * (fadeOutTimer / fadeOutDuration)
+            }
+        }
+
         if (tmpMusicTimer <= 0f) return
 
         tmpMusicTimer -= deltaTime

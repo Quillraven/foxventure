@@ -290,7 +290,7 @@ objects/fox/look-up
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
-  index: -1
+  index: 0
 objects/fox/run
   rotate: false
   xy: 957, 114

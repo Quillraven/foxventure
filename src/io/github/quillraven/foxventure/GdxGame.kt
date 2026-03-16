@@ -21,6 +21,9 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
     val skin: Skin by lazy {
         TypingConfig.DEFAULT_SPEED_PER_CHAR = 0.07f
 
+        TypingConfig.GLOBAL_VARS.put("HIGHLIGHT", "{COLOR=#87ceebff}")
+        TypingConfig.GLOBAL_VARS.put("END_HIGHLIGHT", "{ENDCOLOR}")
+
         val resolver = serviceLocator.fileHandleResolver
         val atlas = TextureAtlas(resolver.resolve("ui/ui.atlas"))
         FreeTypistSkin(resolver.resolve("ui/ui.json"), atlas)
@@ -33,9 +36,16 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
             addScreen(WebStartScreen(this))
             setScreen<WebStartScreen>()
         } else {
-            addScreen(GameScreen(this))
-            setScreen<GameScreen>()
+            changeToGame("tutorial.tmx")
         }
+    }
+
+    fun changeToGame(mapName: String) {
+        removeScreen<GameScreen>()?.dispose()
+        val gameScreen = GameScreen(this)
+        addScreen(gameScreen)
+        setScreen<GameScreen>()
+        gameScreen.setMap(mapName)
     }
 
     override fun resize(width: Int, height: Int) {
