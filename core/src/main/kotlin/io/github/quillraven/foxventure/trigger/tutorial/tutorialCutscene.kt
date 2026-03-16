@@ -1,4 +1,4 @@
-package io.github.quillraven.foxventure.trigger
+package io.github.quillraven.foxventure.trigger.tutorial
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Interpolation
@@ -16,8 +16,7 @@ import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.MoveToPoint
 import io.github.quillraven.foxventure.component.Transform
-import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
-import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.trigger.trigger
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
@@ -25,8 +24,8 @@ fun IntervalSystem.tutorialCutscene() = trigger {
     action {
         onStart = {
             player().configure {
-                it -= Controller
-                it -= JumpControl
+                it -= Controller.Companion
+                it -= JumpControl.Companion
             }
         }
     }
@@ -37,13 +36,17 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             val objectsAtlas = this.inject<TextureAtlas>()
             val acornAnimation = objectsAtlas.getGdxAnimation("objects/acorn", AnimationType.IDLE)
-            val (playerPosition, playerSize) = player()[Transform]
+            val (playerPosition, playerSize) = player()[Transform.Companion]
             val halfAcornW = acornAnimation.keyFrames.first().regionWidth.toWorldUnits() / 2
             val acornX = playerPosition.x + playerSize.x / 2 - halfAcornW
             val acornY = playerPosition.y + playerSize.y / 2 + 10f
 
             acorn = entity {
-                it += Transform(position = vec2(acornX, acornY), size = vec2(1f, 1f), z = Z_SFX)
+                it += Transform(
+                    position = vec2(acornX, acornY),
+                    size = vec2(1f, 1f),
+                    z = Transform.Z_SFX
+                )
                 it += MoveTo(gdxArrayOf(MoveToPoint(vec2(acornX, acornY - 10f), Interpolation.linear, 2f)))
                 it += Graphic(acornAnimation.keyFrames.first())
                 it += Animation("objects/acorn", acornAnimation, emptyMap(), 1f)
@@ -53,7 +56,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
 
         onUpdate = {
-            val acornOnHead = acorn hasNo MoveTo
+            val acornOnHead = acorn hasNo MoveTo.Companion
             if (acornOnHead) {
                 acorn.remove()
             }
@@ -64,15 +67,19 @@ fun IntervalSystem.tutorialCutscene() = trigger {
     timedAction(2.5f) {
         onStart = {
             audioService.playSound("hurt2.wav")
-            player()[Animation].changeTo(AnimationType.DIZZY)
+            player()[Animation.Companion].changeTo(AnimationType.DIZZY)
 
             val objectsAtlas = this.inject<TextureAtlas>()
             val stunAnimation = objectsAtlas.getGdxAnimation("sfx/stun", AnimationType.IDLE)
             val stunFrame = stunAnimation.keyFrames.first()
-            val (playerPosition) = player()[Transform]
+            val (playerPosition) = player()[Transform.Companion]
             val size = vec2(stunFrame.regionWidth.toWorldUnits(), stunFrame.regionHeight.toWorldUnits())
             entity {
-                it += Transform(position = playerPosition.cpy().add(0.3f, 0.9f), size = size, z = Z_SFX)
+                it += Transform(
+                    position = playerPosition.cpy().add(0.3f, 0.9f),
+                    size = size,
+                    z = Transform.Z_SFX
+                )
                 it += Graphic(stunFrame)
                 it += Animation("objects/acorn", stunAnimation, emptyMap(), 1f)
                 it += DelayRemoval(2.5f)
@@ -83,7 +90,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
 
     timedAction(15f) {
         onStart = {
-            player()[Animation].changeTo(AnimationType.IDLE)
+            player()[Animation.Companion].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
                 "avatar-fox",
                 "{SHAKE}Yip!{WAIT=1.0}{RESET} My ears are ringing... and my tail is all dusty!\n" +
@@ -97,8 +104,8 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Move the fox by pressing {COLOR=#87ceebff}A/D{RESET} " +
-                        "or {COLOR=#87ceebff}LEFT/RIGHT{RESET} arrow keys."
+                "Move the fox by pressing {VAR=HIGHLIGHT}A/D{VAR=END_HIGHLIGHT} " +
+                        "or {VAR=HIGHLIGHT}LEFT/RIGHT{VAR=END_HIGHLIGHT} arrow keys."
             )
         }
     }
@@ -107,95 +114,6 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             gameViewModel.onHideMessage()
             player().configure { it += Controller() }
-        }
-    }
-}
-
-fun IntervalSystem.tutorialTrigger1() = trigger {
-    timedAction(0.5f) {
-        onStart = {
-            player().run {
-                configure {
-                    it += EntityTag.ROOT
-                    it -= Controller
-                }
-                this[Velocity].current.setZero()
-            }
-        }
-    }
-
-    timedAction(15f) {
-        onStart = {
-            gameViewModel.onShowMessage(
-                "avatar-fox",
-                "{SHAKE}Ruff!{WAIT=1.0}{RESET} That fall nearly ruffled my fur for good!\n" +
-                        "Wait... I feel a spring in my paws. I used to be able to catch some air, didn't I?\n" +
-                        "How did I... pounce?"
-            )
-        }
-    }
-
-    timedAction(4f) {
-        onStart = {
-            gameViewModel.onShowMessage(
-                "",
-                "Press {COLOR=#87ceebff}SPACE{RESET} to jump."
-            )
-        }
-    }
-
-    action {
-        onStart = {
-            gameViewModel.onHideMessage()
-            player().configure {
-                it += Controller()
-                it += JumpControl()
-                it -= EntityTag.ROOT
-            }
-        }
-    }
-}
-
-fun IntervalSystem.tutorialTrigger2() = trigger {
-    timedAction(0.5f) {
-        onStart = {
-            player().run {
-                configure {
-                    it += EntityTag.ROOT
-                    it -= Controller
-                }
-                this[Velocity].current.setZero()
-            }
-        }
-    }
-
-    timedAction(13f) {
-        onStart = {
-            gameViewModel.onShowMessage(
-                "avatar-fox",
-                "A ladder? Really? {WAIT=0.5}Talk about a workout.\n" +
-                        "I used to be a master of the vertical scramble.\n" +
-                        "Let's see if I can still climb without falling on my tail!"
-            )
-        }
-    }
-
-    timedAction(5f) {
-        onStart = {
-            gameViewModel.onShowMessage(
-                "",
-                "Press {COLOR=#87ceebff}W/D{RESET} or {COLOR=#87ceebff}UP/DOWN{RESET} arrow keys to climb ladders."
-            )
-        }
-    }
-
-    action {
-        onStart = {
-            gameViewModel.onHideMessage()
-            player().configure {
-                it += Controller()
-                it -= EntityTag.ROOT
-            }
         }
     }
 }

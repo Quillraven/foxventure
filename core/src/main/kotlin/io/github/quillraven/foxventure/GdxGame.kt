@@ -21,6 +21,9 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
     val skin: Skin by lazy {
         TypingConfig.DEFAULT_SPEED_PER_CHAR = 0.07f
 
+        TypingConfig.GLOBAL_VARS.put("HIGHLIGHT", "{COLOR=#87ceebff}")
+        TypingConfig.GLOBAL_VARS.put("END_HIGHLIGHT", "{ENDCOLOR}")
+
         val resolver = serviceLocator.fileHandleResolver
         val atlas = TextureAtlas(resolver.resolve("ui/ui.atlas"))
         FreeTypistSkin(resolver.resolve("ui/ui.json"), atlas)
