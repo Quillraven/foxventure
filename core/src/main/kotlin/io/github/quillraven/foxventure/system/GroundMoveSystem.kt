@@ -162,10 +162,9 @@ class GroundMoveSystem(
         }
 
         val rect = tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false)
-            ?: platformFamily.firstOrNull { entity ->
-                val (groundTile) = entity[Platform]
-                collisionBox.overlaps(position, groundTile.rect)
-            }?.get(Platform)?.groundTile?.rect
+            ?: platformFamily.firstNotNullOfOrNull { entity ->
+                entity[Platform].groundTile.rect.takeIf { rect -> collisionBox.overlaps(position, rect) }
+            }
 
         if (rect != null) {
             // colliding with a solid -> move to edge of solid and stop movement
