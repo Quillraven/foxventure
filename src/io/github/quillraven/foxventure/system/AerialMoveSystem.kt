@@ -191,10 +191,9 @@ class AerialMoveSystem(
     }
 
     private fun getPlatformCollisionTile(position: Vector2, collisionBox: Rect): GroundTile? {
-        return platformFamily.firstOrNull { entity ->
-            val (groundTile) = entity[Platform]
-            collisionBox.overlaps(position, groundTile.rect)
-        }?.get(Platform)?.groundTile
+        return platformFamily.firstNotNullOfOrNull { entity ->
+            entity[Platform].groundTile.takeIf { tile -> collisionBox.overlaps(position, tile.rect) }
+        }
     }
 
     private fun handleSolidCollision(
