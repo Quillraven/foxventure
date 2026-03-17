@@ -14,6 +14,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Follow
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Platform
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Stun
@@ -37,6 +38,7 @@ class GroundMoveSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING, EntityTag.ROOT) },
 ) {
+    private val platformFamily = family { all(Transform, Collision, Platform, EntityTag.ACTIVE) }
     private val runDustAnimation: GdxAnimation
 
     init {
@@ -160,6 +162,11 @@ class GroundMoveSystem(
         }
 
         val rect = tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false)
+            ?: platformFamily.firstOrNull { entity ->
+                val (groundTile) = entity[Platform]
+                collisionBox.overlaps(position, groundTile.rect)
+            }?.get(Platform)?.groundTile?.rect
+
         if (rect != null) {
             // colliding with a solid -> move to edge of solid and stop movement
             position.x = when {

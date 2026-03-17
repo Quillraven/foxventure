@@ -52,19 +52,19 @@
    <object id="1" x="1" y="1" width="107" height="97"/>
   </objectgroup>
  </tile>
- <tile id="11">
+ <tile id="11" type="platform">
   <image source="../graphics/sprites/props/face-block.png" width="32" height="32"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="32" height="32"/>
   </objectgroup>
  </tile>
- <tile id="12">
+ <tile id="12" type="platform">
   <image source="../graphics/sprites/props/platform-long.png" width="32" height="16"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="32" height="16"/>
+   <object id="1" type="platform" x="0" y="0" width="32" height="16"/>
   </objectgroup>
  </tile>
- <tile id="13">
+ <tile id="13" type="platform">
   <image source="../graphics/sprites/props/small-platform.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0" width="16" height="16"/>

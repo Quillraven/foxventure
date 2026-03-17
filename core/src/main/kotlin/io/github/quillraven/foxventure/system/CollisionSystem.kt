@@ -121,6 +121,7 @@ class CollisionSystem(
             "spike" -> onPlayerSpikeCollision(player, other, otherCollision)
             "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollision, otherTransform, otherCollision)
             "house" -> onPlayerHouseCollision(player, other, playerTransform, otherTransform, otherCollision)
+            "platform" -> Unit // handled by move systems via platform family
             else -> gdxError("Unsupported player collision with entity $otherType")
         }
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="75" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="119">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="75" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="125">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
  </properties>
@@ -9,7 +9,7 @@
  <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
   <image source="../graphics/sky.png" width="384" height="240"/>
  </imagelayer>
- <imagelayer id="10" name="jungle" offsetx="0" offsety="103" parallaxx="1.5" parallaxy="0.9" repeatx="1">
+ <imagelayer id="10" name="jungle" offsetx="0" offsety="75" parallaxx="1.1" parallaxy="0.9" repeatx="1">
   <image source="../graphics/jungle.png" width="176" height="368"/>
  </imagelayer>
  <layer id="7" name="bgd" width="75" height="20">
@@ -24,7 +24,7 @@
  </layer>
  <layer id="3" name="props" width="75" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1rEJACAMBMDffxuxEpezcQUVyR18H1LkkwDcNSz8GzN1tJ3+ehCec6MAONUZlX4rAEhRC4miBbc=
+   eJzt1tEJwCAMBcDsv431S7pcESo4QFstuQMJ5CsI+hIB8K3mwn/jjDzKferqQVjOH/Ws/q6A94zs6vWY+vJsz8zItFsBQCR1AeCoCeI=
   </data>
  </layer>
  <objectgroup id="4" name="object">
@@ -68,8 +68,13 @@
   <object id="113" gid="592" x="592" y="192" width="15" height="13"/>
   <object id="114" gid="592" x="544" y="176" width="15" height="13"/>
   <object id="115" gid="592" x="496" y="160" width="15" height="13"/>
-  <object id="117" gid="592" x="272" y="144" width="15" height="13"/>
+  <object id="117" gid="592" x="288" y="128" width="15" height="13"/>
   <object id="118" gid="592" x="1024" y="112" width="15" height="13"/>
+  <object id="120" gid="589" x="272" y="160" width="16" height="16"/>
+  <object id="121" gid="589" x="256" y="112" width="16" height="16"/>
+  <object id="122" gid="592" x="256" y="48" width="15" height="13"/>
+  <object id="123" gid="595" x="473" y="264" width="21" height="21"/>
+  <object id="124" gid="597" x="320" y="192" width="61" height="45"/>
  </objectgroup>
  <objectgroup color="#5500ff" id="9" name="trigger"/>
 </map>
