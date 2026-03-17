@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Victory
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.victoryTrigger
+import ktx.tiled.property
 
 class PlayerVictorySystem : IteratingSystem(
     family = family { all(Player, Victory, Controller, EntityTag.ACTIVE) }
@@ -22,6 +23,7 @@ class PlayerVictorySystem : IteratingSystem(
     private var gems = 0
     private var gemsTotal = 0
     private var mapName = ""
+    private var nextMap = ""
     private val gemsFamily = world.family { all(Type, Tiled) }
 
     override fun onTickEntity(entity: Entity) {
@@ -36,14 +38,17 @@ class PlayerVictorySystem : IteratingSystem(
 
         // create a victory trigger for level complete cutscene
         world.entity {
-            it += TriggerRef(victoryTrigger(victoryTextDuration, victoryText, gems, gemsTotal, mapName))
+            it += TriggerRef(victoryTrigger(victoryTextDuration, victoryText, gems, gemsTotal, mapName, nextMap))
         }
     }
 
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         gemsTotal = gemsFamily.filter { it[Type].type == "gem" }.count()
         gems = 0
-        this.mapName = mapName.substringBeforeLast(".").uppercase()
+        this.mapName = mapName.substringBeforeLast('.')
+            .split('_')
+            .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+        this.nextMap = tiledMap.property("next_map", "")
 
         when (mapName) {
             "tutorial.tmx" -> {

@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Victory
+import io.github.quillraven.foxventure.screen.VictoryScreen
 import io.github.quillraven.foxventure.system.TransitionType
 import ktx.collections.gdxArrayOf
 import ktx.math.vec2
@@ -23,6 +24,7 @@ fun IntervalSystem.victoryTrigger(
     gems: Int,
     gemsTotal: Int,
     mapName: String,
+    nextMap: String,
 ) = trigger {
     timedAction(1f) {
         onStart = {
@@ -91,9 +93,17 @@ fun IntervalSystem.victoryTrigger(
         }
     }
 
-    action {
-        onStart = {
-            game.changeToGame("playground.tmx")
+    if (nextMap.isNotBlank()) {
+        action {
+            onStart = {
+                game.changeToGame(nextMap)
+            }
+        }
+    } else {
+        action {
+            onStart = {
+                game.setScreen<VictoryScreen>()
+            }
         }
     }
 }
