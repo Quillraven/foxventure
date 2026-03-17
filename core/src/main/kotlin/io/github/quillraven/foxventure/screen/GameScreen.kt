@@ -206,7 +206,7 @@ class GameScreen(
         var playerLifeMax = 0
 
         fun resetPlayerStats() {
-            playerCredits = 5
+            playerCredits = 4
             playerGems = 0
             playerLife = 4f
             playerLifeMax = 4

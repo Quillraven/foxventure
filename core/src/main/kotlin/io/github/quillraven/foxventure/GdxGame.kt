@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.ScreenUtils
 import com.github.tommyettinger.freetypist.FreeTypistSkin
 import com.github.tommyettinger.textra.TypingConfig
+import io.github.quillraven.foxventure.screen.GameOverScreen
 import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.screen.VictoryScreen
 import io.github.quillraven.foxventure.screen.WebStartScreen
@@ -32,8 +33,10 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
+        GameScreen.resetPlayerStats()
 
         addScreen(VictoryScreen(this))
+        addScreen(GameOverScreen(this))
         if (isWeb) {
             addScreen(WebStartScreen(this))
             setScreen<WebStartScreen>()

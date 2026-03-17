@@ -18,6 +18,7 @@ import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
+import io.github.quillraven.foxventure.screen.GameOverScreen
 import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.collections.gdxArrayOf
@@ -104,7 +105,11 @@ class PlayerDeathSystem(
         world.entity {
             it += DelayAction(delay = 4f) {
                 transitionEntity.remove()
-                game.changeToGame(tiledService.currentMapName)
+                if (GameScreen.playerCredits <= 0) {
+                    game.setScreen<GameOverScreen>()
+                } else {
+                    game.changeToGame(tiledService.currentMapName)
+                }
             }
         }
     }
