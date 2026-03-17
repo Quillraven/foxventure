@@ -6,11 +6,13 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Victory
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.victoryTrigger
 import ktx.tiled.property
@@ -31,6 +33,12 @@ class PlayerVictorySystem : IteratingSystem(
         entity.configure {
             it -= Controller
         }
+
+        // store player stats that remain between maps
+        GameScreen.playerGems = entity[Player].gems
+        GameScreen.playerLife = entity[Life].amount
+        GameScreen.playerLifeMax = entity[Life].maxAmount
+        GameScreen.playerCredits = entity[Player].credits
 
         // count the number of collected gems
         val gemsLeft = gemsFamily.filter { it[Type].type == "gem" }.count()

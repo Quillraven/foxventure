@@ -44,6 +44,11 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
 
     fun changeToGame(mapName: String) {
         Gdx.app.log("GdxGame", "Change to game map $mapName")
+
+        if ("tutorial.tmx" == mapName) {
+            GameScreen.resetPlayerStats()
+        }
+
         val prevGameScreen = screens[GameScreen::class.java]
         removeScreen<GameScreen>()
         val gameScreen = GameScreen(this)

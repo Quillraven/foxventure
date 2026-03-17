@@ -13,10 +13,12 @@ import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.DelayAction
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
+import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.collections.gdxArrayOf
 import kotlin.math.max
@@ -69,6 +71,10 @@ class PlayerDeathSystem(
         entity[Fsm].state.changeState(PlayerStateDeath)
         velocityY = 8f
         audioService.playMusic("game_over.mp3")
+
+        // remember player stats for respawn
+        GameScreen.playerCredits--
+        GameScreen.playerLife = entity[Life].maxAmount.toFloat()
 
         world.system<ActivationSystem>().enabled = false
         world.system<AerialMoveSystem>().enabled = false
