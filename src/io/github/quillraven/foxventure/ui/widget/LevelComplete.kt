@@ -53,7 +53,7 @@ class LevelComplete(skin: Skin) : Table(skin) {
     fun show(gems: Int, gemsMax: Int, mapName: String) {
         updateStars(gems, gemsMax)
 
-        titleLabel.restart("{WAVE}$mapName\n\nCOMPLETE!{RESET}")
+        titleLabel.restart("{WAVE}$mapName\n\ncompleted!{RESET}")
         gemLabel.setText("$gems/$gemsMax")
 
         clearActions()

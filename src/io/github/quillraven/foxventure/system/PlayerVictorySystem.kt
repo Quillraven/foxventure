@@ -6,13 +6,16 @@ import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Victory
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.victoryTrigger
+import ktx.tiled.property
 
 class PlayerVictorySystem : IteratingSystem(
     family = family { all(Player, Victory, Controller, EntityTag.ACTIVE) }
@@ -22,6 +25,7 @@ class PlayerVictorySystem : IteratingSystem(
     private var gems = 0
     private var gemsTotal = 0
     private var mapName = ""
+    private var nextMap = ""
     private val gemsFamily = world.family { all(Type, Tiled) }
 
     override fun onTickEntity(entity: Entity) {
@@ -30,20 +34,29 @@ class PlayerVictorySystem : IteratingSystem(
             it -= Controller
         }
 
+        // store player stats that remain between maps
+        GameScreen.playerGems = entity[Player].gems
+        GameScreen.playerLife = entity[Life].amount
+        GameScreen.playerLifeMax = entity[Life].maxAmount
+        GameScreen.playerCredits = entity[Player].credits
+
         // count the number of collected gems
         val gemsLeft = gemsFamily.filter { it[Type].type == "gem" }.count()
         gems = gemsTotal - gemsLeft
 
         // create a victory trigger for level complete cutscene
         world.entity {
-            it += TriggerRef(victoryTrigger(victoryTextDuration, victoryText, gems, gemsTotal, mapName))
+            it += TriggerRef(victoryTrigger(victoryTextDuration, victoryText, gems, gemsTotal, mapName, nextMap))
         }
     }
 
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
         gemsTotal = gemsFamily.filter { it[Type].type == "gem" }.count()
         gems = 0
-        this.mapName = mapName.substringBeforeLast(".").uppercase()
+        this.mapName = mapName.substringBeforeLast('.')
+            .split('_')
+            .joinToString(" ") { it.replaceFirstChar(Char::titlecase) }
+        this.nextMap = tiledMap.property("next_map", "")
 
         when (mapName) {
             "tutorial.tmx" -> {

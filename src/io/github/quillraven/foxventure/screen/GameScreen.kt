@@ -198,4 +198,18 @@ class GameScreen(
         world.dispose()
         objectsAtlas.dispose()
     }
+
+    companion object {
+        var playerCredits = 0
+        var playerGems = 0
+        var playerLife = 0f
+        var playerLifeMax = 0
+
+        fun resetPlayerStats() {
+            playerCredits = 4
+            playerGems = 0
+            playerLife = 4f
+            playerLifeMax = 4
+        }
+    }
 }

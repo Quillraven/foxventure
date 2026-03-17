@@ -37,6 +37,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Wander
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -160,12 +161,14 @@ class SpawnSystem(
         when (tiledType) {
             "player" -> {
                 entity += listOf(EntityTag.ACTIVE, EntityTag.CAMERA_FOCUS)
-                val playerCmp = Player(credits = 5, gems = 0)
+                val playerCmp = Player(credits = GameScreen.playerCredits, gems = GameScreen.playerGems)
                 entity += playerCmp
                 entity += Controller()
                 entity += Fsm(FleksStateMachine(world, entity, PlayerStateIdle))
 
                 val life = entity[Life]
+                life.maxAmount = GameScreen.playerLifeMax
+                life.amount = GameScreen.playerLife
                 gameViewModel.maxLife = life.maxAmount
                 gameViewModel.life = life.amount
                 gameViewModel.gems = playerCmp.gems
