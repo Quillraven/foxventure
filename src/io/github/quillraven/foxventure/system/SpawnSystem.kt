@@ -28,6 +28,7 @@ import io.github.quillraven.foxventure.component.Graphic
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Platform
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.ProjectileCfg
 import io.github.quillraven.foxventure.component.Rect
@@ -36,6 +37,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.component.Wander
+import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.LoadTileObjectListener
 import io.github.quillraven.foxventure.tiled.TiledService
 import io.github.quillraven.foxventure.tiled.TiledService.Companion.atlasKey
@@ -168,6 +170,12 @@ class SpawnSystem(
                 gameViewModel.life = life.amount
                 gameViewModel.gems = playerCmp.gems
                 gameViewModel.credits = playerCmp.credits
+            }
+
+            "platform" -> {
+                val (position) = entity[Transform]
+                val (box) = entity[Collision]
+                entity += Platform(GroundTile("", Rect(position.x, position.y, box.width, box.height)))
             }
 
             "enemy" -> configureEnemy(tile, entity, atlasKey)

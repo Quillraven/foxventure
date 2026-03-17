@@ -10,6 +10,12 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
  * An immutable rectangular area defined by [x], [y], [width], and [height] coordinates.
  */
 data class Rect(val x: Float, val y: Float, val width: Float, val height: Float) {
+    fun overlaps(position: Vector2, other: Rect): Boolean {
+        val thisX = x + position.x
+        val thisY = y + position.y
+        return thisX < other.x + other.width && thisX + width > other.x && thisY < other.y + other.height && thisY + height > other.y
+    }
+
     fun overlaps(otherX: Float, otherY: Float, otherWidth: Float, otherHeight: Float): Boolean {
         return x < otherX + otherWidth && x + width > otherX && y < otherY + otherHeight && y + height > otherY
     }

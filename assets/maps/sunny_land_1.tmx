@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="75" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="125">
+ <properties>
+  <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
+ </properties>
+ <tileset firstgid="1" source="sunny_land.tsx"/>
+ <tileset firstgid="576" source="props.tsx"/>
+ <tileset firstgid="591" source="objects.tsx"/>
+ <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
+  <image source="../graphics/sky.png" width="384" height="240"/>
+ </imagelayer>
+ <imagelayer id="10" name="jungle" offsetx="0" offsety="75" parallaxx="1.1" parallaxy="0.9" repeatx="1">
+  <image source="../graphics/jungle.png" width="176" height="368"/>
+ </imagelayer>
+ <layer id="7" name="bgd" width="75" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20IX6AAAAAAAIBOAxdwAAE=
+  </data>
+ </layer>
+ <layer id="1" name="ground" width="75" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzVmMuKE0EUhr9T+gIK3oiDuJjHCSHoMwySN9CNBFH3Bl0JijM7RVchuhww4EZFCTKvMZugYBwp0kUOh+rq6k4bk4afTtflVNfXp+uvDtQ7fgMLYAz0dkwT4MxPQtjIcUngssCQlRbFffR2QH3+7+HZLbaAwy6waoPXJvJysiWs/NHNuN9/sc7lxtzkWtWUVVs5s06cbeIUWE1qPOvxGvWpOnsPbXHqAHtGTY/7yhv7yiu7xjetdNuUehXtwjg23gPaywX9jG4BtxvGuitwT2AqMCjOM4EDgVcChwJHRbnWoKI+6E6kbKb6HZixg55K+2vMuj7xRGCUmOtzM0db/6Ok3wuBlz5XErFtX83es3om9d8vrRuR9XgdVq8F3iTmMy4pD9xOijk7B+ccnHfL8vcCHyIMNKfA6o/AmefiVmVvBd5VsOpWrINj1WYuy/ND4BHwuAGrjyX54vVZ4IvA1wTLwKrj4LqDvYLVN4HvFTkVxr3i4KqDa4qVr/uUycp67UTxsW2a5pXP4ZuFfgr8ktW1H2eurmOyfWJykm47T5R1ar5fMbX1DnoP3JelB11wcNEtr6vULc62j59j+N0rzi7SNvTvR2KHZ7Rf0sbHDe9Tzp6ka+qbshopDzoq8j7H24J3TTP8zyX6W++LaWDWCB/3VHHR71+MYVt5NVJsytZg62tlc7J9hxFWZetiHQ0LVrnfDHqvvS6rqWJl9wha2tfKFOsby6t1lcuq7byyrPQeQXt58DW7N6jaX+SymjVkNan49kytV8FvclkdJvYI2stDXL03mGXsL+rmVRgnxfDUzL9sre+Zb7ig40LBb8L1cab8eKl6GzfVPnhZnfh1xvFlqf8vtB/+BUfOF8g=
+  </data>
+ </layer>
+ <layer id="3" name="props" width="75" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1tEJwCAMBcDsv431S7pcESo4QFstuQMJ5CsI+hIB8K3mwn/jjDzKferqQVjOH/Ws/q6A94zs6vWY+vJsz8zItFsBQCR1AeCoCeI=
+  </data>
+ </layer>
+ <objectgroup id="4" name="object">
+  <object id="44" gid="591" x="16" y="114" width="33" height="32"/>
+  <object id="76" gid="586" x="1088" y="144" width="112" height="98"/>
+  <object id="77" gid="582" x="80" y="306" width="17" height="12"/>
+  <object id="78" gid="582" x="272" y="306" width="17" height="12"/>
+  <object id="79" gid="580" x="336" y="306" width="15" height="10"/>
+  <object id="80" gid="580" x="352" y="306" width="15" height="10"/>
+  <object id="81" gid="580" x="368" y="306" width="15" height="10"/>
+  <object id="83" gid="581" x="448" y="232" width="15" height="9"/>
+  <object id="84" gid="581" x="464" y="232" width="15" height="9"/>
+  <object id="85" gid="581" x="480" y="232" width="15" height="9"/>
+  <object id="86" gid="581" x="496" y="232" width="15" height="9"/>
+  <object id="87" gid="597" x="272" y="304" width="61" height="45"/>
+  <object id="88" gid="597" x="544" y="304" width="61" height="45"/>
+  <object id="89" gid="580" x="752" y="306" width="15" height="10"/>
+  <object id="90" gid="580" x="768" y="306" width="15" height="10"/>
+  <object id="91" gid="580" x="784" y="306" width="15" height="10"/>
+  <object id="92" gid="580" x="800" y="306" width="15" height="10"/>
+  <object id="93" gid="580" x="816" y="306" width="15" height="10"/>
+  <object id="94" gid="580" x="832" y="306" width="15" height="10"/>
+  <object id="95" gid="580" x="848" y="306" width="15" height="10"/>
+  <object id="96" gid="580" x="864" y="306" width="15" height="10"/>
+  <object id="97" gid="590" x="956" y="192" width="92" height="85.8151"/>
+  <object id="98" gid="588" x="768" y="288" width="32" height="16"/>
+  <object id="99" gid="589" x="832" y="280" width="16" height="16"/>
+  <object id="100" gid="583" x="720" y="306" width="18" height="20"/>
+  <object id="101" gid="584" x="896" y="288" width="16" height="15"/>
+  <object id="102" gid="593" x="992" y="304" width="41" height="30"/>
+  <object id="103" gid="592" x="1008" y="240" width="15" height="13"/>
+  <object id="104" gid="592" x="992" y="240" width="15" height="13"/>
+  <object id="105" gid="592" x="992" y="256" width="15" height="13"/>
+  <object id="106" gid="592" x="1008" y="256" width="15" height="13"/>
+  <object id="107" gid="592" x="992" y="272" width="15" height="13"/>
+  <object id="108" gid="592" x="1008" y="272" width="15" height="13"/>
+  <object id="109" gid="592" x="832" y="240" width="15" height="13"/>
+  <object id="110" gid="592" x="416" y="256" width="15" height="13"/>
+  <object id="111" gid="592" x="80" y="256" width="15" height="13"/>
+  <object id="112" gid="592" x="640" y="192" width="15" height="13"/>
+  <object id="113" gid="592" x="592" y="192" width="15" height="13"/>
+  <object id="114" gid="592" x="544" y="176" width="15" height="13"/>
+  <object id="115" gid="592" x="496" y="160" width="15" height="13"/>
+  <object id="117" gid="592" x="288" y="128" width="15" height="13"/>
+  <object id="118" gid="592" x="1024" y="112" width="15" height="13"/>
+  <object id="120" gid="589" x="272" y="160" width="16" height="16"/>
+  <object id="121" gid="589" x="256" y="112" width="16" height="16"/>
+  <object id="122" gid="592" x="256" y="48" width="15" height="13"/>
+  <object id="123" gid="595" x="473" y="264" width="21" height="21"/>
+  <object id="124" gid="597" x="320" y="192" width="61" height="45"/>
+ </objectgroup>
+ <objectgroup color="#5500ff" id="9" name="trigger"/>
+</map>

@@ -15,6 +15,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Physics
+import io.github.quillraven.foxventure.component.Platform
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Stun
@@ -22,6 +23,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
+import io.github.quillraven.foxventure.tiled.GroundTile
 import io.github.quillraven.foxventure.tiled.TiledService
 import ktx.math.vec2
 import kotlin.math.abs
@@ -37,6 +39,7 @@ class AerialMoveSystem(
 ) : IteratingSystem(
     family = family { all(Velocity, Collision, Physics, EntityTag.ACTIVE).none(EntityTag.CLIMBING) },
 ) {
+    private val platformFamily = family { all(Transform, Collision, Platform, EntityTag.ACTIVE) }
     private val landingDustAnimation: GdxAnimation
 
     init {
@@ -176,13 +179,22 @@ class AerialMoveSystem(
         collision.isGrounded = false
         val prevPositionY = position.y + collision.box.y
         position.y += delta
-        val tile = tiledService.getAerialCollisionTile(position, collision.box) ?: return
+        val tile = tiledService.getAerialCollisionTile(position, collision.box)
+            ?: getPlatformCollisionTile(position, collision.box)
+            ?: return
 
         if (tile.isSolid) {
             handleSolidCollision(position, collision, velocity, delta, tile.rect)
         } else if (tile.isSemiSolid || tile.isLadderTop) {
             handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY, tile.rect)
         }
+    }
+
+    private fun getPlatformCollisionTile(position: Vector2, collisionBox: Rect): GroundTile? {
+        return platformFamily.firstOrNull { entity ->
+            val (groundTile) = entity[Platform]
+            collisionBox.overlaps(position, groundTile.rect)
+        }?.get(Platform)?.groundTile
     }
 
     private fun handleSolidCollision(
@@ -246,13 +258,17 @@ class AerialMoveSystem(
 
         // 1) try on the right side
         position.x = originalX + tolerance
-        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null) {
+        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null &&
+            getPlatformCollisionTile(position, collisionBox) == null
+        ) {
             return
         }
 
         // 2) try on the left side
         position.x = originalX - tolerance
-        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null) {
+        if (tiledService.getCollisionRect(position, collisionBox, includeSemiSolid = false) == null &&
+            getPlatformCollisionTile(position, collisionBox) == null
+        ) {
             return
         }
 
