@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
     println("Building TeaVM with 'debug'=$debug and 'startJetty'=$startJetty")
 
     val webBackend = WebBackend()
-        .setHtmlTitle("GdxGame")
+        .setHtmlTitle("Foxventure")
         .setHtmlWidth(800)
         .setHtmlHeight(600)
         .setStartJettyAfterBuild(startJetty)
