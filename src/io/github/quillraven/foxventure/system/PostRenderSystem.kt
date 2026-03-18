@@ -12,6 +12,7 @@ import io.github.quillraven.foxventure.component.Transition
 import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.graphic.RenderContext
 import io.github.quillraven.foxventure.graphic.ShaderService
+import io.github.quillraven.foxventure.screen.GameScreen
 import ktx.graphics.use
 import ktx.math.vec2
 
@@ -34,6 +35,11 @@ class PostRenderSystem(
     private val tmpVec = vec2()
 
     override fun onTick() {
+        if (GameScreen.gamePaused) {
+            batch.color = Color.GRAY
+        } else {
+            batch.color = Color.WHITE
+        }
         if (family.isEmpty) {
             // no transition effects -> render primary FBO
             batch.shader = null

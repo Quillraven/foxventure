@@ -110,8 +110,19 @@ class AudioService : MapChangeListener, Disposable {
         }
     }
 
+    fun pause() {
+        val music = tmpMusic ?: currentMusic
+        music?.pause()
+    }
+
+    fun resume() {
+        val music = tmpMusic ?: currentMusic
+        music?.play()
+    }
+
     override fun dispose() {
         currentMusic?.dispose()
+        tmpMusic?.dispose()
         clearSoundCache()
     }
 

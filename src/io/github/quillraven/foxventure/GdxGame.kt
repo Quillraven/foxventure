@@ -2,7 +2,6 @@ package io.github.quillraven.foxventure
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -70,11 +69,7 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
         ScreenUtils.clear(0f, 0f, 0f, 1f, true)
         val deltaTime = Gdx.graphics.deltaTime.coerceIn(0f, 1 / 30f)
         currentScreen.render(deltaTime)
-        serviceLocator.audioService.update(deltaTime)
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit()
-        }
+        serviceLocator.audioService.update(if (GameScreen.gamePaused) 0f else deltaTime)
     }
 
     override fun dispose() {

@@ -85,7 +85,6 @@ class RenderSystem(
             }
         }
 
-        val prevColor = batch.color
         batch.color = graphic.color
         batch.draw(
             region,
@@ -95,7 +94,6 @@ class RenderSystem(
             if (graphic.flip) -1f else 1f, 1f,
             rotationDegrees
         )
-        batch.color = prevColor
     }
 
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {
