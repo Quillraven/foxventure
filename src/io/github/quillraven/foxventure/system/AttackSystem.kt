@@ -40,7 +40,7 @@ class AttackSystem(
             return
         }
 
-        // ready to attack only if target is within attack range
+        // ready to attack only if the target is within attack range
         val (position) = entity[Transform]
         val collBox = entity[Collision].box
         val centerX = position.x + collBox.x + (collBox.width * 0.5f)
