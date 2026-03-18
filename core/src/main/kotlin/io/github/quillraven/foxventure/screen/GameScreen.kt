@@ -1,6 +1,7 @@
 package io.github.quillraven.foxventure.screen
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
@@ -87,6 +88,7 @@ class GameScreen(
             add(game)
             add(shaderService)
             add(gameViewModel)
+            add(skin)
         }
 
         val activationSystem = ActivationSystem(renderContext.gameViewport)
@@ -175,6 +177,20 @@ class GameScreen(
     }
 
     override fun render(delta: Float) {
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            gamePaused = !gamePaused
+            when (gamePaused) {
+                true -> audioService.pause()
+                false -> audioService.resume()
+            }
+        }
+
+        if (gamePaused) {
+            physicsTimer.update(0f)
+            world.update(0f)
+            return
+        }
+
         physicsTimer.update(delta)
         world.update(delta)
     }
@@ -204,6 +220,7 @@ class GameScreen(
         var playerGems = 0
         var playerLife = 0f
         var playerLifeMax = 0
+        var gamePaused = false
 
         fun resetPlayerStats() {
             playerCredits = 4
