@@ -9,6 +9,7 @@ import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.ProximityDetector
+import io.github.quillraven.foxventure.component.Transform
 import ktx.tiled.property
 
 fun EntityCreateContext.eagleCfg(
@@ -26,6 +27,8 @@ fun EntityCreateContext.eagleCfg(
     )
     entity += ProximityDetector(
         range = tile.property("proximity_range"),
-        predicate = { target -> target has Player },
+        predicate = { target ->
+            target has Player && target[Transform].position.y < entity[Transform].position.y
+        },
     )
 }

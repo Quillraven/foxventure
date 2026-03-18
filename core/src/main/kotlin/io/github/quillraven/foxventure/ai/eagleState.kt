@@ -72,6 +72,7 @@ data object EagleStateAttack : FsmState {
         val moveTo = entity.getOrNull(MoveTo)
 
         if (moveTo == null) {
+            entity[ProximityDetector].target = Entity.NONE
             entity[Fsm].state.changeState(EagleStateIdle)
             return
         }
