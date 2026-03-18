@@ -73,6 +73,22 @@ class AerialMoveSystem(
         if (wasFalling && collision.isGrounded && isPlayer) {
             spawnLandingDust(entity)
         }
+
+        handleFallOffMap(physics.position, isPlayer, entity)
+    }
+
+    private fun handleFallOffMap(
+        position: Vector2,
+        isPlayer: Boolean,
+        entity: Entity
+    ) {
+        if (position.y >= 0f) return
+
+        if (isPlayer) {
+            entity.configure { it += EntityTag.PLAYER_DEATH }
+        } else {
+            entity.remove()
+        }
     }
 
     private fun updateJumpState(
