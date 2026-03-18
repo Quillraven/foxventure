@@ -179,6 +179,13 @@ class ClimbSystem(
         collision: Collision,
         velocity: Vector2,
     ) {
+        // clamp position if a solid tile blocks upward movement
+        tiledService.getCollisionRect(position, collision.box, false)?.let { solidRect ->
+            position.y = solidRect.y - collision.box.y - collision.box.height
+            velocity.y = 0f
+            return
+        }
+
         getLadderTop(position, collision.box)?.let { tileRect ->
             if (position.y >= tileRect.y + tileRect.height * 0.4f) {
                 position.y = tileRect.y + tileRect.height - collision.box.y

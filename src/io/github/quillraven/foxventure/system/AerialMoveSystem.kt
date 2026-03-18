@@ -73,6 +73,22 @@ class AerialMoveSystem(
         if (wasFalling && collision.isGrounded && isPlayer) {
             spawnLandingDust(entity)
         }
+
+        handleFallOffMap(physics.position, isPlayer, entity)
+    }
+
+    private fun handleFallOffMap(
+        position: Vector2,
+        isPlayer: Boolean,
+        entity: Entity
+    ) {
+        if (position.y >= 0f) return
+
+        if (isPlayer) {
+            entity.configure { it += EntityTag.PLAYER_DEATH }
+        } else {
+            entity.remove()
+        }
     }
 
     private fun updateJumpState(
@@ -179,14 +195,25 @@ class AerialMoveSystem(
         collision.isGrounded = false
         val prevPositionY = position.y + collision.box.y
         position.y += delta
-        val tile = tiledService.getAerialCollisionTile(position, collision.box)
+        var tile = tiledService.getAerialCollisionTile(position, collision.box)
             ?: getPlatformCollisionTile(position, collision.box)
             ?: return
 
+        if (tile.isSemiSolid || tile.isLadderTop) {
+            val fellThrough = handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY, tile.rect)
+            if (!fellThrough) {
+                // semisolid collision handled -> nothing more to do
+                return
+            }
+
+            // semisolid was ignored — still check for a solid tile beneath
+            tile = tiledService.getAerialCollisionTile(position, collision.box, skipSemiSolid = true)
+                ?: getPlatformCollisionTile(position, collision.box)
+                        ?: return
+        }
+
         if (tile.isSolid) {
             handleSolidCollision(position, collision, velocity, delta, tile.rect)
-        } else if (tile.isSemiSolid || tile.isLadderTop) {
-            handleSemiSolidCollision(position, collision, velocity, delta, prevPositionY, tile.rect)
         }
     }
 
@@ -217,6 +244,12 @@ class AerialMoveSystem(
         collision.isGrounded = true
     }
 
+    /**
+     * Handles collisions with semi-solid platforms, determining whether the entity should land on top of the platform
+     * or fall through it based on the current and previous positions.
+     *
+     * @return `true` if the entity falls through the platform; `false` if the entity lands on the platform.
+     */
     private fun handleSemiSolidCollision(
         position: Vector2,
         collision: Collision,
@@ -224,21 +257,22 @@ class AerialMoveSystem(
         delta: Float,
         prevPositionY: Float,
         tileRect: Rect,
-    ) {
+    ): Boolean {
         if (delta > 0f) {
             // no semisolid collision during jump
-            return
+            return true
         }
 
         if (prevPositionY < tileRect.y + tileRect.height) {
             // the previous position was below semisolid -> fall through it
-            return
+            return true
         }
 
         // the previous position was above semisolid -> attach to the top edge of it
         position.y = tileRect.y + tileRect.height - collision.box.y
         velocity.y = 0f
         collision.isGrounded = true
+        return false
     }
 
     /**

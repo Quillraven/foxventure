@@ -202,7 +202,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
      * @param collisionBox The bounding box representing the area to check for potential collisions.
      * @return The first `GroundTile` that overlaps with the collision box, or `null` if no such tile exists.
      */
-    fun getAerialCollisionTile(position: Vector2, collisionBox: Rect): GroundTile? {
+    fun getAerialCollisionTile(position: Vector2, collisionBox: Rect, skipSemiSolid: Boolean = false): GroundTile? {
         val startX = position.x + collisionBox.x
         val endX = startX + collisionBox.width
         val startY = position.y + collisionBox.y
@@ -218,6 +218,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
                 val groundTile = groundTiles.get(index) ?: continue
                 // ignore ladder tiles but consider ladder tops
                 if (groundTile.isLadder && !groundTile.isLadderTop) continue
+                if (skipSemiSolid && groundTile.isSemiSolid) continue
 
                 if (groundTile.rect.overlaps(startX, startY, collisionBox.width, collisionBox.height)) {
                     return groundTile

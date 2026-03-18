@@ -146,6 +146,16 @@
    <object id="1" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
+ <tile id="260" type="semisolid">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="2" y="1" width="12" height="15"/>
+  </objectgroup>
+ </tile>
+ <tile id="261" type="semisolid">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="0" width="14" height="16"/>
+  </objectgroup>
+ </tile>
  <tile id="277">
   <objectgroup draworder="index" id="2">
    <object id="1" x="1" y="0" width="15" height="16"/>
