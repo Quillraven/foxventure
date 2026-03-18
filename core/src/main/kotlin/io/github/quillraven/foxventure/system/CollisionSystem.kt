@@ -74,7 +74,10 @@ class CollisionSystem(
 
             val otherTransform = other[Transform]
             val (otherPosition) = otherTransform
-            val otherCollision = other[Collision]
+            // it is possible that we get here a null Collision component because when the player
+            // collides with the house, then the house loses its Collision component in the family.forEach loop below
+            // but is still part of the system's family until the outer system's family loop is finished.
+            val otherCollision = other.getOrNull(Collision) ?: return@forEach
             val otherCollBox = otherCollision.box
             val otherType = other.getOrNull(Type)?.type ?: ""
 
