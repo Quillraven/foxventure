@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="86" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="162">
+ <properties>
+  <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
+ </properties>
+ <tileset firstgid="1" source="sunny_land.tsx"/>
+ <tileset firstgid="576" source="props.tsx"/>
+ <tileset firstgid="591" source="objects.tsx"/>
+ <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
+  <image source="../graphics/sky.png" width="384" height="240"/>
+ </imagelayer>
+ <imagelayer id="10" name="jungle" offsetx="0" offsety="80" parallaxx="1.1" parallaxy="0.9" repeatx="1">
+  <image source="../graphics/jungle.png" width="176" height="368"/>
+ </imagelayer>
+ <layer id="7" name="bgd" width="86" height="15">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgiD/r25IQAEAAAAAnRsUKAAB
+  </data>
+ </layer>
+ <layer id="1" name="ground" width="86" height="15">
+  <data encoding="base64" compression="zlib">
+   eJztmMFqk0EQgL+ZqncLaostHtTH+SnBYt+giG9QUUrxDRQ9FRT1pthTaD1JwaAXlXrIe/QiCtXK2F0yHXYT0xjaaAeG3ey/O//Ox+zM/oH/S/aAH0AbWCjopuvbnNZxb3hC5ILARYHVwLCk+7ZAjnvHkyXNgDg1pjMCs6dch+Zai9f7p0xHjlefZzPnfz2nXgbmR9ArztZLAZXes99cBdY40JbrN6nvbeW13uakcjTft5N+lV6/cf34zPjkMR93DxPXjsAzgecCt9Jv09upXRdYFthIeVVd20xoLNu+s5+d4LfX5cq457PLYK5rbl03te3Uvk5sS1z/5BydBLkKXAOuB67e72E1cl0RuBO4vghMPwp8Evicfj+qcG0qednrSRLv+6gauT6Qg5iNTD3XqJ6rieea+Vm+iXyNeZSzf/G+Nqyt7PsoPDOzyNXq1qsh7NwVuBf2X+JaUmMdc4XVu3NS1n5Sml/KQ/3qafT9icDTI7DtFri+S8/U1ac8/6fAvvmnvXdarD4ewLX2LbxQuB+3xnz37mc/+551S+BNGFsPHFRhSuGMHj7Tg7jm+mR6SWFGYVZ778x1q8a1lFP9WDPG/xlK34o3gMU+XH3+2xH4Eri2E4dvAt/tTCjMKczr4bW1uqWF+pRtddw73wt8OGIe8FzH8a3RFM5Lzf5NYAl46+6l/n4a6/V5hWkt32FL99ecu+M802jL26hxjfEac8Ivf4UeRA==
+  </data>
+ </layer>
+ <layer id="3" name="props" width="86" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzt2MEJwCAMheG3/zbSU8kaDlQKFXpJ9VIS4v+B5CISQlSIhJmTEgHlWHQCiRyS2rNW9t3R07WnWe1Q07gTHvoCwPs9aD+f/fU/A8iHOUNeFp1AsAtxgQ4m
+  </data>
+ </layer>
+ <objectgroup id="4" name="object">
+  <object id="125" gid="591" x="15" y="178" width="33" height="32"/>
+  <object id="126" gid="594" x="496" y="112" width="40" height="41"/>
+  <object id="127" gid="589" x="704" y="192" width="16" height="16"/>
+  <object id="128" gid="592" x="832" y="176" width="15" height="13"/>
+  <object id="129" gid="592" x="848" y="176" width="15" height="13"/>
+  <object id="130" gid="592" x="848" y="160" width="15" height="13"/>
+  <object id="131" gid="592" x="832" y="160" width="15" height="13"/>
+  <object id="134" gid="592" x="704" y="144" width="15" height="13"/>
+  <object id="135" gid="592" x="208" y="128" width="15" height="13"/>
+  <object id="136" gid="592" x="240" y="128" width="15" height="13"/>
+  <object id="137" gid="592" x="592" y="48" width="15" height="13"/>
+  <object id="138" gid="597" x="624" y="224" width="61" height="45"/>
+  <object id="139" gid="593" x="816" y="224" width="41" height="30"/>
+  <object id="140" gid="594" x="736" y="32" width="40" height="41"/>
+  <object id="141" gid="585" x="1264" y="112" width="119" height="144"/>
+  <object id="142" gid="576" x="752" y="82" width="46" height="28"/>
+  <object id="143" gid="592" x="960" y="32" width="15" height="13"/>
+  <object id="144" gid="592" x="1136" y="64" width="15" height="13"/>
+  <object id="145" gid="592" x="1168" y="32" width="15" height="13"/>
+  <object id="146" gid="592" x="1136" y="112" width="15" height="13"/>
+  <object id="147" gid="592" x="992" y="160" width="15" height="13"/>
+  <object id="148" gid="597" x="1104" y="224" width="61" height="45"/>
+  <object id="149" gid="596" x="608" y="48" width="21" height="21"/>
+  <object id="150" gid="595" x="800" y="176" width="21" height="21"/>
+  <object id="151" gid="595" x="961" y="159" width="21" height="21"/>
+  <object id="153" gid="587" x="1168" y="176" width="32" height="32"/>
+  <object id="154" gid="584" x="576" y="226" width="16" height="15"/>
+  <object id="155" gid="584" x="1008" y="226" width="16" height="15"/>
+  <object id="156" gid="581" x="688" y="119" width="15" height="9"/>
+  <object id="157" gid="581" x="704" y="119" width="15" height="9"/>
+  <object id="158" gid="581" x="736" y="119" width="15" height="9"/>
+  <object id="159" gid="583" x="992" y="226" width="18" height="20"/>
+ </objectgroup>
+</map>
