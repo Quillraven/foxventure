@@ -6,7 +6,7 @@
  </properties>
  <tileset firstgid="1" source="sunny_land.tsx"/>
  <tileset firstgid="576" source="props.tsx"/>
- <tileset firstgid="587" source="objects.tsx"/>
+ <tileset firstgid="591" source="objects.tsx"/>
  <imagelayer id="2" name="sky" parallaxx="1.3" repeatx="1">
   <image source="../graphics/sky.png" width="384" height="240"/>
  </imagelayer>
@@ -32,12 +32,12 @@
     <property name="z" type="int" value="200"/>
    </properties>
   </object>
-  <object id="44" gid="587" x="16" y="66" width="33" height="32"/>
-  <object id="45" gid="588" x="432" y="160" width="15" height="13"/>
-  <object id="46" gid="588" x="480" y="160" width="15" height="13"/>
-  <object id="47" gid="588" x="656" y="64" width="15" height="13"/>
-  <object id="48" gid="588" x="624" y="80" width="15" height="13"/>
-  <object id="49" gid="588" x="608" y="112" width="15" height="13"/>
+  <object id="44" gid="591" x="16" y="66" width="33" height="32"/>
+  <object id="45" gid="592" x="432" y="160" width="15" height="13"/>
+  <object id="46" gid="592" x="480" y="160" width="15" height="13"/>
+  <object id="47" gid="592" x="656" y="64" width="15" height="13"/>
+  <object id="48" gid="592" x="624" y="80" width="15" height="13"/>
+  <object id="49" gid="592" x="608" y="112" width="15" height="13"/>
   <object id="51" gid="582" x="304" y="209" width="17" height="12"/>
   <object id="52" gid="576" x="112" y="64" width="46" height="28"/>
   <object id="53" gid="576" x="784" y="115" width="46" height="28">
@@ -46,18 +46,18 @@
    </properties>
   </object>
   <object id="54" gid="584" x="608" y="224" width="16" height="15"/>
-  <object id="55" gid="588" x="736" y="96" width="15" height="13"/>
+  <object id="55" gid="592" x="736" y="96" width="15" height="13"/>
   <object id="56" gid="584" x="928" y="224" width="16" height="15"/>
   <object id="57" gid="584" x="944" y="176" width="16" height="15"/>
   <object id="58" gid="582" x="880" y="225" width="17" height="12"/>
   <object id="59" gid="577" x="976" y="112" width="79" height="176"/>
   <object id="60" gid="586" x="1072" y="112" width="112" height="98"/>
-  <object id="62" gid="588" x="864" y="176" width="15" height="13"/>
-  <object id="63" gid="588" x="944" y="128" width="15" height="13"/>
-  <object id="64" gid="588" x="944" y="224" width="15" height="13"/>
-  <object id="65" gid="588" x="992" y="64" width="15" height="13"/>
+  <object id="62" gid="592" x="864" y="176" width="15" height="13"/>
+  <object id="63" gid="592" x="944" y="128" width="15" height="13"/>
+  <object id="64" gid="592" x="944" y="224" width="15" height="13"/>
+  <object id="65" gid="592" x="992" y="64" width="15" height="13"/>
   <object id="70" gid="577" x="-11" y="64" width="79" height="176"/>
-  <object id="71" gid="589" x="896" y="225" width="41" height="30"/>
+  <object id="71" gid="593" x="896" y="225" width="41" height="30"/>
   <object id="72" gid="583" x="832" y="115" width="18" height="20">
    <properties>
     <property name="z" type="int" value="200"/>
@@ -66,6 +66,6 @@
  </objectgroup>
  <objectgroup color="#5500ff" id="9" name="trigger">
   <object id="74" name="tutorial-1" x="304" y="192" width="177" height="32"/>
-  <object id="75" name="tutorial-2" x="699" y="113" width="31" height="111"/>
+  <object id="75" name="tutorial-2" x="720" y="113" width="31" height="111"/>
  </objectgroup>
 </map>
