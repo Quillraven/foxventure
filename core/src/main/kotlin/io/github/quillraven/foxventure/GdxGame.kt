@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.screen.GameOverScreen
 import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.screen.VictoryScreen
 import io.github.quillraven.foxventure.screen.WebStartScreen
+import io.github.quillraven.foxventure.ui.ArcEffect
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
@@ -24,6 +25,8 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
 
         TypingConfig.GLOBAL_VARS.put("HIGHLIGHT", "{COLOR=#87ceebff}")
         TypingConfig.GLOBAL_VARS.put("END_HIGHLIGHT", "{ENDCOLOR}")
+
+        TypingConfig.registerEffect("ARC") { label, params -> ArcEffect(label, params) }
 
         val resolver = serviceLocator.fileHandleResolver
         val atlas = TextureAtlas(resolver.resolve("ui/ui.atlas"))
