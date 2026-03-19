@@ -125,8 +125,20 @@ class CollisionSystem(
             "enemy" -> onPlayerEnemyCollision(player, other, playerTransform, playerCollision, otherTransform, otherCollision)
             "house" -> onPlayerHouseCollision(player, other, playerTransform, otherTransform, otherCollision)
             "platform" -> Unit // handled by move systems via platform family
+            "shop" -> onShopCollision(player, other)
             else -> gdxError("Unsupported player collision with entity $otherType")
         }
+    }
+
+    private fun onShopCollision(
+        player: Entity,
+        shop: Entity
+    ) {
+        if (!player[Controller].hasCommand(Command.MOVE_UP)) {
+            return
+        }
+
+        println("TODO shop")
     }
 
     private fun onPlayerSpikeCollision(

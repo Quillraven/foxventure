@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.2" name="objects" tilewidth="61" tileheight="45" tilecount="8" columns="0">
+<tileset version="1.10" tiledversion="1.12.0" name="objects" tilewidth="61" tileheight="50" tilecount="9" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -113,6 +113,12 @@
   <image source="../graphics/sprites/objects/piranha-ball/idle_0.png" width="16" height="16"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="2" y="5" width="13" height="8"/>
+  </objectgroup>
+ </tile>
+ <tile id="8" type="shop">
+  <image source="../graphics/sprites/objects/mushroom-shop/idle_0.png" width="50" height="50"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="7" y="15" width="35" height="35"/>
   </objectgroup>
  </tile>
 </tileset>
