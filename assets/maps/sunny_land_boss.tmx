@@ -41,6 +41,6 @@ EXTRA_HEART</property>
   <object id="172" gid="588" x="224" y="192" width="32" height="16"/>
  </objectgroup>
  <objectgroup color="#5500ff" id="12" name="trigger">
-  <object id="173" name="shop" x="190" y="36" width="18" height="64"/>
+  <object id="173" name="shop" x="90" y="0" width="18" height="64"/>
  </objectgroup>
 </map>
