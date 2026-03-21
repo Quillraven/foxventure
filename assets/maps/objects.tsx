@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.0" name="objects" tilewidth="61" tileheight="50" tilecount="9" columns="0">
+<tileset version="1.10" tiledversion="1.12.0" name="objects" tilewidth="70" tileheight="64" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -119,6 +119,25 @@
   <image source="../graphics/sprites/objects/mushroom-shop/idle_0.png" width="50" height="50"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="7" y="15" width="35" height="35"/>
+  </objectgroup>
+ </tile>
+ <tile id="9" type="enemy">
+  <properties>
+   <property name="life" type="int" value="3"/>
+   <property name="physics" type="class" propertytype="Physics">
+    <properties>
+     <property name="climb_speed" type="float" value="0"/>
+     <property name="gravity" type="float" value="30"/>
+     <property name="jump_impulse" type="float" value="20"/>
+     <property name="max_fall_speed" type="float" value="30"/>
+     <property name="max_speed" type="float" value="5"/>
+     <property name="peak_gravity_multiplier" type="float" value="1"/>
+    </properties>
+   </property>
+  </properties>
+  <image source="../graphics/sprites/objects/frog-boss/idle_0.png" width="70" height="64"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="10" y="20" width="48" height="32"/>
   </objectgroup>
  </tile>
 </tileset>
