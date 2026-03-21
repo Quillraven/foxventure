@@ -5,7 +5,7 @@ import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Item
 import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.Player
-import com.badlogic.gdx.utils.Array as GdxArray
+import ktx.collections.GdxArray
 
 class ShopViewModel {
     lateinit var world: World

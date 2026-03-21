@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Scaling
 import com.github.tommyettinger.textra.TypingLabel
 import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.ui.ShopViewModel
-import com.badlogic.gdx.utils.Array as GdxArray
+import ktx.collections.GdxArray
 
 class ShopView(
     private val viewModel: ShopViewModel,
