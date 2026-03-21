@@ -26,23 +26,33 @@ class ShopView(
 
         val panel = Table(skin).apply { background = skin.getDrawable("button-blue-gradient") }
 
-        val titleLabel = TypingLabel("{ARC}Shop{RESET}", skin, "border").apply {
+        val titleLabel = TypingLabel("[%125]Shop[%]", skin, "border").apply {
             alignment = Align.center
         }
-        val closeLabel = Label("X", skin, "border")
+        val closeLabel = Image(skin.getDrawable("check-square-grey-cross"))
         closeLabel.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent, x: Float, y: Float) {
                 viewModel.closeShop()
             }
         })
 
-        val titleRow = Table(skin)
-        titleRow.add(titleLabel).growX().padLeft(32f)
-        titleRow.add(closeLabel).right().padRight(8f)
-        panel.add(titleRow).padTop(16f).padBottom(8f).growX().row()
+        panel.add(titleLabel).growX().padTop(-20f).row()
 
-        panel.add(grid).pad(16f).grow().row()
-        add(panel).center().size(320f, 240f)
+        panel.add(grid).pad(4f).growX().row()
+        grid.background = skin.getDrawable("button-blue-square-border")
+        val infoLabel = Label("Click on an item to purchase it", skin, "small_border").apply {
+            wrap = true
+        }
+        panel.add(infoLabel).padTop(10f).growX().padBottom(-10f).row()
+
+        val panelStack = Stack()
+        panelStack.add(panel)
+        val closeContainer = Table()
+        closeContainer.add(closeLabel).top().right().size(24f).padRight(-4f).padTop(-4f)
+        closeContainer.top().right()
+        panelStack.add(closeContainer)
+
+        add(panelStack).center().width(214f)
 
         viewModel.onItemsChanged = { items -> updateGrid(items) }
         viewModel.onCloseShop = { isVisible = false }
@@ -62,18 +72,19 @@ class ShopView(
 
         val frame = Stack()
         frame.add(Image(skin.getDrawable("button-grey-yellow")))
-        frame.add(Image(skin.getDrawable(itemType.drawable), Scaling.fit))
-
-        val costTable = Table(skin)
-        costTable.background = skin.getDrawable("button-grey-yellow")
-        costTable.add(Image(skin.getDrawable("gem"), Scaling.fit)).size(16f).padRight(4f)
-        costTable.add(Label("${itemType.cost}", skin, "small_border"))
-        costTable.addListener(object : ClickListener() {
+        val itemImage = Image(skin.getDrawable(itemType.drawable), Scaling.fit)
+        val itemTable = Table().apply { add(itemImage).pad(8f).grow() }
+        frame.add(itemTable)
+        frame.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent, x: Float, y: Float) = viewModel.onPurchase(itemType)
         })
 
+        val costTable = Table(skin)
+        costTable.add(Image(skin.getDrawable("gem"), Scaling.fit)).size(16f).padRight(4f)
+        costTable.add(Label("${itemType.cost}", skin, "small_border")).bottom().padBottom(3f)
+
         cell.add(frame).size(64f).row()
-        cell.add(costTable).padTop(-8f)
+        cell.add(costTable).padTop(4f)
         return cell
     }
 }

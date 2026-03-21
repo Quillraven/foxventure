@@ -8,6 +8,7 @@ import io.github.quillraven.foxventure.component.Item
 import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.ui.GameViewModel
 
 class ItemSystem(
@@ -22,12 +23,15 @@ class ItemSystem(
         val itemType = entity[Item].type
 
         if (playerCmp.gems < itemType.cost) {
+            // cannot afford item -> do nothing
             entity.remove()
             return
         }
 
+        // consume item -> modify player stats
         playerCmp.gems -= itemType.cost
         gameViewModel.gems = playerCmp.gems
+        val life = player[Life]
 
         when (itemType) {
             ItemType.EXTRA_CREDIT -> {
@@ -35,7 +39,6 @@ class ItemSystem(
                 gameViewModel.credits = playerCmp.credits
             }
             ItemType.EXTRA_HEART -> {
-                val life = player[Life]
                 life.maxAmount += 4
                 life.amount += 4
                 gameViewModel.life = life.amount
@@ -43,6 +46,13 @@ class ItemSystem(
             }
         }
 
+        // also set global player stats in case the player dies and respawns
+        GameScreen.playerCredits = playerCmp.credits
+        GameScreen.playerGems = playerCmp.gems
+        GameScreen.playerLife = life.amount
+        GameScreen.playerLifeMax = life.maxAmount
+
+        // remove item
         entity.remove()
     }
 }
