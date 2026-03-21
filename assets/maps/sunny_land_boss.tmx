@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="182">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="183">
  <properties>
   <property name="music" type="file" value="../music/fantasy_dragon.ogg"/>
  </properties>
@@ -36,9 +36,9 @@ EXTRA_HEART</property>
    </properties>
   </object>
   <object id="164" gid="590" x="224" y="224" width="119" height="111"/>
-  <object id="170" gid="600" x="501" y="235" width="70" height="64"/>
   <object id="171" gid="588" x="448" y="192" width="32" height="16"/>
   <object id="172" gid="588" x="224" y="192" width="32" height="16"/>
+  <object id="182" gid="600" x="519" y="231" width="42" height="38"/>
  </objectgroup>
  <objectgroup color="#5500ff" id="12" name="trigger">
   <object id="173" name="shop" x="289" y="7" width="18" height="64"/>
@@ -51,10 +51,10 @@ EXTRA_HEART</property>
   <object id="175" name="platform-left" x="240" y="176">
    <point/>
   </object>
-  <object id="176" name="right" x="534" y="224">
+  <object id="176" name="right" x="540" y="224">
    <point/>
   </object>
-  <object id="177" name="left" x="170" y="224">
+  <object id="177" name="left" x="164" y="224">
    <point/>
   </object>
   <object id="178" name="center-right" x="400" y="224">

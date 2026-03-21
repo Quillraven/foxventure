@@ -128,9 +128,9 @@
   <properties>
    <property name="life" type="int" value="3"/>
   </properties>
-  <image source="../graphics/sprites/objects/frog-boss/idle_0.png" width="70" height="64"/>
+  <image source="../graphics/sprites/objects/frog-boss/idle_0.png" width="42" height="38"/>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="10" y="20" width="48" height="32"/>
+   <object id="2" x="8" y="12" width="27" height="19"/>
   </objectgroup>
  </tile>
 </tileset>
