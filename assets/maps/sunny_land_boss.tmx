@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="169">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="40" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="183">
  <properties>
   <property name="music" type="file" value="../music/fantasy_dragon.ogg"/>
  </properties>
@@ -19,21 +19,52 @@
  </layer>
  <layer id="1" name="ground" width="40" height="15">
   <data encoding="base64" compression="zlib">
-   eJzNlUEKgDAMBLeCD9CriC8S8bHSs5+SepNgC1qS6kUTYRHJoeNsUMDONQKYYny8wyhfikW+5SVf7aDqjzruAPSFDD/zpb2bGJebuz9TZuX9K8Ur8OV+OI8W/F179gIv9W2pX45Ti0/qk5xp83GepN4t9Cu51PDnH3jyBAfsH/9HQjxD8pc6zXeP3qOpgLY6Zyv4lGZv5umM/PtHXAdCg1XC
+   eJzNlEEKgDAMBLcHXyHii6T4WMnZT3mWQAO1JNGTibCUUg/DbFogz7cBqC3UViTlk2TkOz7yTQWh/rjjGcDiZP2ZT+auKi6v8txz9uD580IBfKMfzWMGf33PZPBy35n61Tij+Kw+2Vk0n+bJ6j1Dv5bLCH/0whPNV51Ox9mTO3x2qxbv7Mu5/DO+f8x1A/OYVU8=
   </data>
  </layer>
  <layer id="3" name="props" width="40" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFwx1shOLNA+2QUUA22E1B2O0cDfdRMMwBJfljFIwCBhoBAKCzBEU=
+   eJxjYBgFwx1shOLNA+2QUUA22E1B2O0cDfdRMMwBJfljFFC3jtmIJs6AhU3ILHRzhioAAJMRCoI=
   </data>
  </layer>
  <objectgroup id="4" name="object">
   <object id="162" gid="591" x="16" y="64" width="33" height="32"/>
-  <object id="163" gid="599" x="64" y="64" width="50" height="50"/>
+  <object id="163" gid="599" x="64" y="64" width="50" height="50">
+   <properties>
+    <property name="items">EXTRA_CREDIT
+EXTRA_HEART</property>
+   </properties>
+  </object>
   <object id="164" gid="590" x="224" y="224" width="119" height="111"/>
-  <object id="165" gid="588" x="464" y="176" width="32" height="16"/>
-  <object id="166" gid="588" x="400" y="128" width="32" height="16"/>
-  <object id="167" gid="588" x="320" y="112" width="32" height="16"/>
-  <object id="168" gid="587" x="320" y="192" width="32" height="32"/>
+  <object id="171" gid="588" x="448" y="192" width="32" height="16"/>
+  <object id="172" gid="588" x="224" y="192" width="32" height="16"/>
+  <object id="182" gid="600" x="519" y="231" width="42" height="38"/>
+ </objectgroup>
+ <objectgroup color="#5500ff" id="12" name="trigger">
+  <object id="173" name="shop" x="289" y="7" width="18" height="64"/>
+  <object id="181" name="boss-start" x="480" y="48" width="18" height="176"/>
+ </objectgroup>
+ <objectgroup id="13" name="boss">
+  <object id="174" name="platform-right" x="464" y="176">
+   <point/>
+  </object>
+  <object id="175" name="platform-left" x="240" y="176">
+   <point/>
+  </object>
+  <object id="176" name="right" x="540" y="224">
+   <point/>
+  </object>
+  <object id="177" name="left" x="164" y="224">
+   <point/>
+  </object>
+  <object id="178" name="center-right" x="400" y="224">
+   <point/>
+  </object>
+  <object id="179" name="center-left" x="304" y="224">
+   <point/>
+  </object>
+  <object id="180" name="center" x="352" y="224">
+   <point/>
+  </object>
  </objectgroup>
 </map>

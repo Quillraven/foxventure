@@ -9,7 +9,7 @@ import io.github.quillraven.foxventure.ai.FleksStateMachine
  */
 data class Fsm(
     val state: FleksStateMachine,
-    val customProperties: Map<String, Any> = emptyMap(),
+    val customProperties: MutableMap<String, Any> = mutableMapOf(),
 ) : Component<Fsm> {
     inline fun <reified T> customProperty(key: String): T = customProperties[key] as T
 

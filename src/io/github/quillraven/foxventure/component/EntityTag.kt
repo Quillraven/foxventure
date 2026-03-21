@@ -13,4 +13,5 @@ enum class EntityTag : EntityTags by entityTagOf() {
     ROOT,
     PLAYER_DEATH,
     PROJECTILE,
+    BOSS,
 }

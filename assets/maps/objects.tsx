@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.12.0" name="objects" tilewidth="61" tileheight="50" tilecount="9" columns="0">
+<tileset version="1.10" tiledversion="1.12.0" name="objects" tilewidth="70" tileheight="64" tilecount="10" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0" type="player">
   <properties>
@@ -116,9 +116,21 @@
   </objectgroup>
  </tile>
  <tile id="8" type="shop">
+  <properties>
+   <property name="animation_speed" type="float" value="0"/>
+  </properties>
   <image source="../graphics/sprites/objects/mushroom-shop/idle_0.png" width="50" height="50"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="7" y="15" width="35" height="35"/>
+  </objectgroup>
+ </tile>
+ <tile id="9" type="enemy">
+  <properties>
+   <property name="life" type="int" value="3"/>
+  </properties>
+  <image source="../graphics/sprites/objects/frog-boss/idle_0.png" width="42" height="38"/>
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="8" y="12" width="27" height="19"/>
   </objectgroup>
  </tile>
 </tileset>

@@ -47,7 +47,8 @@ data class GroundTile(val type: String, val rect: Rect) {
 }
 
 class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
-    private var currentMap: TiledMap = TiledMap()
+    var currentMap: TiledMap = TiledMap()
+        private set
     var currentMapName: String = ""
         private set
 

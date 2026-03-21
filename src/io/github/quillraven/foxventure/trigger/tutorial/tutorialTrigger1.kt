@@ -13,9 +13,9 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
             player().run {
                 configure {
                     it += EntityTag.ROOT
-                    it -= Controller.Companion
+                    it -= Controller
                 }
-                this[Velocity.Companion].current.setZero()
+                this[Velocity].current.setZero()
             }
         }
     }

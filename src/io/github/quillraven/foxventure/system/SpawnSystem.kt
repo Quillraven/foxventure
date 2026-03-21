@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.cfg.eagleCfg
+import io.github.quillraven.foxventure.cfg.frogBossCfg
 import io.github.quillraven.foxventure.cfg.mushroomCfg
 import io.github.quillraven.foxventure.cfg.piranhaCfg
 import io.github.quillraven.foxventure.component.Animation
@@ -25,6 +26,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
+import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
@@ -32,6 +34,7 @@ import io.github.quillraven.foxventure.component.Platform
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.ProjectileCfg
 import io.github.quillraven.foxventure.component.Rect
+import io.github.quillraven.foxventure.component.Shop
 import io.github.quillraven.foxventure.component.Tiled
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
@@ -46,6 +49,7 @@ import io.github.quillraven.foxventure.tiled.TiledService.Companion.collisionRec
 import io.github.quillraven.foxventure.tiled.TiledService.Companion.pointObject
 import io.github.quillraven.foxventure.ui.GameViewModel
 import ktx.app.gdxError
+import ktx.collections.toGdxArray
 import ktx.math.vec2
 import ktx.tiled.height
 import ktx.tiled.id
@@ -96,7 +100,7 @@ class SpawnSystem(
             physicsEntityCfg(tile, it, x, y)
             attackEntityCfg(tile, it)
             wanderCfg(tile, it)
-            typeSpecificEntityCfg(tile, it, atlasKey, tiledType)
+            typeSpecificEntityCfg(mapObject, tile, it, atlasKey, tiledType)
             projectileCfg(tile, it)
         }
     }
@@ -153,6 +157,7 @@ class SpawnSystem(
 
 
     private fun EntityCreateContext.typeSpecificEntityCfg(
+        mapObject: TiledMapTileMapObject,
         tile: TiledMapTile,
         entity: Entity,
         atlasKey: String,
@@ -179,6 +184,11 @@ class SpawnSystem(
                 val (position) = entity[Transform]
                 val (box) = entity[Collision]
                 entity += Platform(GroundTile("", Rect(position.x, position.y, box.width, box.height)))
+            }
+
+            "shop" -> {
+                val itemNames = mapObject.property("items", "").lines()
+                entity += Shop(itemNames.map { ItemType.valueOf(it.trim()) }.toGdxArray())
             }
 
             "enemy" -> configureEnemy(tile, entity, atlasKey)
@@ -261,6 +271,7 @@ class SpawnSystem(
             "mushroom" -> mushroomCfg(world, tile, entity)
             "eagle" -> eagleCfg(world, tile, entity)
             "piranha" -> piranhaCfg(world, tile, entity)
+            "frog-boss" -> frogBossCfg(world, entity)
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }

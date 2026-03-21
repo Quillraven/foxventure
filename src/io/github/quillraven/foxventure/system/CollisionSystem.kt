@@ -9,6 +9,8 @@ import com.github.quillraven.fleks.World.Companion.inject
 import com.github.quillraven.fleks.collection.compareEntity
 import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.PhysicsTimer
+import io.github.quillraven.foxventure.component.Animation
+import io.github.quillraven.foxventure.component.AnimationType
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Damage
@@ -19,6 +21,7 @@ import io.github.quillraven.foxventure.component.Invulnerable
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
+import io.github.quillraven.foxventure.component.Shop
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Type
 import io.github.quillraven.foxventure.component.Velocity
@@ -27,6 +30,7 @@ import io.github.quillraven.foxventure.input.Command
 import io.github.quillraven.foxventure.system.DamagedSystem.Companion.damageEntity
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.ui.GameViewModel
+import io.github.quillraven.foxventure.ui.ShopViewModel
 import ktx.app.gdxError
 import ktx.math.vec2
 
@@ -37,6 +41,7 @@ class CollisionSystem(
     private val physicsTimer: PhysicsTimer = inject(),
     private val audioService: AudioService = inject(),
     private val gameViewModel: GameViewModel = inject(),
+    private val shopViewModel: ShopViewModel = inject(),
     objectsAtlas: TextureAtlas = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Collision, EntityTag.ACTIVE) },
@@ -134,11 +139,20 @@ class CollisionSystem(
         player: Entity,
         shop: Entity
     ) {
-        if (!player[Controller].hasCommand(Command.MOVE_UP)) {
+        val shopAnimation = shop[Animation]
+        if (shopAnimation.speed == 0f) {
+            shopAnimation.speed = 0.75f
+            shopAnimation.changeTo(AnimationType.IDLE)
+            shopAnimation.active.playMode = PlayMode.NORMAL
+        }
+
+        val controller = player.getOrNull(Controller)
+        if (controller == null || !controller.hasCommand(Command.MOVE_UP)) {
             return
         }
 
-        println("TODO shop")
+        player.configure { it -= Controller }
+        shopViewModel.items = shop[Shop].items
     }
 
     private fun onPlayerSpikeCollision(
@@ -166,13 +180,17 @@ class CollisionSystem(
         otherCollision: Collision,
     ) {
         val playerBottom = playerTransform.position.y + playerCollision.box.y
-        val enemyTop = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * 0.75f
+        val stompThreshold = if (other has EntityTag.BOSS) 0.6f else 0.75f
+        val enemyTop = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * stompThreshold
+        val enemyCenter = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * 0.5f
+        val playerFallingOnTop = player[Velocity].current.y < 0f && playerBottom >= enemyCenter
 
-        if (playerBottom >= enemyTop) {
+        if (playerBottom >= enemyTop || playerFallingOnTop) {
             // player stomps on an enemy from above -> apply upwards impulse
             val jumpPressed = player[Controller].hasCommand(Command.JUMP)
             val physics = player[Physics]
-            player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse * 0.75f else physics.jumpImpulse * 0.4f
+            val bounceMultiplier = if (other has EntityTag.BOSS) 0.9f else if (jumpPressed) 0.75f else 0.4f
+            player[Velocity].current.y = physics.jumpImpulse * bounceMultiplier
 
             // damage enemy
             world.damageEntity(
