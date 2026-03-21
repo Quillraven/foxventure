@@ -1,14 +1,13 @@
-package io.github.quillraven.foxventure.trigger.tutorial
+package io.github.quillraven.foxventure.trigger.firstboss
 
 import com.github.quillraven.fleks.IntervalSystem
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
-import io.github.quillraven.foxventure.component.JumpControl
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.trigger.trigger
 
-fun IntervalSystem.tutorialTrigger1() = trigger {
-    timedAction(0.5f) {
+fun IntervalSystem.firstBossShopTrigger() = trigger {
+    timedAction(1f) {
         onStart = {
             player().run {
                 configure {
@@ -24,9 +23,9 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "avatar-fox",
-                "{SHAKE}Ruff!{WAIT=1.0}{RESET} That fall nearly ruffled my fur for good!\n" +
-                        "Wait... I feel a spring in my paws. I used to be able to catch some air, didn't I?\n" +
-                        "How did I... pounce?"
+                "Well, look at that! {WAIT=0.6}A friendly face in a damp place.\n" +
+                        "I remember him now — he is the local merchant.\n" +
+                        "I'd better grab some supplies before I go any further."
             )
         }
     }
@@ -35,7 +34,7 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Press {VAR=HIGHLIGHT}SPACE{VAR=END_HIGHLIGHT} to jump."
+                "Press {VAR=HIGHLIGHT}W{VAR=END_HIGHLIGHT} or {VAR=HIGHLIGHT}UP{VAR=END_HIGHLIGHT} arrow key to open the shop."
             )
         }
     }
@@ -45,7 +44,6 @@ fun IntervalSystem.tutorialTrigger1() = trigger {
             gameViewModel.onHideMessage()
             player().configure {
                 it += Controller()
-                it += JumpControl()
                 it -= EntityTag.ROOT
             }
         }

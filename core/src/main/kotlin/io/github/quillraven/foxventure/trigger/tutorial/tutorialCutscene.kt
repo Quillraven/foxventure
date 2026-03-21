@@ -24,8 +24,8 @@ fun IntervalSystem.tutorialCutscene() = trigger {
     action {
         onStart = {
             player().configure {
-                it -= Controller.Companion
-                it -= JumpControl.Companion
+                it -= Controller
+                it -= JumpControl
             }
         }
     }
@@ -36,7 +36,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         onStart = {
             val objectsAtlas = this.inject<TextureAtlas>()
             val acornAnimation = objectsAtlas.getGdxAnimation("objects/acorn", AnimationType.IDLE)
-            val (playerPosition, playerSize) = player()[Transform.Companion]
+            val (playerPosition, playerSize) = player()[Transform]
             val halfAcornW = acornAnimation.keyFrames.first().regionWidth.toWorldUnits() / 2
             val acornX = playerPosition.x + playerSize.x / 2 - halfAcornW
             val acornY = playerPosition.y + playerSize.y / 2 + 10f
@@ -56,7 +56,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
         }
 
         onUpdate = {
-            val acornOnHead = acorn hasNo MoveTo.Companion
+            val acornOnHead = acorn hasNo MoveTo
             if (acornOnHead) {
                 acorn.remove()
             }
@@ -67,12 +67,12 @@ fun IntervalSystem.tutorialCutscene() = trigger {
     timedAction(2.5f) {
         onStart = {
             audioService.playSound("hurt2.wav")
-            player()[Animation.Companion].changeTo(AnimationType.DIZZY)
+            player()[Animation].changeTo(AnimationType.DIZZY)
 
             val objectsAtlas = this.inject<TextureAtlas>()
             val stunAnimation = objectsAtlas.getGdxAnimation("sfx/stun", AnimationType.IDLE)
             val stunFrame = stunAnimation.keyFrames.first()
-            val (playerPosition) = player()[Transform.Companion]
+            val (playerPosition) = player()[Transform]
             val size = vec2(stunFrame.regionWidth.toWorldUnits(), stunFrame.regionHeight.toWorldUnits())
             entity {
                 it += Transform(
@@ -90,7 +90,7 @@ fun IntervalSystem.tutorialCutscene() = trigger {
 
     timedAction(14f) {
         onStart = {
-            player()[Animation.Companion].changeTo(AnimationType.IDLE)
+            player()[Animation].changeTo(AnimationType.IDLE)
             gameViewModel.onShowMessage(
                 "avatar-fox",
                 "{SHAKE}Yip!{WAIT=1.0}{RESET} My ears are ringing... and my tail is all dusty!\n" +
