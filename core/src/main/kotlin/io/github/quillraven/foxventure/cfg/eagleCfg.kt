@@ -19,7 +19,7 @@ fun EntityCreateContext.eagleCfg(
 ) {
     entity += Fsm(
         FleksStateMachine(world, entity, EagleStateIdle),
-        customProperties = mapOf(
+        customProperties = mutableMapOf(
             "dive_time" to tile.property<Float>("dive_time"),
             "dive_peak_time" to tile.property<Float>("dive_peak_time"),
             "rise_time" to tile.property<Float>("rise_time"),

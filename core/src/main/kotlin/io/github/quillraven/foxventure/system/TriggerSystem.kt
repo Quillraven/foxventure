@@ -15,6 +15,7 @@ import io.github.quillraven.foxventure.tiled.LoadTriggerListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.Trigger
 import io.github.quillraven.foxventure.trigger.firstboss.firstBossShopTrigger
+import io.github.quillraven.foxventure.trigger.firstboss.firstBossStartTrigger
 import io.github.quillraven.foxventure.trigger.tutorial.tutorialCutscene
 import io.github.quillraven.foxventure.trigger.tutorial.tutorialTrigger1
 import io.github.quillraven.foxventure.trigger.tutorial.tutorialTrigger2
@@ -85,6 +86,7 @@ class TriggerSystem(
         "tutorial-1" -> tutorialTrigger1()
         "tutorial-2" -> tutorialTrigger2()
         "shop" -> firstBossShopTrigger()
+        "boss-start" -> firstBossStartTrigger()
         else -> gdxError("Unknown trigger name $name")
     }
 
