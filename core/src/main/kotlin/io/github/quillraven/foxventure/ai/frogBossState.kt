@@ -1,8 +1,6 @@
 package io.github.quillraven.foxventure.ai
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.Vector2
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
@@ -20,13 +18,8 @@ import io.github.quillraven.foxventure.component.MoveTo
 import io.github.quillraven.foxventure.component.MoveToPoint
 import io.github.quillraven.foxventure.component.Platform
 import io.github.quillraven.foxventure.component.Transform
-import ktx.app.gdxError
-import ktx.collections.gdxArrayOf
+import ktx.collections.GdxArray
 import ktx.math.vec2
-
-private val PHASE1_2_WAYPOINTS =
-    listOf("left", "platform-left", "center-left", "center-right", "platform-right", "right")
-private val PHASE3_WAYPOINTS = listOf("left", "center-left", "center", "center-right", "right")
 
 data object FrogBossStateIdle : FsmState {
     override fun World.onEnter(entity: Entity) {
@@ -35,49 +28,22 @@ data object FrogBossStateIdle : FsmState {
 }
 
 data object FrogBossStateJump : FsmState {
-    private fun waypointsForPhase(phase: Int, rtl: Boolean): List<String> {
-        val list = if (phase < 2) PHASE1_2_WAYPOINTS else PHASE3_WAYPOINTS
-        // rtl = right-to-left: iterate reversed, skip last (= starting point "left")
-        // ltr = left-to-right: iterate normal, skip first (= starting point "left")
-        return if (rtl) list.dropLast(1).asReversed() else list.drop(1)
-    }
-
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.JUMP)
 
         val fsm = entity[Fsm]
-        val waypoints = fsm.customProperty<Map<String, Vector2>>("waypoints")
-        val jumpDurations = fsm.customProperty<FloatArray>("jump_duration")
-        val direction = fsm.customProperty<Int>("direction")
-        val platformsDestroyed = fsm.customProperty<Boolean>("platforms_destroyed")
         val phase = fsm.customProperty<Int>("phase")
-        val rtl = direction == -1
+        val rtl = fsm.customProperty<Int>("direction") == -1
+        val dirIdx = if (rtl) 0 else 1
 
-        // destroy platforms on first entry into phase 3
-        if (phase == 2 && !platformsDestroyed) {
+        if (phase == 2 && !fsm.customProperty<Boolean>("platforms_destroyed")) {
             fsm.customProperties["platforms_destroyed"] = true
             family { all(Platform) }.forEach { it.remove() }
         }
 
-        val jumpDuration = jumpDurations[phase]
-        val halfDuration = jumpDuration * 0.5f
-        val jumpHeight = 3f
-        val collBox = entity[Collision].box
-        val names = waypointsForPhase(phase, rtl)
-        val landingYs = names.map { name ->
-            val pt = waypoints[name] ?: gdxError("No waypoint for name $name in phase $phase")
-            pt.y - collBox.y
-        }
-        val points = gdxArrayOf<MoveToPoint>()
-        names.forEachIndexed { i, name ->
-            val pt = waypoints[name] ?: return@forEachIndexed
-            val landX = pt.x - collBox.x - collBox.width * 0.5f
-            val landY = landingYs[i]
-            val startY = if (i == 0) entity[Transform].position.y else landingYs[i - 1]
-            val peakY = maxOf(startY, landY) + jumpHeight
-            points.add(MoveToPoint(vec2(landX, peakY), Interpolation.smooth, halfDuration, Interpolation.pow3Out))
-            points.add(MoveToPoint(vec2(landX, landY), Interpolation.smooth, halfDuration, Interpolation.pow3In))
-        }
+        // clone the pre-computed points so MoveTo can consume them independently each run
+        val template = fsm.customProperty<Array<Array<GdxArray<MoveToPoint>>>>("jump_sequences")[phase][dirIdx]
+        val points = GdxArray(template)
 
         entity.configure {
             it += MoveTo(points)
