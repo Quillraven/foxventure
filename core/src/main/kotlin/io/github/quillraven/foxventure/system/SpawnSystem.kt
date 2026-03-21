@@ -13,6 +13,7 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.ai.FleksStateMachine
 import io.github.quillraven.foxventure.ai.PlayerStateIdle
 import io.github.quillraven.foxventure.cfg.eagleCfg
+import io.github.quillraven.foxventure.cfg.frogBossCfg
 import io.github.quillraven.foxventure.cfg.mushroomCfg
 import io.github.quillraven.foxventure.cfg.piranhaCfg
 import io.github.quillraven.foxventure.component.Animation
@@ -261,6 +262,7 @@ class SpawnSystem(
             "mushroom" -> mushroomCfg(world, tile, entity)
             "eagle" -> eagleCfg(world, tile, entity)
             "piranha" -> piranhaCfg(world, tile, entity)
+            "frog-boss" -> frogBossCfg(world, entity)
             else -> gdxError("No enemy state for enemy $enemyType")
         }
     }

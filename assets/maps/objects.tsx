@@ -116,6 +116,9 @@
   </objectgroup>
  </tile>
  <tile id="8" type="shop">
+  <properties>
+   <property name="animation_speed" type="float" value="0"/>
+  </properties>
   <image source="../graphics/sprites/objects/mushroom-shop/idle_0.png" width="50" height="50"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="7" y="15" width="35" height="35"/>

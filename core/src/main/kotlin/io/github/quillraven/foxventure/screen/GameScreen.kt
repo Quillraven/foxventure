@@ -36,6 +36,7 @@ import io.github.quillraven.foxventure.system.FollowSystem
 import io.github.quillraven.foxventure.system.FsmSystem
 import io.github.quillraven.foxventure.system.GroundMoveSystem
 import io.github.quillraven.foxventure.system.InvulnerabilitySystem
+import io.github.quillraven.foxventure.system.ItemSystem
 import io.github.quillraven.foxventure.system.LifeSystem
 import io.github.quillraven.foxventure.system.MoveToSystem
 import io.github.quillraven.foxventure.system.PlayerDeathSystem
@@ -59,6 +60,8 @@ import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.tiled.TiledService
 import io.github.quillraven.foxventure.ui.GameView
 import io.github.quillraven.foxventure.ui.GameViewModel
+import io.github.quillraven.foxventure.ui.ShopViewModel
+import io.github.quillraven.foxventure.ui.widget.ShopView
 import ktx.app.KtxScreen
 import ktx.collections.gdxArrayOf
 
@@ -74,6 +77,7 @@ class GameScreen(
     private val objectsAtlas = TextureAtlas(game.serviceLocator.fileHandleResolver.resolve("graphics/objects.atlas"))
     private val physicsTimer = PhysicsTimer(interval = 1 / 60f)
     private val gameViewModel = GameViewModel()
+    private val shopViewModel = ShopViewModel()
     private val world: World = ecsWorld()
 
     private fun ecsWorld() = configureWorld {
@@ -88,6 +92,7 @@ class GameScreen(
             add(game)
             add(shaderService)
             add(gameViewModel)
+            add(shopViewModel)
             add(skin)
         }
 
@@ -111,6 +116,7 @@ class GameScreen(
             add(InvulnerabilitySystem())
             add(StunSystem())
             add(LifeSystem())
+            add(ItemSystem())
             add(PlayerDeathSystem())
             add(FsmSystem())
             add(DamageRequestSystem())
@@ -168,7 +174,14 @@ class GameScreen(
 
     private fun setupUI() {
         stage.clear()
+        // game hud
         stage.addActor(GameView(gameViewModel, skin))
+
+        // shop
+        shopViewModel.world = world
+        val shopView = ShopView(shopViewModel, skin)
+        stage.addActor(shopView)
+        shopView.isVisible = false
     }
 
     override fun hide() {
