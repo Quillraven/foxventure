@@ -186,7 +186,8 @@ class CollisionSystem(
             // player stomps on an enemy from above -> apply upwards impulse
             val jumpPressed = player[Controller].hasCommand(Command.JUMP)
             val physics = player[Physics]
-            player[Velocity].current.y = if (jumpPressed) physics.jumpImpulse * 0.75f else physics.jumpImpulse * 0.4f
+            val bounceMultiplier = if (other has EntityTag.BOSS) 0.9f else if (jumpPressed) 0.75f else 0.4f
+            player[Velocity].current.y = physics.jumpImpulse * bounceMultiplier
 
             // damage enemy
             world.damageEntity(
