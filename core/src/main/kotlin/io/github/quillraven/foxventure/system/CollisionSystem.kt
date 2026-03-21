@@ -18,6 +18,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Flash
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Invulnerable
+import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.Life
 import io.github.quillraven.foxventure.component.Physics
 import io.github.quillraven.foxventure.component.Player
@@ -31,6 +32,7 @@ import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
 import io.github.quillraven.foxventure.ui.GameViewModel
 import io.github.quillraven.foxventure.ui.ShopViewModel
 import ktx.app.gdxError
+import ktx.collections.gdxArrayOf
 import ktx.math.vec2
 
 /**
@@ -151,7 +153,7 @@ class CollisionSystem(
         }
 
         player.configure { it -= Controller }
-        shopViewModel.onOpenShop()
+        shopViewModel.items = gdxArrayOf(ItemType.EXTRA_CREDIT, ItemType.EXTRA_HEART)
     }
 
     private fun onPlayerSpikeCollision(

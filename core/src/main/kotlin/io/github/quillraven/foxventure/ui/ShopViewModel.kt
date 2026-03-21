@@ -5,11 +5,19 @@ import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.Item
 import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.Player
+import com.badlogic.gdx.utils.Array as GdxArray
 
 class ShopViewModel {
     lateinit var world: World
 
-    var onOpenShop: () -> Unit = {}
+    var onItemsChanged: (GdxArray<ItemType>) -> Unit = {}
+    var onCloseShop: () -> Unit = {}
+
+    var items: GdxArray<ItemType> = GdxArray.with()
+        set(value) {
+            field = value
+            onItemsChanged(value)
+        }
 
     fun onPurchase(itemType: ItemType) {
         world.entity { it += Item(itemType) }
@@ -19,5 +27,6 @@ class ShopViewModel {
         world.family { all(Player) }.forEach {
             it.configure { player -> player += Controller() }
         }
+        onCloseShop()
     }
 }

@@ -19,25 +19,27 @@ class ItemSystem(
     override fun onTickEntity(entity: Entity) {
         val player = playerFamily.single()
         val playerCmp = player[Player]
+        val itemType = entity[Item].type
 
-        when (entity[Item].type) {
+        if (playerCmp.gems < itemType.cost) {
+            entity.remove()
+            return
+        }
+
+        playerCmp.gems -= itemType.cost
+        gameViewModel.gems = playerCmp.gems
+
+        when (itemType) {
             ItemType.EXTRA_CREDIT -> {
-                if (playerCmp.gems < 10) return
-                playerCmp.gems -= 10
                 playerCmp.credits++
-                gameViewModel.gems = playerCmp.gems
                 gameViewModel.credits = playerCmp.credits
             }
-
             ItemType.EXTRA_HEART -> {
-                if (playerCmp.gems < 40) return
-                playerCmp.gems -= 40
-                val playerLife = player[Life]
-                playerLife.maxAmount += 4
-                playerLife.amount += 4
-                gameViewModel.gems = playerCmp.gems
-                gameViewModel.life = playerLife.amount
-                gameViewModel.maxLife = playerLife.maxAmount
+                val life = player[Life]
+                life.maxAmount += 4
+                life.amount += 4
+                gameViewModel.life = life.amount
+                gameViewModel.maxLife = life.maxAmount
             }
         }
 
