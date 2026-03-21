@@ -180,9 +180,12 @@ class CollisionSystem(
         otherCollision: Collision,
     ) {
         val playerBottom = playerTransform.position.y + playerCollision.box.y
-        val enemyTop = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * 0.75f
+        val stompThreshold = if (other has EntityTag.BOSS) 0.6f else 0.75f
+        val enemyTop = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * stompThreshold
+        val enemyCenter = otherTransform.position.y + otherCollision.box.y + otherCollision.box.height * 0.5f
+        val playerFallingOnTop = player[Velocity].current.y < 0f && playerBottom >= enemyCenter
 
-        if (playerBottom >= enemyTop) {
+        if (playerBottom >= enemyTop || playerFallingOnTop) {
             // player stomps on an enemy from above -> apply upwards impulse
             val jumpPressed = player[Controller].hasCommand(Command.JUMP)
             val physics = player[Physics]
