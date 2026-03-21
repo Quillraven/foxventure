@@ -22,7 +22,8 @@ import ktx.math.vec2
 import ktx.tiled.x
 import ktx.tiled.y
 
-private const val JUMP_HEIGHT = 3f
+private const val JUMP_HEIGHT = 2.5f
+private val JUMP_DURATIONS = floatArrayOf(1.1f, 0.95f, 0.75f)
 private val PHASE1_2_WAYPOINTS = listOf("left", "platform-left", "center-left", "center-right", "platform-right", "right")
 private val PHASE3_WAYPOINTS = listOf("left", "center-left", "center", "center-right", "right")
 
@@ -48,7 +49,6 @@ fun EntityCreateContext.frogBossCfg(
         FleksStateMachine(world, entity, FrogBossStateIdle),
         customProperties = mutableMapOf(
             "jump_sequences" to jumpSequences,
-            "jump_duration" to floatArrayOf(1.5f, 1.2f, 0.9f),
             "vulnerable_duration" to floatArrayOf(2.5f, 1.8f, 1.2f),
             "direction" to -1,
             "platforms_destroyed" to false,
@@ -68,8 +68,7 @@ private fun buildJumpPoints(
 ): GdxArray<MoveToPoint> {
     val list = if (phase < 2) PHASE1_2_WAYPOINTS else PHASE3_WAYPOINTS
     val names = if (rtl) list.dropLast(1).asReversed() else list.drop(1)
-    val jumpDurations = floatArrayOf(1.5f, 1.2f, 0.9f)
-    val halfDuration = jumpDurations[phase] * 0.5f
+    val halfDuration = JUMP_DURATIONS[phase] * 0.5f
 
     val landingYs = names.map { name ->
         val pt = waypoints[name] ?: gdxError("No waypoint '$name'")
@@ -82,9 +81,21 @@ private fun buildJumpPoints(
         val landX = pt.x - collBox.x - collBox.width * 0.5f
         val landY = landingYs[i]
         val startY = if (i == 0) spawnY else landingYs[i - 1]
+        val startX = if (i == 0) {
+            val startName = if (rtl) list.last() else list.first()
+            val startPt = waypoints[startName] ?: gdxError("No waypoint '$startName'")
+            startPt.x - collBox.x - collBox.width * 0.5f
+        } else {
+            val prevName = names[i - 1]
+            val prevPt = waypoints[prevName] ?: gdxError("No waypoint '$prevName'")
+            prevPt.x - collBox.x - collBox.width * 0.5f
+        }
+        val midX = (startX + landX) * 0.5f
         val peakY = maxOf(startY, landY) + JUMP_HEIGHT
-        points.add(MoveToPoint(vec2(landX, peakY), Interpolation.smooth, halfDuration, Interpolation.pow3Out))
-        points.add(MoveToPoint(vec2(landX, landY), Interpolation.smooth, halfDuration, Interpolation.pow3In))
+        // rise: move to arc peak (halfway X, full height)
+        points.add(MoveToPoint(vec2(midX, peakY), Interpolation.sine, halfDuration, Interpolation.sineOut))
+        // fall: move to landing (finish X, ground)
+        points.add(MoveToPoint(vec2(landX, landY), Interpolation.sine, halfDuration, Interpolation.sineIn))
     }
     return points
 }
