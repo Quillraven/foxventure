@@ -28,7 +28,7 @@ import ktx.tiled.y
 private const val JUMP_HEIGHT = 2.5f
 private val JUMP_DURATIONS = floatArrayOf(1.1f, 0.95f, 0.75f)
 private val PHASE1_2_WAYPOINTS = listOf("left", "platform-left", "center-left", "center-right", "platform-right", "right")
-private val PHASE3_WAYPOINTS = listOf("left", "center-left", "center", "center-right", "right")
+private val PHASE3_WAYPOINTS = listOf("left", "bottom-left", "center-left", "center", "center-right", "bottom-right", "right")
 
 fun EntityCreateContext.frogBossCfg(
     world: World,
@@ -54,7 +54,6 @@ fun EntityCreateContext.frogBossCfg(
             "jump_sequences" to jumpSequences,
             "vulnerable_duration" to floatArrayOf(2.5f, 1.8f, 1.2f),
             "direction" to -1,
-            "platforms_destroyed" to false,
             "stun_entity" to Entity.NONE,
             "life_on_enter" to 0f,
             "phase" to 0,

@@ -39,26 +39,6 @@ data object FrogBossStateJump : FsmState {
         val rtl = fsm.customProperty<Int>("direction") == -1
         val dirIdx = if (rtl) 0 else 1
 
-        if (phase == 2 && !fsm.customProperty<Boolean>("platforms_destroyed")) {
-            fsm.customProperties["platforms_destroyed"] = true
-            family { all(Platform) }.forEach { platform ->
-                val region = platform[Graphic].region
-                platform.configure {
-                    it += Dissolve(
-                        duration = 2f,
-                        uvOffsetU = region.u,
-                        uvOffsetV = region.v,
-                        atlasMaxU = region.u2,
-                        atlasMaxV = region.v2,
-                    )
-                    it += DelayRemoval(2f)
-                }
-            }
-            family { all(EntityTag.CAMERA_FOCUS) }.first().configure {
-                it += CameraShake(max = 8f, duration = 2f)
-            }
-        }
-
         // clone the pre-computed points so MoveTo can consume them independently each run
         val template = fsm.customProperty<Array<Array<GdxArray<MoveToPoint>>>>("jump_sequences")[phase][dirIdx]
         val points = GdxArray(template)
@@ -150,12 +130,35 @@ data object FrogBossStateVulnerable : FsmState {
 }
 
 data object FrogBossStateRecovery : FsmState {
+    private fun World.destroyPlatforms() {
+        family { all(Platform) }.forEach { platform ->
+            val region = platform[Graphic].region
+            platform.configure {
+                it += Dissolve(
+                    duration = 2f,
+                    uvOffsetU = region.u,
+                    uvOffsetV = region.v,
+                    atlasMaxU = region.u2,
+                    atlasMaxV = region.v2,
+                )
+                it += DelayRemoval(2f)
+            }
+        }
+        family { all(EntityTag.CAMERA_FOCUS) }.first().configure {
+            it += CameraShake(max = 8f, duration = 2f)
+        }
+        this.inject<AudioService>().playSound("explosion.wav")
+    }
+
     override fun World.onEnter(entity: Entity) {
         entity[Animation].changeTo(AnimationType.IDLE)
         entity.configure { it += Invulnerable(999f) }
         when (entity[Life].amount) {
             2f -> inject<AudioService>().playSound("croak2.wav")
-            1f -> inject<AudioService>().playSound("croak3.wav")
+            1f -> {
+                inject<AudioService>().playSound("croak3.wav")
+                destroyPlatforms()
+            }
         }
     }
 
