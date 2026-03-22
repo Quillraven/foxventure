@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.tommyettinger.textra.TypingLabel
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
 import ktx.app.KtxScreen
 import ktx.graphics.use
@@ -16,6 +17,7 @@ class VictoryScreen(
     private val game: GdxGame,
     private val batch: Batch = game.serviceLocator.renderContext.batch,
     private val uiViewport: Viewport = game.serviceLocator.renderContext.uiViewport,
+    private val audioService: AudioService = game.serviceLocator.audioService,
     skin: Skin = game.skin,
 ) : KtxScreen {
     private val font = skin.getFont("border")
@@ -60,6 +62,7 @@ class VictoryScreen(
 
     override fun show() {
         blinkTimer = 0f
+        audioService.playMusic("take-some-rest-and-eat-some-food.mp3")
     }
 
     override fun dispose() {
