@@ -77,3 +77,6 @@ class TriggerBuilder(
 
 fun IntervalSystem.trigger(block: TriggerBuilder.() -> Unit): Trigger =
     Trigger(TriggerBuilder(world).apply(block).actions)
+
+fun trigger(world: World, block: TriggerBuilder.() -> Unit): Trigger =
+    Trigger(TriggerBuilder(world).apply(block).actions)

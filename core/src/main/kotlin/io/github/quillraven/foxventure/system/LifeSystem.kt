@@ -10,6 +10,7 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Life
+import io.github.quillraven.foxventure.component.OnDeath
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.system.RenderSystem.Companion.sfx
@@ -57,6 +58,9 @@ class LifeSystem(
             )
 
             world.sfx(centeredPosition, scaledSize, deathAnimation)
+
+            entity.getOrNull(OnDeath)?.action()
+
             entity.remove()
         } else {
             entity.configure { it += EntityTag.PLAYER_DEATH }
