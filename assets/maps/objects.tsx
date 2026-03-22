@@ -126,6 +126,7 @@
  </tile>
  <tile id="9" type="enemy">
   <properties>
+   <property name="animation_speed" type="float" value="0.6"/>
    <property name="life" type="int" value="3"/>
   </properties>
   <image source="../graphics/sprites/objects/frog-boss/idle_0.png" width="42" height="38"/>
