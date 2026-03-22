@@ -4,6 +4,7 @@ import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import com.github.quillraven.fleks.World.Companion.family
 import com.github.quillraven.fleks.World.Companion.inject
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.component.Item
 import io.github.quillraven.foxventure.component.ItemType
 import io.github.quillraven.foxventure.component.Life
@@ -13,6 +14,7 @@ import io.github.quillraven.foxventure.ui.GameViewModel
 
 class ItemSystem(
     private val gameViewModel: GameViewModel = inject(),
+    private val audioService: AudioService = inject(),
 ) : IteratingSystem(family = family { all(Item) }) {
 
     private val playerFamily = family { all(Player) }
@@ -51,6 +53,9 @@ class ItemSystem(
         GameScreen.playerGems = playerCmp.gems
         GameScreen.playerLife = life.amount
         GameScreen.playerLifeMax = life.maxAmount
+
+        // play item sound
+        audioService.playSound("item-select.wav")
 
         // remove item
         entity.remove()

@@ -42,3 +42,7 @@ Credits:
 - https://pixabay.com/de/music/videospiele-game-8-bit-on-short-278081/
 - https://kenney.nl/assets/ui-pack
 - https://gl-transitions.com/gallery
+- https://wyver9.itch.io/8-bit-beatem-up-soundtrack
+- https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack
+- https://opengameart.org/content/8bit-action-jingle-mini-loop
+- https://opengameart.org/content/512-sound-effects-8-bit-style
