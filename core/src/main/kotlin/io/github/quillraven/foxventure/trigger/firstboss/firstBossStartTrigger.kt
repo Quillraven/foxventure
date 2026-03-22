@@ -33,21 +33,24 @@ fun IntervalSystem.firstBossStartTrigger() = trigger {
         }
     }
 
+    timedAction(2f) {
+        onStart = {
+            gameViewModel.onHideMessage()
+            audioService.playSound("croak1.wav")
+        }
+    }
+
     action {
         onStart = {
+            player().configure {
+                it += Controller()
+                it -= EntityTag.ROOT
+            }
+
             val boss = this@trigger.world.family { all(EntityTag.BOSS) }.single()
             boss[Fsm].state.changeState(FrogBossStateJump)
             audioService.playMusic("boss.mp3")
         }
     }
 
-    action {
-        onStart = {
-            gameViewModel.onHideMessage()
-            player().configure {
-                it += Controller()
-                it -= EntityTag.ROOT
-            }
-        }
-    }
 }
