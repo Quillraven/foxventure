@@ -13,8 +13,11 @@ import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.MoveToPoint
+import io.github.quillraven.foxventure.component.OnDeath
 import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.tiled.TiledService
+import io.github.quillraven.foxventure.trigger.firstboss.firstBossDeathTrigger
 import ktx.app.gdxError
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
@@ -57,6 +60,11 @@ fun EntityCreateContext.frogBossCfg(
             "phase" to 0,
         ),
     )
+    entity += OnDeath {
+        world.entity {
+            it += TriggerRef(firstBossDeathTrigger(world))
+        }
+    }
 }
 
 private fun buildJumpPoints(

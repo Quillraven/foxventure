@@ -7,8 +7,10 @@ import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.Animation.Companion.getGdxAnimation
 import io.github.quillraven.foxventure.component.AnimationType
+import io.github.quillraven.foxventure.component.CameraShake
 import io.github.quillraven.foxventure.component.Collision
 import io.github.quillraven.foxventure.component.DelayRemoval
+import io.github.quillraven.foxventure.component.Dissolve
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.Graphic
@@ -38,7 +40,22 @@ data object FrogBossStateJump : FsmState {
 
         if (phase == 2 && !fsm.customProperty<Boolean>("platforms_destroyed")) {
             fsm.customProperties["platforms_destroyed"] = true
-            family { all(Platform) }.forEach { it.remove() }
+            family { all(Platform) }.forEach { platform ->
+                val region = platform[Graphic].region
+                platform.configure {
+                    it += Dissolve(
+                        duration = 2f,
+                        uvOffsetU = region.u,
+                        uvOffsetV = region.v,
+                        atlasMaxU = region.u2,
+                        atlasMaxV = region.v2,
+                    )
+                    it += DelayRemoval(2f)
+                }
+            }
+            family { all(EntityTag.CAMERA_FOCUS) }.first().configure {
+                it += CameraShake(max = 8f, duration = 2f)
+            }
         }
 
         // clone the pre-computed points so MoveTo can consume them independently each run
