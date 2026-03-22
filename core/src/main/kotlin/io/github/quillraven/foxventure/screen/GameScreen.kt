@@ -233,6 +233,7 @@ class GameScreen(
         var playerGems = 0
         var playerLife = 0f
         var playerLifeMax = 0
+        var shopInfoTutorial = true
         var gamePaused = false
 
         fun resetPlayerStats() {
@@ -240,6 +241,7 @@ class GameScreen(
             playerGems = 0
             playerLife = 4f
             playerLifeMax = 4
+            shopInfoTutorial = true
         }
     }
 }
