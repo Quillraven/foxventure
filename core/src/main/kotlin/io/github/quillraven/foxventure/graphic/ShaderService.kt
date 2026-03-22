@@ -23,6 +23,12 @@ class ShaderService : Disposable {
     private val circleCropUlBgColor = circleCropShader.getUniformLocation("u_bgcolor")
     private val circleCropUlCenter = circleCropShader.getUniformLocation("u_center")
 
+    private val dissolveShader = shader(fragmentName = "dissolve.frag")
+    private val dissolveUlDissolve = dissolveShader.getUniformLocation("u_dissolve")
+    private val dissolveUlUvOffset = dissolveShader.getUniformLocation("u_uvOffset")
+    private val dissolveUlAtlasMaxUV = dissolveShader.getUniformLocation("u_atlasMaxUV")
+    private val dissolveUlFragmentNumber = dissolveShader.getUniformLocation("u_fragmentNumber")
+
     private fun shader(vertexName: String = "default.vert", fragmentName: String) =
         ShaderProgram(
             "shader/$vertexName".toInternalFile(),
@@ -69,9 +75,27 @@ class ShaderService : Disposable {
         }
     }
 
+    fun applyDissolveShader(
+        batch: Batch,
+        progress: Float,
+        uvOffsetU: Float,
+        uvOffsetV: Float,
+        atlasMaxU: Float,
+        atlasMaxV: Float,
+    ) {
+        batch.shader = dissolveShader
+        dissolveShader.use {
+            dissolveShader.setUniformf(dissolveUlDissolve, progress)
+            dissolveShader.setUniformf(dissolveUlUvOffset, uvOffsetU, uvOffsetV)
+            dissolveShader.setUniformf(dissolveUlAtlasMaxUV, atlasMaxU, atlasMaxV)
+            dissolveShader.setUniformf(dissolveUlFragmentNumber, 8f, 8f)
+        }
+    }
+
     override fun dispose() {
         pixelShader.dispose()
         grayScaleShader.dispose()
         circleCropShader.dispose()
+        dissolveShader.dispose()
     }
 }

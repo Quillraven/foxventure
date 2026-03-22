@@ -20,6 +20,7 @@ import com.github.quillraven.fleks.collection.compareEntityBy
 import io.github.quillraven.foxventure.GdxGame.Companion.toWorldUnits
 import io.github.quillraven.foxventure.component.Animation
 import io.github.quillraven.foxventure.component.DelayRemoval
+import io.github.quillraven.foxventure.component.Dissolve
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.GdxAnimation
 import io.github.quillraven.foxventure.component.Graphic
@@ -28,6 +29,7 @@ import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.Transform.Companion.Z_SFX
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.graphic.RenderContext
+import io.github.quillraven.foxventure.graphic.ShaderService
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import ktx.collections.gdxArrayOf
 import ktx.graphics.use
@@ -39,6 +41,7 @@ import ktx.tiled.use
 class RenderSystem(
     private val renderContext: RenderContext = inject(),
     private val batch: Batch = renderContext.batch, // do not inject the FBO because it gets disposed during resize
+    private val shaderService: ShaderService = inject(),
     gameViewport: Viewport = inject(),
 ) : IteratingSystem(
     family = family { all(Transform, Graphic, EntityTag.ACTIVE) },
@@ -86,6 +89,15 @@ class RenderSystem(
         }
 
         batch.color = graphic.color
+        val dissolve = entity.getOrNull(Dissolve)
+        if (dissolve != null) {
+            dissolve.timer += deltaTime
+            shaderService.applyDissolveShader(
+                batch, dissolve.progress,
+                dissolve.uvOffsetU, dissolve.uvOffsetV,
+                dissolve.atlasMaxU, dissolve.atlasMaxV,
+            )
+        }
         batch.draw(
             region,
             position.x + graphic.offset.x, position.y + graphic.offset.y,
@@ -94,6 +106,9 @@ class RenderSystem(
             if (graphic.flip) -1f else 1f, 1f,
             rotationDegrees
         )
+        if (dissolve != null) {
+            batch.shader = null
+        }
     }
 
     override fun onMapChanged(mapName: String, tiledMap: TiledMap) {

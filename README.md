@@ -41,3 +41,4 @@ Credits:
 - UI: https://danieldiggle.itch.io/sunnyside
 - https://pixabay.com/de/music/videospiele-game-8-bit-on-short-278081/
 - https://kenney.nl/assets/ui-pack
+- https://gl-transitions.com/gallery
