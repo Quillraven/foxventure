@@ -193,8 +193,15 @@ class GameScreen(
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             gamePaused = !gamePaused
             when (gamePaused) {
-                true -> audioService.pause()
-                false -> audioService.resume()
+                true -> {
+                    audioService.pause()
+                    audioService.playSound("pause-in.wav")
+                }
+
+                false -> {
+                    audioService.resume()
+                    audioService.playSound("pause-out.wav")
+                }
             }
         }
 
@@ -233,6 +240,7 @@ class GameScreen(
         var playerGems = 0
         var playerLife = 0f
         var playerLifeMax = 0
+        var shopInfoTutorial = true
         var gamePaused = false
 
         fun resetPlayerStats() {
@@ -240,6 +248,7 @@ class GameScreen(
             playerGems = 0
             playerLife = 4f
             playerLifeMax = 4
+            shopInfoTutorial = true
         }
     }
 }

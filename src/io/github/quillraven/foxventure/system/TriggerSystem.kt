@@ -11,6 +11,7 @@ import io.github.quillraven.foxventure.PhysicsTimer
 import io.github.quillraven.foxventure.component.Player
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.TriggerRef
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.tiled.LoadTriggerListener
 import io.github.quillraven.foxventure.tiled.MapChangeListener
 import io.github.quillraven.foxventure.trigger.Trigger
@@ -71,6 +72,10 @@ class TriggerSystem(
     override fun onTickEntity(entity: Entity) = Unit
 
     override fun onLoadTrigger(mapObject: RectangleMapObject) {
+        if ("shop" == mapObject.name && !GameScreen.shopInfoTutorial) {
+            return
+        }
+
         world.entity {
             val x = mapObject.x.toWorldUnits()
             val y = mapObject.y.toWorldUnits()

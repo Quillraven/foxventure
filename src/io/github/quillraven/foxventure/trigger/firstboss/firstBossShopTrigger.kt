@@ -4,6 +4,7 @@ import com.github.quillraven.fleks.IntervalSystem
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Velocity
+import io.github.quillraven.foxventure.screen.GameScreen
 import io.github.quillraven.foxventure.trigger.trigger
 
 fun IntervalSystem.firstBossShopTrigger() = trigger {
@@ -16,6 +17,7 @@ fun IntervalSystem.firstBossShopTrigger() = trigger {
                 }
                 this[Velocity].current.setZero()
             }
+            GameScreen.shopInfoTutorial = false
         }
     }
 

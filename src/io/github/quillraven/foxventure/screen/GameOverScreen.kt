@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.viewport.Viewport
+import io.github.quillraven.foxventure.AudioService
 import io.github.quillraven.foxventure.GdxGame
 import ktx.app.KtxScreen
 import ktx.graphics.use
@@ -15,6 +16,7 @@ class GameOverScreen(
     private val game: GdxGame,
     private val batch: Batch = game.serviceLocator.renderContext.batch,
     private val uiViewport: Viewport = game.serviceLocator.renderContext.uiViewport,
+    private val audioService: AudioService = game.serviceLocator.audioService,
     skin: Skin = game.skin,
 ) : KtxScreen {
     private val font = skin.getFont("border")
@@ -54,6 +56,7 @@ class GameOverScreen(
 
     override fun show() {
         blinkTimer = 0f
+        audioService.playMusic("game_over_loop.ogg")
     }
 
     override fun dispose() {
