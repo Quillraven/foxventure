@@ -3,9 +3,14 @@ package io.github.quillraven.foxventure.trigger.firstboss
 import com.github.quillraven.fleks.World
 import io.github.quillraven.foxventure.component.Controller
 import io.github.quillraven.foxventure.component.EntityTag
+import io.github.quillraven.foxventure.component.Transform
+import io.github.quillraven.foxventure.component.Transition
+import io.github.quillraven.foxventure.component.TransitionEffect
 import io.github.quillraven.foxventure.component.Velocity
 import io.github.quillraven.foxventure.screen.VictoryScreen
+import io.github.quillraven.foxventure.system.TransitionType
 import io.github.quillraven.foxventure.trigger.trigger
+import ktx.collections.gdxArrayOf
 
 fun firstBossDeathTrigger(world: World) = trigger(world) {
     timedAction(3f) {
@@ -38,6 +43,18 @@ fun firstBossDeathTrigger(world: World) = trigger(world) {
                 "",
                 "{VAR=HIGHLIGHT}Thank you for playing the Foxventure demo!{VAR=END_HIGHLIGHT}"
             )
+        }
+    }
+
+    timedAction(3f) {
+        onStart = {
+            gameViewModel.onHideMessage()
+            entity {
+                it += Transition(
+                    gdxArrayOf(TransitionEffect(TransitionType.CIRCLE_CROP, duration = 2.5f, reversed = true))
+                )
+                it += player()[Transform]
+            }
         }
     }
 
