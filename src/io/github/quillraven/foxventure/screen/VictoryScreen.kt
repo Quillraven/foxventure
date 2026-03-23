@@ -55,7 +55,7 @@ class VictoryScreen(
         }
 
         if (Gdx.input.isTouched) {
-            game.changeToGame("tutorial.tmx")
+            game.setScreen<MainMenuScreen>()
             return
         }
     }
