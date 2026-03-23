@@ -23,7 +23,7 @@ group = "io.github.quillraven.foxventure"
 version = "1.0"
 
 application {
-    applicationName = "GdxLwjgl3"
+    applicationName = "FoxVenture"
     mainClass = "io.github.quillraven.foxventure.Lwjgl3LauncherKt"
 }
 
