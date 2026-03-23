@@ -1,48 +1,74 @@
-# Gdx Kotlin Template
+# Foxventure 🦊
 
-This project uses a modern [Gradle](https://gradle.org/) setup approach with Kotlin DSL,
-version catalog (see `gradle/libs.versions.toml`) and extracted build logic
-to convention plugins located in `buildSrc`.
-It also uses both a build cache and a configuration cache (see `gradle.properties`).
+**Foxventure** is a 2D retro pixel-art platformer built with **LibGDX** and **Kotlin**. Experience a nostalgic journey through vibrant environments, challenging enemies, and a quest fueled by the most powerful motivation of all: a home-cooked meal.
 
-It is a starting point for any [LibGDX](https://github.com/libgdx/libgdx) Kotlin application
-with [LibKTX](https://github.com/libktx/ktx) extensions and provides two launchers:
+---
 
-- `Desktop` (=lwjgl3): `Lwjgl3Launcher.kt`
-- `TeaVM` (=browser): `TeaVMLauncher.kt`
+## 📖 The Story
 
-To run `lwjgl3` just execute the `main` method of the launcher class or run:
+Our protagonist is a little fox with a big problem: he’s lost his memory. Through the haze of his amnesia, only one thing remains crystal clear—his wife was cooking something delicious back at the den.
 
-- `./gradlew lwjgl3:run`
+Help the fox navigate a dangerous world, regain his bearings, and make it home in time for dinner!
 
-[Construo](https://github.com/fourlastor-alexandria/construo) is used to package your game for distribution.
-To package for Linux or Windows run:
+---
 
-- `./gradlew lwjgl3:packageLinuxX64`
-- `./gradlew lwjgl3:packageWinX64`
+## 🎮 Controls
 
-For `teavm` there are four different tasks to build and optionally run it on `http://localhost:8080/`:
+| Action | Keys |
+| :--- | :--- |
+| **Move** | `A` / `D` or `Left` / `Right` Arrows |
+| **Jump** | `Space` |
+| **Climb Ladders** | `W` / `S` or `Up` / `Down` Arrows |
+| **Interact (Shop)** | `W` or `Up` Arrow |
 
-- `./gradlew teavm:teavmDebugBuild`: build an unobfuscated version with source-mapping for browser debugging
-- `./gradlew teavm:teavmDebugRun`: run the debug build locally
-- `./gradlew teavm:teavmReleaseBuild`: build an obfuscated and optimized version
-- `./gradlew teavm:teavmReleaseRun`: run the release build locally
+---
 
-This template can be configured
-using [Gdx-Quilly-Utils](https://quillraven.github.io/gdx-quilly-utils/gradle-kotlin-template).
+## 👾 Gameplay Features
 
-Credits:
-- https://pimen.itch.io/smoke-vfx-1
-- https://ansimuz.itch.io/sunny-land-pixel-game-art
-- https://sfxr.me/
-- https://pixabay.com/sound-effects/film-special-effects-game-over-38511/
-- https://ansimuz.itch.io/sunnyland-enemies-extended-pack
-- https://fonts.google.com/specimen/Press+Start+2P
-- UI: https://danieldiggle.itch.io/sunnyside
-- https://pixabay.com/de/music/videospiele-game-8-bit-on-short-278081/
-- https://kenney.nl/assets/ui-pack
-- https://gl-transitions.com/gallery
-- https://wyver9.itch.io/8-bit-beatem-up-soundtrack
-- https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack
-- https://opengameart.org/content/8bit-action-jingle-mini-loop
-- https://opengameart.org/content/512-sound-effects-8-bit-style
+### Enemies
+* **Piranha Plant:** Stationary but deadly; it fires projectiles at passing foxes.
+* **Mushroom:** Watch out for its poisonous breath attack!
+* **Eagle:** Patrols the skies and will dive-bomb you from above.
+* **Frog Boss:** A formidable foe that will test your platforming skills.
+
+### Items & Hazards
+* **Spike Traps:** Classic hazards—watch your step.
+* **Gems:** Shiny collectibles scattered throughout the world.
+* **Cherries:** Eat these to restore your hitpoints.
+* **Golden Cherry:** Grants temporary invulnerability (power-up).
+
+---
+
+## 🖼️ Screenshots
+
+*(Screenshots coming soon!)*
+
+---
+
+## 🛠️ Built With
+
+* **Language:** [Kotlin](https://kotlinlang.org/)
+* **Framework:** [LibGDX](https://libgdx.com/)
+* **Build Tool:** Gradle
+
+---
+
+## 📜 Credits & Assets
+
+This project features incredible work from the indie community:
+
+### Visuals
+* **Environment & Character:** [Sunny Land](https://ansimuz.itch.io/sunny-land-pixel-game-art) by Ansimuz
+* **Enemies:** [Sunnyland Enemies Extended](https://ansimuz.itch.io/sunnyland-enemies-extended-pack) by Ansimuz
+* **UI Elements:** [Sunnyside](https://danieldiggle.itch.io/sunnyside) by Daniel Diggle & [UI Pack](https://kenney.nl/assets/ui-pack) by Kenney
+* **VFX:** [Smoke VFX 1](https://pimen.itch.io/smoke-vfx-1) by Pimen
+* **Shaders/Transitions:** [GL Transitions](https://gl-transitions.com/gallery)
+* **Font:** [Press Start 2P](https://fonts.google.com/specimen/Press+Start+2P) via Google Fonts
+
+### Audio & Music
+* **Sound Effects:** [sfxr.me](https://sfxr.me/), [512 8-Bit SFX](https://opengameart.org/content/512-sound-effects-8-bit-style), and [Game Over SFX](https://pixabay.com/sound-effects/film-special-effects-game-over-38511/)
+* **Music:**
+    * [8-Bit Beat'em Up Soundtrack](https://wyver9.itch.io/8-bit-beatem-up-soundtrack) by Wyver9
+    * [8-Bit Fantasy Adventure](https://xdeviruchi.itch.io/8-bit-fantasy-adventure-music-pack) by xDeviruchi
+    * [8-Bit Action Jingle](https://opengameart.org/content/8bit-action-jingle-mini-loop) via OpenGameArt
+    * [8-Bit On Short](https://pixabay.com/de/music/videospiele-game-8-bit-on-short-278081/) via Pixabay
