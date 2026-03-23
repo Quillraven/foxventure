@@ -109,15 +109,17 @@ slide_hangle
   index: -1
 slide_horizontal_color
   rotate: false
-  xy: 1, 237
+  xy: 1, 219
   size: 96, 16
+  split: 15, 15, 7, 7
   orig: 96, 16
   offset: 0, 0
   index: -1
 slide_horizontal_grey
   rotate: false
-  xy: 1, 219
+  xy: 1, 237
   size: 96, 16
+  split: 15, 15, 7, 7
   orig: 96, 16
   offset: 0, 0
   index: -1
