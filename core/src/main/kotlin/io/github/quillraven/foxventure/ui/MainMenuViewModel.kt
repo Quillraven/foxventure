@@ -15,4 +15,6 @@ class MainMenuViewModel(
     var onSoundVolumeChanged: (volume: Float) -> Unit = { volume -> audioService.soundVolume = volume }
     var onStartGame: () -> Unit = { game.changeToGame("tutorial.tmx") }
     var onQuit: () -> Unit = { Gdx.app.exit() }
+
+    fun playSampleSound() = audioService.playSound("jump.wav")
 }

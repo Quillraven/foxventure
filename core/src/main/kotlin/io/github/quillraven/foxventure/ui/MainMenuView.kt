@@ -14,6 +14,18 @@ class MainMenuView(
     isWeb: Boolean,
 ) : Table(skin) {
 
+    private var soundPreviewCooldown = 0f
+
+    override fun act(delta: Float) {
+        super.act(delta)
+        if (soundPreviewCooldown > 0f) {
+            soundPreviewCooldown -= delta
+            if (soundPreviewCooldown <= 0f) {
+                viewModel.playSampleSound()
+            }
+        }
+    }
+
     init {
         setFillParent(true)
         bottom()
@@ -33,7 +45,10 @@ class MainMenuView(
         content.add(startButton).row()
 
         content.add(sliderBlock("Music Volume", skin, viewModel.musicVolume) { viewModel.musicVolume = it }).row()
-        content.add(sliderBlock("Sound Volume", skin, viewModel.soundVolume) { viewModel.soundVolume = it }).row()
+        content.add(sliderBlock("Sound Volume", skin, viewModel.soundVolume) {
+            viewModel.soundVolume = it
+            soundPreviewCooldown = 0.4f
+        }).row()
 
         if (!isWeb) {
             val quitButton = TextButton("Quit Game", skin)
