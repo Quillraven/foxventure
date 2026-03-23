@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="86" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="163">
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-up" width="86" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="164">
  <properties>
   <property name="music" type="file" value="../music/hurt_and_heart.ogg"/>
   <property name="next_map" type="file" value="sunny_land_boss.tmx"/>
@@ -20,7 +20,7 @@
  </layer>
  <layer id="1" name="ground" width="86" height="15">
   <data encoding="base64" compression="zlib">
-   eJztmMFqk0EQgL+ZqncLaostHtTH+SnBYt+giG9QUUrxDRQ9FRT1pthTaD1JwaAXlXrIe/QiCtXK2F0yHXYT0xjaaAeG3ey/O//Ox+zM/oH/S/aAH0AbWCjopuvbnNZxb3hC5ILARYHVwLCk+7ZAjnvHkyXNgDg1pjMCs6dch+Zai9f7p0xHjlefZzPnfz2nXgbmR9ArztZLAZXes99cBdY40JbrN6nvbeW13uakcjTft5N+lV6/cf34zPjkMR93DxPXjsAzgecCt9Jv09upXRdYFthIeVVd20xoLNu+s5+d4LfX5cq457PLYK5rbl03te3Uvk5sS1z/5BydBLkKXAOuB67e72E1cl0RuBO4vghMPwp8Evicfj+qcG0qednrSRLv+6gauT6Qg5iNTD3XqJ6rieea+Vm+iXyNeZSzf/G+Nqyt7PsoPDOzyNXq1qsh7NwVuBf2X+JaUmMdc4XVu3NS1n5Sml/KQ/3qafT9icDTI7DtFri+S8/U1ac8/6fAvvmnvXdarD4ewLX2LbxQuB+3xnz37mc/+551S+BNGFsPHFRhSuGMHj7Tg7jm+mR6SWFGYVZ778x1q8a1lFP9WDPG/xlK34o3gMU+XH3+2xH4Eri2E4dvAt/tTCjMKczr4bW1uqWF+pRtddw73wt8OGIe8FzH8a3RFM5Lzf5NYAl46+6l/n4a6/V5hWkt32FL99ecu+M802jL26hxjfEac8Ivf4UeRA==
+   eJztmM1qFEEQx39VftwjqAkmeFAfZwiLom8QxDcwKCH4BoZ4CijqTdHTop5EcNGLijnkPXIRA/mQMt1speiezbouyWoa/kxvT3fN1I/qqp6F/6ttAztAF5gv6I3r25zOUb/whLTzAhcElgLDkvZsgRz1G09WawbEqTGdFpg54To011q8PjhhOnK8+jybOf/rOfUSMDeCLjtbLwRU+vd+cxVYZl8d129S39vKa73NSeVovn9I+iH9fuP68Z7xyWM+7lYS157AU4FnArfTb9OddF0TWBB4nfKqumszobFs75397AW/vRYq457PJoO5Lrt1G+naTddXiW2J62H20XFoV4CrwLXA1fs9rCLXuwKLgevzwPSLwFeBb+n3aoVrU8nLXseped9HVeT6UPZjNjL1XKM8V2uea+Zn+SbyNeaxnfmL57VhbWXfR+GZmUWuVrdeDmHnnsD9Q3AtyVjHXGH17qyU1dZK80t5qK2eRt8fCzz5A7YbBa4f0z119SnP3xXYM/+0/0yL1UfB58i19i08Xzgfd8Z89m6zn33PeivwLoytBQ6qcErhtB7c04O45vpkuqgwrTCj/WfmulXjWsqpfqwZ4/8MpW/F68CNFq4+/30XWA9cu4nDT4Et2xMKswpzenBtrW5poT5lWz33zE8CnwfEa5uaMX5rNIX9UrN/E7gFvHfnUn8+jfV6SuGcls+wpfNrzt1xnina8jZqXGO8xpzwC5BMHkc=
   </data>
  </layer>
  <layer id="3" name="props" width="86" height="15">
