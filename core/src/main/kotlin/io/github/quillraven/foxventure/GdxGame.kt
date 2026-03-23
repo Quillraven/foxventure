@@ -11,6 +11,7 @@ import com.github.tommyettinger.freetypist.FreeTypistSkin
 import com.github.tommyettinger.textra.TypingConfig
 import io.github.quillraven.foxventure.screen.GameOverScreen
 import io.github.quillraven.foxventure.screen.GameScreen
+import io.github.quillraven.foxventure.screen.MainMenuScreen
 import io.github.quillraven.foxventure.screen.VictoryScreen
 import io.github.quillraven.foxventure.screen.WebStartScreen
 import io.github.quillraven.foxventure.ui.ArcEffect
@@ -39,11 +40,12 @@ class GdxGame(val isWeb: Boolean) : KtxGame<KtxScreen>() {
 
         addScreen(VictoryScreen(this))
         addScreen(GameOverScreen(this))
+        addScreen(MainMenuScreen(this))
         if (isWeb) {
             addScreen(WebStartScreen(this))
             setScreen<WebStartScreen>()
         } else {
-            changeToGame("tutorial.tmx")
+            setScreen<MainMenuScreen>()
         }
     }
 
