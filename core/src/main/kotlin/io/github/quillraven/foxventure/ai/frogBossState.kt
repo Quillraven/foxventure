@@ -36,11 +36,10 @@ data object FrogBossStateJump : FsmState {
 
         val fsm = entity[Fsm]
         val phase = fsm.customProperty<Int>("phase")
-        val rtl = fsm.customProperty<Int>("direction") == -1
-        val dirIdx = if (rtl) 0 else 1
+        val dirIdx = if (fsm.customProperty<Int>("direction") == -1) 0 else 1
 
         // clone the pre-computed points so MoveTo can consume them independently each run
-        val template = fsm.customProperty<Array<Array<GdxArray<MoveToPoint>>>>("jump_sequences")[phase][dirIdx]
+        val template = fsm.customProperty<Array<GdxArray<MoveToPoint>>>("jump_sequences")[phase * 2 + dirIdx]
         val points = GdxArray(template)
 
         entity.configure {

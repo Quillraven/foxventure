@@ -14,6 +14,7 @@ import io.github.quillraven.foxventure.component.EntityTag
 import io.github.quillraven.foxventure.component.Fsm
 import io.github.quillraven.foxventure.component.MoveToPoint
 import io.github.quillraven.foxventure.component.OnDeath
+import io.github.quillraven.foxventure.component.Rect
 import io.github.quillraven.foxventure.component.Transform
 import io.github.quillraven.foxventure.component.TriggerRef
 import io.github.quillraven.foxventure.tiled.TiledService
@@ -40,11 +41,8 @@ fun EntityCreateContext.frogBossCfg(
     val spawnY = entity[Transform].position.y
 
     // pre-compute jump sequences: index = phase * 2 + (if rtl 0 else 1)
-    val jumpSequences = Array(3) { phase ->
-        Array(2) { dirIdx ->
-            val rtl = dirIdx == 0
-            buildJumpPoints(waypoints, collBox, spawnY, phase, rtl)
-        }
+    val jumpSequences = Array(6) { i ->
+        buildJumpPoints(waypoints, collBox, spawnY, phase = i / 2, rtl = i % 2 == 0)
     }
 
     entity += EntityTag.BOSS
@@ -68,7 +66,7 @@ fun EntityCreateContext.frogBossCfg(
 
 private fun buildJumpPoints(
     waypoints: Map<String, Vector2>,
-    collBox: io.github.quillraven.foxventure.component.Rect,
+    collBox: Rect,
     spawnY: Float,
     phase: Int,
     rtl: Boolean,
