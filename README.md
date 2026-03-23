@@ -41,7 +41,10 @@ Help the fox navigate a dangerous world, regain his bearings, and make it home i
 
 ## 🖼️ Screenshots
 
-*(Screenshots coming soon!)*
+<img src="https://github.com/user-attachments/assets/68917069-74ab-40ea-a388-ccd61b16419a" width="100%" />
+<img src="https://github.com/user-attachments/assets/2f3d8c14-41f3-4c7c-a071-9d2e65a9f349" width="100%" />
+<img src="https://github.com/user-attachments/assets/ee5fba85-cfcf-4e16-8be0-db956359c83b" width="100%" />
+<img src="https://github.com/user-attachments/assets/f3c145c0-5678-468f-846c-909efe6fe512" width="100%" />
 
 ---
 
