@@ -34,7 +34,7 @@ fun IntervalSystem.tutorialTrigger2() = trigger {
         onStart = {
             gameViewModel.onShowMessage(
                 "",
-                "Press {VAR=HIGHLIGHT}W/D{VAR=END_HIGHLIGHT} or {VAR=HIGHLIGHT}UP/DOWN{VAR=END_HIGHLIGHT} arrow keys to climb ladders."
+                "Press {VAR=HIGHLIGHT}W/S{VAR=END_HIGHLIGHT} or {VAR=HIGHLIGHT}UP/DOWN{VAR=END_HIGHLIGHT} arrow keys to climb ladders."
             )
         }
     }
