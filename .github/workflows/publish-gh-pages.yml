@@ -29,8 +29,8 @@ jobs:
         uses: gradle/actions/wrapper-validation@v5
 
       - name: Build with Gradle Wrapper
-        run: ./gradlew teavm:teavmReleaseBuild
-#        run: ./gradlew teavm:teavmDebugBuild
+        run: ./gradlew teavm:gdx_teavm_web_wasm_build
+#        run: ./gradlew teavm:gdx_teavm_web_js_build
 
       - name: Publish game
         uses: JamesIves/github-pages-deploy-action@v4
