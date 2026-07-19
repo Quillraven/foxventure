@@ -1,51 +1,33 @@
 plugins {
     buildsrc.convention.`kotlin-jvm`
+    alias(libs.plugins.gdxTeaVmPlugin)
 }
 
 dependencies {
-    implementation(libs.gdxTeaVmBackend)
     implementation(libs.gdxTeaVmFreetype)
     implementation(project(":core"))
     implementation(libs.stripeFreetype)
 }
 
-fun registerTeavmTask(name: String, description: String, javaMainArgs: List<String>) =
-    tasks.register<JavaExec>(name) {
-        group = "teavm"
-        this.description = description
-        dependsOn(tasks.classes)
+gdxTeaVM {
+    assets(rootProject.file("assets"))
+    reflection("com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator")
 
-        mainClass = "io.github.quillraven.foxventure.TeaVMBuilderKt"
-        classpath = sourceSets.main.get().runtimeClasspath
-        args = javaMainArgs
+    js {
+        mainClass.set("io.github.quillraven.foxventure.TeaVMLauncherKt")
+        htmlTitle.set("Foxventure JS")
+        htmlWidth.set(800)
+        htmlHeight.set(600)
+        serverPort.set(8080)
+        obfuscated.set(false)
     }
 
-registerTeavmTask(
-    "teavmDebugRun",
-    "Build unobfuscated, simple optimized TeaVM artifact and run it at localhost",
-    listOf("debug", "startJetty"),
-)
-
-registerTeavmTask(
-    "teavmReleaseRun",
-    "Build obfuscated, advanced optimized TeaVM artifact and run it at localhost",
-    listOf("startJetty"),
-)
-
-registerTeavmTask(
-    "teavmDebugBuild",
-    "Build unobfuscated, simple optimized TeaVM artifact",
-    listOf("debug"),
-)
-
-val teavmReleaseBuild = registerTeavmTask(
-    "teavmReleaseBuild",
-    "Build obfuscated, advanced optimized TeaVM artifact",
-    emptyList(),
-)
-
-tasks {
-    build {
-        dependsOn(teavmReleaseBuild)
+    wasm {
+        mainClass.set("io.github.quillraven.foxventure.TeaVMLauncherKt")
+        htmlTitle.set("Foxventure Wasm")
+        htmlWidth.set(700)
+        htmlHeight.set(800)
+        serverPort.set(8080)
+        obfuscated.set(false)
     }
 }
