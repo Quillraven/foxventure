@@ -6,7 +6,6 @@ plugins {
 dependencies {
     implementation(libs.gdxTeaVmFreetype)
     implementation(project(":core"))
-    implementation(libs.stripeFreetype)
 }
 
 gdxTeaVM {
