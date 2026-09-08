@@ -22,13 +22,14 @@ import ktx.tiled.height
 import ktx.tiled.isEmpty
 import ktx.tiled.layer
 import ktx.tiled.property
+import ktx.tiled.tileById
 import ktx.tiled.width
 import ktx.tiled.x
 import ktx.tiled.y
 import kotlin.math.abs
 
 interface MapChangeListener {
-    fun onMapChanged(mapName:String, tiledMap: TiledMap)
+    fun onMapChanged(mapName: String, tiledMap: TiledMap)
 }
 
 interface LoadTileObjectListener {
@@ -342,12 +343,7 @@ class TiledService(fileHandleResolver: FileHandleResolver) : Disposable {
         loadTriggerListener.clear()
     }
 
-    fun tileById(tilesetName: String, id: Int): TiledMapTile {
-        val tileSet = currentMap.tileSets.single { it.name == tilesetName }
-        val tiledId = tileSet.property<Int>("firstgid") + id
-
-        return tileSet.getTile(tiledId) ?: gdxError("There is no tile with id $id in tileset $tilesetName")
-    }
+    fun tileById(tilesetName: String, id: Int): TiledMapTile = currentMap.tileById(tilesetName, id)
 
     companion object {
         fun TiledMapTile.collisionRect(): Rectangle {
